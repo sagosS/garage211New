@@ -35,19 +35,16 @@
 
 </head>
 <body>
-  <header>
-        <nav>
-            <ul>
-                <li><a href="{{ url_for('main.index') }}">Головна</a></li>
-                <li><a href="{{ url_for('main.news') }}">Новини</a></li>
-                <li><a href="{{ url_for('main.promotions') }}">Акції</a></li>
-                <li><a href="{{ url_for('main.gallery') }}">Галерея</a></li>
-            </ul>
-        </nav>
+    <header>        
+        <!-- Включення головного меню -->
+        {% include 'includes/navbar.html' %}
     </header>
 
     <main>
-        {% block content %}{% endblock %}
+        {% block content %}
+        <h1>Головна сторінка</h1>
+        <p>Вітаємо на нашому сайті!</p>
+        {% endblock %}
     </main>
 
     <footer>

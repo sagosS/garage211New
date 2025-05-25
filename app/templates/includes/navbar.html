@@ -1,0 +1,28 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{{ url_for('main.index') }}">Назва СТО</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Перемикач навігації">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('main.index') }}">Головна</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('main.news') }}">Новини</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('main.promotions') }}">Акції</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('main.gallery') }}">Галерея</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('main.contacts') }}">Контакти</a>
+        </li>
+      </ul>
+      <a class="btn btn-primary" href="{{ url_for('main.application') }}" role="button">Подати заявку</a>
+    </div>
+  </div>
+</nav>
