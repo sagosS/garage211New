@@ -18,6 +18,7 @@
     <!-- ...existing code... -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     
     <!-- ...existing code... -->
     <script type="application/ld+json">
@@ -39,10 +40,10 @@
 
 </head>
 <body>
-    <header>        
+    <!-- <header>         -->
         <!-- Включення головного меню -->
         {% include 'includes/navbar.html' %}
-    </header>
+    <!-- </header> -->
 
     <main>
         {% block content %}
@@ -51,8 +52,7 @@
         {% endblock %}
     </main>
 
-    <footer>
-        <p>&copy; 2025 Назва СТО</p>
-    </footer>
+    {% include 'includes/footer.html' %}
+<script src="{{ url_for('static', filename='js/navbar.js') }}"></script>
 </body>
 </html>

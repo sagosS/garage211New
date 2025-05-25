@@ -6,6 +6,12 @@
     z-index: 1000;
 }
 
+.navbar-transparent {
+    background: rgba(35, 39, 43, 0.85);
+    transition: background 0.3s;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+}
+
 .navbar-container {
     max-width: 1100px;
     margin: 0 auto;

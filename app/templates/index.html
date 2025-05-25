@@ -1,6 +1,106 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Ласкаво просимо!</h1>
-<p>Це головна сторінка сайту СТО.</p>
+<!-- HERO SECTION -->
+<section class="hero">
+    <img src="{{ url_for('static', filename='images/hero-bg.webp') }}" alt="СТО АвтоПрофі" class="hero-bg">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <h1>СТО "АвтоПрофі"</h1>
+        <p>Якісний сервіс, ремонт та діагностика вашого авто у Кривому Розі</p>
+        <form action="{{ url_for('main.application') }}">
+            <button type="submit" class="btn btn-primary hero-btn">Замовити</button>
+        </form>
+    </div>
+</section>
+
+<!-- PROMOTIONS SECTION -->
+<section class="promotions">
+    <h2>Акції</h2>
+    <div class="promotions-list">
+        <div class="promotion-item">
+            <h3>Знижка 10% на ТО</h3>
+            <p>Тільки цього місяця — знижка на комплексне технічне обслуговування!</p>
+        </div>
+        <div class="promotion-item">
+            <h3>Безкоштовна діагностика</h3>
+            <p>Для нових клієнтів — діагностика ходової частини безкоштовно.</p>
+        </div>
+    </div>
+</section>
+
+<!-- GALLERY SECTION -->
+<section class="gallery">
+    <h2>Галерея</h2>
+    <div class="gallery-list">
+        <img src="{{ url_for('static', filename='images/hero-bg.webp') }}" alt="Фото 1">
+        <img src="{{ url_for('static', filename='images/hero-bg.webp') }}" alt="Фото 2">
+        <img src="{{ url_for('static', filename='images/hero-bg.webp') }}" alt="Фото 3">
+    </div>
+</section>
+
+<!-- NEWS SECTION -->
+<section class="news">
+    <h2>Новини</h2>
+    <div class="news-list">
+        <div class="news-item">
+            <h3>Оновлення обладнання</h3>
+            <p>Ми встановили новий стенд для розвал-сходження!</p>
+            <span class="news-date">25 травня 2025</span>
+        </div>
+        <div class="news-item">
+            <h3>Новий майстер</h3>
+            <p>До нашої команди приєднався досвідчений автоелектрик.</p>
+            <span class="news-date">20 травня 2025</span>
+        </div>
+    </div>
+</section>
+
+<!-- SERVICES SECTION -->
+<section class="services">
+    <h2>Наші послуги</h2>
+    <div class="services-list">
+        <div class="service-item">
+            <img src="{{ url_for('static', filename='images/hero-bg.webp') }}" alt="Діагностика">
+            <h3>Діагностика</h3>
+            <p>Сучасне обладнання для точної діагностики авто.</p>
+        </div>
+        <div class="service-item">
+            <img src="{{ url_for('static', filename='images/hero-bg.webp') }}" alt="Ремонт">
+            <h3>Ремонт</h3>
+            <p>Всі види ремонту: ходова, двигун, електрика.</p>
+        </div>
+        <div class="service-item">
+            <img src="{{ url_for('static', filename='images/hero-bg.webp') }}" alt="ТО">
+            <h3>Технічне обслуговування</h3>
+            <p>Регулярне ТО для довгої служби вашого авто.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ADVANTAGES SECTION -->
+<section class="advantages">
+    <h2>Чому обирають нас?</h2>
+    <ul class="advantages-list">
+        <li>Досвідчені майстри</li>
+        <li>Гарантія на всі роботи</li>
+        <li>Сучасне обладнання</li>
+        <li>Зручне розташування</li>
+    </ul>
+</section>
+
+<!-- REVIEWS SECTION -->
+<section class="reviews">
+    <h2>Відгуки клієнтів</h2>
+    <div class="reviews-list">
+        <blockquote>
+            <p>Все швидко, якісно та за розумною ціною!</p>
+            <footer>— Олександр</footer>
+        </blockquote>
+        <blockquote>
+            <p>Дуже задоволений сервісом, рекомендую!</p>
+            <footer>— Ірина</footer>
+        </blockquote>
+    </div>
+</section>
 {% endblock %}

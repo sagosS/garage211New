@@ -1,0 +1,147 @@
+
+/* === FOOTER === */
+.footer {
+    background: #23272b;
+    color: #f1f1f1;
+    padding: 2.5rem 0 1rem 0;
+    margin-top: 3rem;
+    border-top: 1px solid #333;
+    font-size: 1rem;
+}
+.footer-columns {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto 1.5rem auto;
+    flex-wrap: wrap;
+}
+.footer-col {
+    flex: 1 1 0;
+    min-width: 220px;
+    max-width: 340px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.footer-col h3 {
+    color: #ffb300;
+    margin-bottom: 1rem;
+    font-size: 1.15rem;
+    letter-spacing: 0.5px;
+}
+.footer-map iframe {
+    width: 100%;
+    border-radius: 8px;
+    min-height: 120px;
+}
+.footer-contacts {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    color: #f1f1f1;
+}
+.footer-contacts a {
+    color: #ffb300;
+    text-decoration: none;
+}
+.footer-contacts a:hover {
+    text-decoration: underline;
+    color: #ffd54f;
+}
+.footer-socials-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    align-items: flex-start;
+    margin-top: 0.5rem;
+}
+.footer-socials-column a img {
+    width: 32px;
+    height: 32px;
+    filter: grayscale(1) brightness(1.2);
+    transition: filter 0.2s, transform 0.2s;
+}
+.footer-socials-column a:hover img {
+    filter: none;
+    transform: scale(1.1) rotate(-6deg);
+}
+.footer-bottom {
+    text-align: center;
+    font-size: 0.95rem;
+    color: #aaa;
+    margin-top: 1rem;
+    border-top: 1px solid #333;
+    padding-top: 1rem;
+}
+
+/* === Адаптивність === */
+@media (max-width: 1200px) {
+    .hero, .hero-bg {
+        width: 100vw;
+        margin-left: -50vw;
+        margin-right: -50vw;
+        left: 50%;
+        right: 50%;
+    }
+    .footer-columns {
+        max-width: 98vw;
+    }
+}
+@media (max-width: 900px) {
+    .hero {
+        min-height: 60vh;
+        border-radius: 0 0 12px 12px;
+    }
+    .hero-content h1 {
+        font-size: 1.5rem;
+    }
+    .hero-content p {
+        font-size: 1rem;
+    }
+    .hero-btn {
+        font-size: 1rem;
+        padding: 0.7rem 1.5rem;
+    }
+    .services-list, .advantages-list, .reviews-list {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+    .service-item, .reviews-list blockquote, .advantages-list li {
+        width: 90vw;
+        max-width: 400px;
+    }
+    .footer-columns {
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+    }
+    .footer-col {
+        max-width: 100%;
+        min-width: 0;
+        width: 100%;
+        align-items: center;
+        text-align: center;
+    }
+    .footer-map iframe {
+        min-height: 180px;
+    }
+}
+@media (max-width: 600px) {
+    body {
+        font-size: 1rem;
+    }
+    .hero-content {
+        padding: 1rem 0.2rem;
+    }
+    .footer {
+        padding: 1.2rem 0 0.5rem 0;
+    }
+    .footer-bottom {
+        font-size: 0.85rem;
+        padding: 0.7rem 0;
+    }
+}
