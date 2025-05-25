@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title if title else "Назва СТО" }}</title>
+  <meta name="description" content="{{ description if description else 'Опис СТО, який привертає увагу користувачів та Google' }}">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="{{ request.url }}"/>
+  <!-- Open Graph для соцмереж -->
+  <meta property="og:title" content="{{ title if title else 'Назва СТО' }}">
+  <meta property="og:description" content="{{ description if description else 'Опис СТО' }}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ request.url }}">
+  <meta property="og:image" content="{{ url_for('static', filename='images/og-image.png', _external=True) }}">
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script type="application/ld+json">
+    {
+    "@context": "https://schema.org",
+    "@type": "AutoRepair",
+    "name": "Назва СТО",
+    "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Вулиця, будинок",
+        "addressLocality": "Кривий Ріг",
+        "addressRegion": "Дніпропетровська область",
+        "postalCode": "49000",
+        "addressCountry": "UA"
+    },
+    "telephone": "+380XXXXXXXXX"
+    }
+    </script>
+
+</head>
+<body>
+  <header>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('main.index') }}">Головна</a></li>
+                <li><a href="{{ url_for('main.news') }}">Новини</a></li>
+                <li><a href="{{ url_for('main.promotions') }}">Акції</a></li>
+                <li><a href="{{ url_for('main.gallery') }}">Галерея</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Назва СТО</p>
+    </footer>
+</body>
+</html>
