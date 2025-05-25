@@ -6,7 +6,7 @@
     <img src="{{ url_for('static', filename='images/hero-bg.webp') }}" alt="СТО АвтоПрофі" class="hero-bg">
     <div class="hero-overlay"></div>
     <div class="hero-content">
-        <h1>СТО "АвтоПрофі"</h1>
+        <h1>СТО {{ GARAGE_NAME }}</h1>
         <p>Якісний сервіс, ремонт та діагностика вашого авто у Кривому Розі</p>
         <form action="{{ url_for('main.application') }}">
             <button type="submit" class="btn btn-primary hero-btn">Замовити</button>

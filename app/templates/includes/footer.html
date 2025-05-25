@@ -10,18 +10,18 @@
         <div class="footer-col">
             <h3>Контакти</h3>
             <ul class="footer-contacts">
-                <li>Кривий Ріг, вул. Прикладна, 1</li>
-                <li>Телефон: <a href="tel:+380XXXXXXXXX">+38 (0XX) XXX-XX-XX</a></li>
-                <li>Email: <a href="mailto:info@example.com">info@example.com</a></li>
+                <li>{{ GARAGE_ADDRESS }}</li>
+                <li>Телефон: <a href="tel:{{ GARAGE_PHONE }}">{{ GARAGE_PHONE }}</a></li>
+                <li>Email: <a href="mailto:{{ GARAGE_EMAIL }}">{{ GARAGE_EMAIL }}</a></li>
             </ul>
         </div>
         <div class="footer-col">
             <h3>Ми в соцмережах</h3>
             <div class="footer-socials footer-socials-column">
-                <a href="#" aria-label="Facebook"><img src="{{ url_for('static', filename='images/facebook.svg') }}" alt="Facebook"></a>
-                <a href="#" aria-label="Instagram"><img src="{{ url_for('static', filename='images/instagram.svg') }}" alt="Instagram"></a>
-                <a href="#" aria-label="Telegram"><img src="{{ url_for('static', filename='images/telegram.svg') }}" alt="Telegram"></a>
-                <a href="#" aria-label="Viber"><img src="{{ url_for('static', filename='images/viber.svg') }}" alt="Viber"></a>
+                <a href="{{ SOCIAL_FACEBOOK }}" aria-label="Facebook"><img src="{{ url_for('static', filename='images/facebook.svg') }}" alt="Facebook"></a>
+                <a href="{{ SOCIAL_INSTAGRAM }}" aria-label="Instagram"><img src="{{ url_for('static', filename='images/instagram.svg') }}" alt="Instagram"></a>
+                <a href="{{ SOCIAL_TELEGRAM }}" aria-label="Telegram"><img src="{{ url_for('static', filename='images/telegram.svg') }}" alt="Telegram"></a>
+                <a href="{{ SOCIAL_VIBER }}" aria-label="Viber"><img src="{{ url_for('static', filename='images/viber.svg') }}" alt="Viber"></a>
             </div>
         </div>
     </div>

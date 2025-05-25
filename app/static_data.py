@@ -1,0 +1,8 @@
+GARAGE_NAME = "Гараж 211"
+GARAGE_ADDRESS = "м. Кривий Ріг, Центрально-міський район, вулиця Ньютона, будинок 2А, жилий масив Карачуни"
+GARAGE_PHONE = "+380982112112"
+GARAGE_EMAIL = "gar211sto@gmail.com"
+SOCIAL_FACEBOOK = "https://www.facebook.com/profile.php?id=61573377493044&locale=uk_UA"
+SOCIAL_INSTAGRAM = "https://www.instagram.com/gar211sto?igsh=MW1kdjV4Yms3NzR5bw=="
+SOCIAL_TELEGRAM = "https://t.me/garage211"
+SOCIAL_VIBER = "https://connect.viber.com/business/faaa8114-f475-11ef-8ae6-c604932d4827?utm_source=manage&utm_medium=copy_link"
