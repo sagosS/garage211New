@@ -18,3 +18,11 @@ def promotions():
 @main.route('/gallery')
 def gallery():
     return render_template('gallery.html', title="Галерея")
+
+@main.route('/contacts')
+def contacts():
+    return render_template('contacts.html', title="Контакти")
+
+@main.route('/application')
+def application():
+    return render_template('application.html', title="Подати заявку")
