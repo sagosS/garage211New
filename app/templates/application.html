@@ -1,4 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>Подати заявку</h1>
+
+<!-- Приклад форми -->
+<form method="post">
+    {{ form.hidden_tag() }}
+    <div>
+        {{ form.name.label }}<br>
+        {{ form.name(size=32) }}
+    </div>
+    <div>
+        {{ form.email.label }}<br>
+        {{ form.email(size=32) }}
+    </div>
+    <div>
+        {{ form.submit() }}
+    </div>
+</form>
 {% endblock %}

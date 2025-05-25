@@ -3,20 +3,4 @@
 {% block content %}
 <h1>Ласкаво просимо!</h1>
 <p>Це головна сторінка сайту СТО.</p>
-
-<!-- Приклад форми -->
-<form method="post">
-    {{ form.hidden_tag() }}
-    <div>
-        {{ form.name.label }}<br>
-        {{ form.name(size=32) }}
-    </div>
-    <div>
-        {{ form.email.label }}<br>
-        {{ form.email(size=32) }}
-    </div>
-    <div>
-        {{ form.submit() }}
-    </div>
-</form>
 {% endblock %}

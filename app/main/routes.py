@@ -4,8 +4,7 @@ from app.forms import ApplicationForm
 
 @main.route('/')
 def index():
-    form = ApplicationForm()
-    return render_template('index.html', title="Головна сторінка", form=form)
+    return render_template('index.html', title="Головна сторінка")
 
 @main.route('/news')
 def news():
@@ -25,4 +24,5 @@ def contacts():
 
 @main.route('/application')
 def application():
-    return render_template('application.html', title="Подати заявку")
+    form = ApplicationForm()
+    return render_template('application.html', title="Подати заявку", form=form)
