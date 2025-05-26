@@ -1,10 +1,23 @@
-from flask import render_template, url_for, abort
+from flask import render_template, redirect, url_for, flash, request, abort
+from flask_login import login_user
+from app.models import User
+from werkzeug.security import check_password_hash
 from app.main import main
 from app.forms import ApplicationForm
 
 @main.route('/')
 def index():
     return render_template('index.html', title="Головна сторінка")
+
+@main.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        user = User.query.filter_by(phone_number=request.form['phone_number']).first()
+        if user and check_password_hash(user.password, request.form['password']):
+            login_user(user)
+            return redirect(url_for('admin.admin_index'))
+        flash('Невірний логін або пароль')
+    return render_template('login.html')
 
 @main.route('/news')
 def news():

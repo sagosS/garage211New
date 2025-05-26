@@ -26,6 +26,10 @@
         </div>
     </div>
     <div class="footer-bottom">
-        <p>&copy; 2025 Назва СТО</p>
+        <div class="copyright">
+        &copy; {{ current_year }} СТО "Гараж 211"
+        |
+        <a href="{{ url_for('main.login') }}">Вхід для персоналу</a>
+    </div>
     </div>
 </footer>
