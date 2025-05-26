@@ -40,6 +40,14 @@ def news():
     ]
     return render_template('news.html', title="Новини", news=news)
 
+@main.route('/book', methods=['GET', 'POST'])
+def book():
+    if request.method == 'POST':
+        # Тут обробка форми, наприклад, збереження в БД чи надсилання email
+        flash('Ваша заявка прийнята!', 'success')
+        return redirect(url_for('main.book'))
+    return render_template('book.html')
+
 @main.route('/news/<int:news_id>')
 def news_detail(news_id):
     # Тут має бути пошук новини за id (наприклад, з БД)
@@ -124,8 +132,3 @@ def gallery():
 @main.route('/contacts')
 def contacts():
     return render_template('contacts.html', title="Контакти")
-
-@main.route('/application')
-def application():
-    form = ApplicationForm()
-    return render_template('application.html', title="Подати заявку", form=form)

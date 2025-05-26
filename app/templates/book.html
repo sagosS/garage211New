@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Записатись - СТО "Гараж 211"{% endblock %}
+
+{% block content %}
+<div class="book-container">
+    <div class="book-box">
+        <h1>Записатись</h1>
+        <form method="POST" action="{{ url_for('main.book') }}">
+            <label for="name">Ваше ім'я</label>
+            <input type="text" id="name" name="name" required placeholder="Введіть ім'я">
+
+            <label for="phone">Телефон</label>
+            <input type="tel" id="phone" name="phone" required placeholder="+380 XX XXX XX XX">
+
+            <label for="service">Вид послуги</label>
+            <select id="service" name="service" required>
+                <option value="">Оберіть послугу</option>
+                <option value="diagnostics">Діагностика</option>
+                <option value="repair">Ремонт</option>
+                <option value="maintenance">Технічне обслуговування</option>
+                <option value="other">Інше</option>
+            </select>
+
+            <label for="message">Додаткова інформація</label>
+            <textarea id="message" name="message" rows="3" placeholder="Опишіть проблему, якщо потрібно"></textarea>
+
+            <button type="submit">Записатись</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
