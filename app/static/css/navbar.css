@@ -1,9 +1,11 @@
 .navbar {
-    background: #23272b;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+  background: rgba(30, 30, 30, 0.2); /* напівпрозорий фон */
+  transition: background 0.3s;
+  backdrop-filter: blur(4px); /* легке розмиття фону (опціонально) */
 }
 
 .navbar-transparent {
@@ -118,7 +120,7 @@
         width: 100%;
         background: #23272b;
         position: absolute;
-        top: 60px;
+        top: 105px;
         left: 0;
         z-index: 1000;
         padding: 1rem 0;

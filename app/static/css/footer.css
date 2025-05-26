@@ -7,6 +7,7 @@
     margin-top: 3rem;
     border-top: 1px solid #333;
     font-size: 1rem;
+    flex-shrink: 0;
 }
 .footer-columns {
     display: flex;
@@ -79,41 +80,11 @@
 
 /* === Адаптивність === */
 @media (max-width: 1200px) {
-    .hero, .hero-bg {
-        width: 100vw;
-        margin-left: -50vw;
-        margin-right: -50vw;
-        left: 50%;
-        right: 50%;
-    }
     .footer-columns {
         max-width: 98vw;
     }
 }
 @media (max-width: 900px) {
-    .hero {
-        min-height: 60vh;
-        border-radius: 0 0 12px 12px;
-    }
-    .hero-content h1 {
-        font-size: 1.5rem;
-    }
-    .hero-content p {
-        font-size: 1rem;
-    }
-    .hero-btn {
-        font-size: 1rem;
-        padding: 0.7rem 1.5rem;
-    }
-    .services-list, .advantages-list, .reviews-list {
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-    }
-    .service-item, .reviews-list blockquote, .advantages-list li {
-        width: 90vw;
-        max-width: 400px;
-    }
     .footer-columns {
         flex-direction: column;
         align-items: center;
@@ -131,12 +102,6 @@
     }
 }
 @media (max-width: 600px) {
-    body {
-        font-size: 1rem;
-    }
-    .hero-content {
-        padding: 1rem 0.2rem;
-    }
     .footer {
         padding: 1.2rem 0 0.5rem 0;
     }

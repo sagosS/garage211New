@@ -1,4 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Галерея</h1>
+<section class="gallery-section">
+  <h1>Галерея</h1>
+  <div class="gallery-grid">
+    {% for img in images %}
+    <div class="gallery-item">
+      <a href="{{ url_for('static', filename='images/gallery/' ~ img.full) }}" data-lightbox="gallery" data-title="{{ img.caption }}">
+        <img src="{{ url_for('static', filename='images/gallery/' ~ img.thumb) }}" alt="{{ img.caption }}">
+      </a>
+      {% if img.caption %}
+      <div class="gallery-caption">{{ img.caption }}</div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+<!-- Lightbox2 scripts -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
 {% endblock %}

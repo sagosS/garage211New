@@ -1,5 +1,5 @@
 GARAGE_NAME = "Гараж 211"
-GARAGE_ADDRESS = "м. Кривий Ріг, Центрально-міський район, вулиця Ньютона, будинок 2А, жилий масив Карачуни"
+GARAGE_ADDRESS = "м. Кривий Ріг, Ц-м район, вул. Ньютона, буд. 2А, жилий масив Карачуни"
 GARAGE_PHONE = "+380982112112"
 GARAGE_EMAIL = "gar211sto@gmail.com"
 SOCIAL_FACEBOOK = "https://www.facebook.com/profile.php?id=61573377493044&locale=uk_UA"

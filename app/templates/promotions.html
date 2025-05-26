@@ -1,4 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Акції</h1>
+<section class="promotions-section">
+  <h1>Акції</h1>
+  <div class="promotions-list">
+    {% for promo in promotions %}
+    <div class="promotion-card">
+      <div class="promotion-card-img" style="background-image: url('{{ promo.image_url }}');"></div>
+      <div class="promotion-card-content">
+        <span class="promotion-card-date">
+          <i class="fas fa-calendar-alt"></i> {{ promo.date }}
+        </span>
+        <h2>{{ promo.title }}</h2>
+        <p>{{ promo.preview }}</p>
+        <a href="{{ url_for('main.promotion_detail', promo_id=promo.id) }}" class="promotion-card-btn">Детальніше</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
 {% endblock %}

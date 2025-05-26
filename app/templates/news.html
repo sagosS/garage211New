@@ -1,4 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Новини</h1>
+<section class="news-section">
+  <h1>Новини</h1>
+  <div class="news-list">
+    {% for item in news %}
+    <div class="news-card">
+      <div class="news-card-img" style="background-image: url('{{ item.image_url }}');"></div>
+      <div class="news-card-content">
+        <span class="news-card-date">
+          <i class="fas fa-calendar-alt"></i> {{ item.date }}
+        </span>
+        <h2>{{ item.title }}</h2>
+        <p>{{ item.preview }}</p>
+        <a href="{{ url_for('main.news_detail', news_id=item.id) }}" class="news-card-btn">Детальніше</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
 {% endblock %}

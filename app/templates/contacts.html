@@ -1,4 +1,79 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Контакти</h1>
+<section class="contacts-section">
+  <h1>Контакти</h1>
+  <div class="contacts-grid">
+    <div class="contacts-info">
+      <div class="contact-item">
+        <span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span>
+        <div>
+          <strong>Адреса:</strong><br>
+          {{ GARAGE_ADDRESS }}
+        </div>
+      </div>
+      <div class="contact-item">
+        <span class="contact-icon"><i class="fas fa-phone"></i></span>
+        <div>
+          <strong>Телефон:</strong><br>
+          <a href="tel:{{ GARAGE_PHONE }}">{{ GARAGE_PHONE }}</a>
+        </div>
+      </div>
+      <div class="contact-item">
+        <span class="contact-icon"><i class="fas fa-envelope"></i></span>
+        <div>
+          <strong>Email:</strong><br>
+          <a href="mailto:{{ GARAGE_EMAIL }}">{{ GARAGE_EMAIL }}</a>
+        </div>
+      </div>
+      <div class="contact-item">
+        <span class="contact-icon"><i class="fab fa-instagram"></i></span>
+        <div>
+          <strong>Instagram:</strong><br>
+          <a href="{{ SOCIAL_INSTAGRAM }}" target="_blank">@gar211sto</a>
+        </div>
+      </div>
+      <div class="contact-item">
+        <span class="contact-icon"><i class="fab fa-telegram"></i></span>
+        <div>
+          <strong>Telegram:</strong><br>
+          <a href="{{ SOCIAL_TELEGRAM }}" target="_blank">@garage211</a>
+        </div>
+      </div>
+      <div class="contact-item">
+        <span class="contact-icon"><i class="fab fa-facebook"></i></span>
+        <div>
+          <strong>Facebook:</strong><br>
+          <a href="{{ SOCIAL_FACEBOOK }}" target="_blank">/garazdvistiodinadcat</a>
+        </div>
+      </div>
+      <div class="contact-item">
+        <span class="contact-icon"><i class="fab fa-whatsapp"></i></span>
+        <div>
+          <strong>WhatsApp:</strong><br>
+          <a href="https://facebook.com/yourpage" target="_blank">WhatsApp.com/yourpage</a>
+        </div>
+      </div>
+      <div class="contact-item">
+        <span class="contact-icon"><i class="fab fa-viber"></i></span>
+        <div>
+          <strong>Viber:</strong><br>
+          <a href="{{ SOCIAL_VIBER }}" target="_blank">Гараж 211</a>
+        </div>
+      </div>
+    </div>
+    <div class="contacts-form-map">
+      <form class="contact-form">
+        <h2>Зворотній зв'язок з {{ GARAGE_NAME }}</h2>
+        <input type="text" name="name" placeholder="Ваше ім'я" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <textarea name="message" rows="4" placeholder="Ваше повідомлення" required></textarea>
+        <button type="submit">Відправити</button>
+      </form>
+      <div class="contacts-map">
+        <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=33.391%2C47.910%2C33.401%2C47.920&amp;layer=mapnik&amp;marker=47.915%2C33.396"
+          style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
 {% endblock %}

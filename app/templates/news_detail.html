@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="news-detail-section">
+  <h1>{{ item.title }}</h1>
+  <div class="news-detail-date">
+    <i class="fas fa-calendar-alt"></i> {{ item.date }}
+  </div>
+  <img src="{{ item.image_url }}" alt="{{ item.title }}" class="news-detail-img">
+  <div class="news-detail-content">
+    {{ item.content }}
+  </div>
+  <a href="{{ url_for('main.news') }}" class="news-card-btn" style="margin-top:2rem;">← До всіх новин</a>
+</section>
+{% endblock %}

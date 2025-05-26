@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="promotion-detail-section">
+  <h1>{{ promo.title }}</h1>
+  <div class="promotion-detail-date">
+    <i class="fas fa-calendar-alt"></i> {{ promo.date }}
+  </div>
+  <img src="{{ promo.image_url }}" alt="{{ promo.title }}" class="promotion-detail-img">
+  <div class="promotion-detail-content">
+    {{ promo.content }}
+  </div>
+  <a href="{{ url_for('main.promotions') }}" class="promotion-card-btn" style="margin-top:2rem;">← До всіх акцій</a>
+</section>
+{% endblock %}
