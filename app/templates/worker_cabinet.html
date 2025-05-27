@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Кабінет працівника</h2>
+<p>Вітаємо, {{ current_user.phone_number }}!</p>
+<a href="{{ url_for('main.logout') }}">Вийти</a>
+{% endblock %}

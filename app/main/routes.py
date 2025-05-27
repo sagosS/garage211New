@@ -1,5 +1,5 @@
 from flask import render_template, redirect, url_for, flash, request, abort
-from flask_login import login_user
+from flask_login import login_user, login_required, logout_user
 from app.models import User
 from werkzeug.security import check_password_hash
 from app.main import main
@@ -15,9 +15,24 @@ def login():
         user = User.query.filter_by(phone_number=request.form['phone_number']).first()
         if user and check_password_hash(user.password, request.form['password']):
             login_user(user)
-            return redirect(url_for('admin.admin_index'))
+            if user.is_admin:
+                return redirect(url_for('admin.admin_index'))
+            else:
+                return redirect(url_for('main.worker_cabinet'))
         flash('Невірний логін або пароль')
     return render_template('login.html')
+
+@main.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('Ви вийшли з кабінету', 'info')
+    return redirect(url_for('main.index'))
+
+@main.route('/cabinet')
+@login_required
+def worker_cabinet():
+    return render_template('worker_cabinet.html')
 
 @main.route('/news')
 def news():
