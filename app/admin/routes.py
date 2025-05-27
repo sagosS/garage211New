@@ -1,14 +1,16 @@
 from flask import render_template, request, redirect, url_for, flash, abort
 from flask_login import login_required, current_user, logout_user
 from werkzeug.security import generate_password_hash
-from app.models import User
+from app.models import User, Client
 from app.extensions import db
 from . import admin
 
 @admin.route('/')
 @login_required
 def admin_index():
-    return render_template('admin/index.html')
+    workers_count = User.query.filter_by(is_admin=False).count()
+    clients_count = Client.query.count()
+    return render_template('admin/index.html', workers_count=workers_count, clients_count=clients_count)
 
 @admin.route('/register_worker', methods=['GET', 'POST'])
 @login_required
