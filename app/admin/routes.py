@@ -1,8 +1,9 @@
 import os
+from datetime import datetime
 from flask import render_template, request, redirect, url_for, flash, abort, current_app
 from flask_login import login_required, current_user, logout_user
 from werkzeug.security import generate_password_hash
-from app.models import User, Client, Service
+from app.models import User, Client, Service, Promotion
 from app.extensions import db
 from . import admin
 from werkzeug.utils import secure_filename
@@ -304,6 +305,87 @@ def edit_service(service_id):
         flash('Послугу оновлено!', 'success')
         return redirect(url_for('admin.admin_services'))
     return render_template('admin/edit_service.html', service=service)
+
+@admin.route('/promotions', methods=['GET', 'POST'])
+@login_required
+def admin_promotions():
+    if request.method == 'POST':
+        title = request.form['title']
+        description = request.form['description']
+        price = request.form.get('price')
+        end_date = request.form.get('end_date')
+        price = float(price) if price else None
+
+        end_date_str = request.form.get('end_date')
+        end_date = None
+        if end_date_str:
+            try:
+                end_date = datetime.strptime(end_date_str, "%d.%m.%Y").date()
+            except ValueError:
+                flash("Невірний формат дати. Використовуйте дд.мм.рррр", "danger")
+                return redirect(request.url)
+
+        image_file = request.files.get('image')
+        image_filename = None
+        if image_file and image_file.filename:
+            image_filename = secure_filename(image_file.filename)
+            upload_path = os.path.join(current_app.static_folder, 'uploads', image_filename)
+            image_file.save(upload_path)
+        promo = Promotion(
+            title=title,
+            description=description,
+            image=image_filename,
+            price=price,
+            end_date=end_date
+        )
+        db.session.add(promo)
+        db.session.commit()
+        flash('Акцію створено!', 'success')
+        return redirect(url_for('admin.admin_promotions'))
+
+    promotions = Promotion.query.order_by(Promotion.id.desc()).all()
+    return render_template('admin/promotions.html', promotions=promotions)
+
+@admin.route('/promotions/edit/<int:promo_id>', methods=['GET', 'POST'])
+@login_required
+def edit_promotion(promo_id):
+    promo = Promotion.query.get_or_404(promo_id)
+    if request.method == 'POST':
+        promo.title = request.form['title']
+        promo.description = request.form['description']
+        price = request.form.get('price')
+        end_date = request.form.get('end_date')
+        promo.price = float(price) if price else None
+
+        end_date_str = request.form.get('end_date')
+        if end_date_str:
+            try:
+                promo.end_date = datetime.strptime(end_date_str, "%d.%m.%Y").date()
+            except ValueError:
+                flash("Невірний формат дати. Використовуйте дд.мм.рррр", "danger")
+                return redirect(request.url)
+        else:
+            promo.end_date = None
+            
+        image_file = request.files.get('image')
+        if image_file and image_file.filename:
+            image_filename = secure_filename(image_file.filename)
+            upload_path = os.path.join(current_app.static_folder, 'uploads', image_filename)
+            image_file.save(upload_path)
+            promo.image = image_filename
+        db.session.commit()
+        flash('Акцію оновлено!', 'success')
+        return redirect(url_for('admin.admin_promotions'))
+    return render_template('admin/edit_promotions.html', promo=promo)
+
+@admin.route('/promotions/delete/<int:promo_id>')
+@login_required
+def delete_promotion(promo_id):
+    promo = Promotion.query.get_or_404(promo_id)
+    db.session.delete(promo)
+    db.session.commit()
+    flash('Акцію видалено!', 'info')
+    return redirect(url_for('admin.admin_promotions'))
 
 @admin.route('/logout')
 @login_required

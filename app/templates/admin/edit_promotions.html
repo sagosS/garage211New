@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+{% include 'includes/admin_navbar.html' %}
+
+
+<div class="promotion-form">
+    <h2>Редагувати акцію</h2>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="text" name="title" value="{{ promo.title }}" required>
+        <textarea name="description" required>{{ promo.description }}</textarea>
+        <input type="number" name="price" step="0.01" value="{{ promo.price }}">
+        <input type="text" name="end_date" value="{{ promo.end_date.strftime('%d.%m.%Y') if promo.end_date else '' }}" placeholder="Дата закінчення (напр. 31.07.2025)">
+        <input type="file" name="image" accept="image/*">
+        {% if promo.image %}
+            <img src="{{ url_for('static', filename='uploads/' ~ promo.image) }}" alt="" style="width:80px;height:54px;border-radius:7px;margin-bottom:10px;">
+        {% endif %}
+        <button type="submit">Зберегти</button>
+        <a href="{{ url_for('admin.admin_promotions') }}" class="edit-btn" style="margin-left:10px;">Скасувати</a>
+    </form>
+</div>
+{% endblock %}

@@ -18,14 +18,24 @@
 <section class="promotions">
     <h2>Акції</h2>
     <div class="promotions-list">
-        <div class="promotion-item">
-            <h3>Знижка 10% на ТО</h3>
-            <p>Тільки цього місяця — знижка на комплексне технічне обслуговування!</p>
-        </div>
-        <div class="promotion-item">
-            <h3>Безкоштовна діагностика</h3>
-            <p>Для нових клієнтів — діагностика ходової частини безкоштовно.</p>
-        </div>
+        {% for p in promotions %}
+            <!-- у index.html -->
+            <div class="promotion-item">
+                {% if p.image %}
+                    <img src="{{ url_for('static', filename='uploads/' ~ p.image) }}" alt="">
+                {% endif %}
+                <h3>{{ p.title }}</h3>
+                <p>{{ p.description }}</p>
+                {% if p.price %}
+                    <div class="promotion-price">{{ p.price|round(2) }} грн</div>
+                {% endif %}
+                {% if p.end_date %}
+                    <div class="promotion-date">До {{ p.end_date }}</div>
+                {% endif %}
+            </div>
+        {% else %}
+                <p style="grid-column:1/-1;text-align:center;color:#888;">Не має акцій.</p>
+        {% endfor %}
     </div>
 </section>
 

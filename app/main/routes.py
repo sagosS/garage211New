@@ -2,7 +2,7 @@ import os
 import json
 from flask import render_template, redirect, url_for, flash, request, abort, current_app
 from flask_login import login_user, login_required, logout_user
-from app.models import User, Service
+from app.models import User, Service, Promotion
 from werkzeug.security import check_password_hash
 from app.main import main
 from app.forms import ApplicationForm
@@ -34,8 +34,9 @@ def index():
             alts = {}
 
     services = Service.query.order_by(Service.id.desc()).all()
-    
-    return render_template('index.html', images=images, alts=alts, services=services,title="Головна сторінка")
+    promotions = Promotion.query.order_by(Promotion.id.desc()).all()
+
+    return render_template('index.html', images=images, alts=alts, services=services, promotions=promotions, title="Головна сторінка")
 
 @main.route('/login', methods=['GET', 'POST'])
 def login():
