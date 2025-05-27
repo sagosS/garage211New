@@ -1,85 +1,129 @@
 {% extends "base.html" %}
-{% block title %}Завантаження зображень{% endblock %}
 {% block content %}
+{% include 'includes/admin_navbar.html' %}
 <style>
-.upload-section {
+.image-upload-section {
     background: #fff;
     border-radius: 16px;
     box-shadow: 0 4px 24px rgba(0,0,0,0.09);
-    max-width: 600px;
+    max-width: 700px;
     margin: 2.5rem auto 2rem auto;
     padding: 2rem 2rem 1.5rem 2rem;
 }
-.upload-section h2 {
-    font-size: 1.5rem;
+.image-upload-section h2 {
+    font-size: 1.4rem;
     font-weight: 700;
     margin-bottom: 1.2rem;
     color: #222;
 }
-.upload-section form {
+.upload-form {
     display: flex;
-    gap: 1rem;
-    align-items: center;
-    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 18px;
+    align-items: flex-end;
+    margin-bottom: 2.2rem;
 }
-.upload-section input[type="file"] {
-    flex: 1;
+.upload-form input[type="file"] {
+    border: 1.5px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 1rem;
+    background: #fffbe6;
+    flex: 1 1 180px;
 }
-.upload-section button {
+.upload-form input[type="text"] {
+    border: 1.5px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 1rem;
+    flex: 2 1 220px;
+    background: #fff;
+}
+.upload-form button {
     background: #ffb300;
     color: #222;
-    padding: 8px 18px;
-    border-radius: 6px;
-    font-weight: 600;
+    padding: 10px 28px;
+    border-radius: 8px;
+    font-weight: 700;
     border: none;
     cursor: pointer;
     transition: background 0.2s;
 }
-.upload-section button:hover {
+.upload-form button:hover {
     background: #ff9800;
     color: #fff;
 }
-.thumbs-list {
+.images-list {
     display: flex;
     flex-wrap: wrap;
     gap: 18px;
     margin-top: 1.5rem;
 }
 .thumb-item {
-    border: 1px solid #eee;
-    border-radius: 8px;
-    padding: 6px;
-    background: #fff;
+    background: #fffbe6;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(255,179,0,0.07);
+    padding: 10px;
+    text-align: center;
+    position: relative;
+    width: 140px;
 }
 .thumb-item img {
-    width: 110px;
-    height: 70px;
+    width: 120px;
+    height: 80px;
     object-fit: cover;
-    border-radius: 6px;
+    border-radius: 7px;
+    margin-bottom: 7px;
+    background: #fff;
+}
+.thumb-alt {
+    font-size: 0.97rem;
+    color: #666;
+    margin-bottom: 4px;
+    min-height: 1.2em;
+}
+.delete-btn {
+    position: absolute;
+    top: 7px;
+    right: 7px;
+    background: #ef4444;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 2px 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.delete-btn:hover {
+    background: #d32f2f;
 }
 @media (max-width: 700px) {
-    .upload-section { padding: 1rem 0.5rem; }
-    .thumb-item img { width: 80px; height: 50px; }
+    .image-upload-section { padding: 1rem 0.5rem; }
+    .thumb-item { width: 100px; }
+    .thumb-item img { width: 80px; height: 54px; }
 }
 </style>
-<div class="upload-section">
-    <h2>Завантажити зображення</h2>
-    <form method="POST" enctype="multipart/form-data">
+<div class="image-upload-section">
+    <h2>Завантажити нове зображення</h2>
+    <form method="POST" enctype="multipart/form-data" class="upload-form">
         <input type="file" name="image" accept="image/*" required>
-        <input type="text" name="alt" placeholder="Опис (alt) для зображення" style="margin-left:10px;max-width:200px;">
+        <input type="text" name="alt" placeholder="Опис (alt) для зображення">
         <button type="submit">Завантажити</button>
     </form>
-    <h4 style="margin-top:2rem;">Мініатюри завантажених зображень:</h4>
-    <div class="thumbs-list">
+
+    <h3 style="margin-bottom:1rem;">Завантажені зображення</h3>
+    <div class="images-list">
         {% for img in images %}
-            <div class="thumb-item" style="position:relative;">
-                <img src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="{{ alts.get(img, '') }}">
-                <form method="POST" action="{{ url_for('admin.delete_image', filename=img) }}" style="position:absolute;top:4px;right:4px;">
-                    <button type="submit" style="background:#ef4444;color:#fff;border:none;border-radius:4px;padding:2px 8px;cursor:pointer;font-size:1.1rem;">×</button>
+            <div class="thumb-item">
+                <form method="POST" action="{{ url_for('admin.admin_images') }}?delete={{ img }}" style="position:absolute;top:0;right:0;">
+                    <button type="submit" class="delete-btn" title="Видалити" onclick="return confirm('Видалити зображення?')">&times;</button>
                 </form>
+                <img src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="{{ alts.get(img, '') }}">
+                <div class="thumb-alt">{{ alts.get(img, '') }}</div>
             </div>
         {% else %}
-            <span style="color:#888;">Зображень ще немає.</span>
+            <p style="color:#888;">Зображень ще немає.</p>
         {% endfor %}
     </div>
 </div>
