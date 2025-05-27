@@ -89,6 +89,9 @@
                 Адмін-панель
             </div>
             <nav class="admin-nav">
+                <a href="{{ url_for('admin.gallery_editor') }}">Редактор галереї</a>
+                <a href="{{ url_for('admin.admin_projects') }}">Проєкт</a>
+                <a href="{{ url_for('admin.admin_images') }}">Зображення</a>
                 <a href="{{ url_for('admin.register_worker') }}" style="background:#098528;color:#fff;border:none;">Додати працівника</a>
             </nav>
         </div>

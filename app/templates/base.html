@@ -62,5 +62,22 @@
     </main>
 
     {% include 'includes/footer.html' %}
+
+    <script>
+    document.querySelectorAll('.gallery-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const src = this.querySelector('img').getAttribute('src');
+            document.getElementById('lightboxImg').setAttribute('src', src);
+            document.getElementById('lightbox').classList.add('active');
+        });
+    });
+    document.getElementById('lightboxClose').onclick = function() {
+        document.getElementById('lightbox').classList.remove('active');
+    };
+    document.getElementById('lightbox').onclick = function(e) {
+        if (e.target === this) this.classList.remove('active');
+    };
+    </script>
 </body>
 </html>

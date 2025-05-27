@@ -30,12 +30,18 @@
 </section>
 
 <!-- GALLERY SECTION -->
-<section class="gallery">
-    <h2>Галерея</h2>
-    <div class="gallery-list">
-        <img src="{{ url_for('static', filename='images/hero-bg.webp') }}" alt="Фото 1">
-        <img src="{{ url_for('static', filename='images/hero-bg.webp') }}" alt="Фото 2">
-        <img src="{{ url_for('static', filename='images/hero-bg.webp') }}" alt="Фото 3">
+<section class="gallery-section">
+    <div class="gallery-title">Галерея</div>
+    <div class="gallery-grid">
+        {% for img in images %}
+            <div class="gallery-item">
+                <a href="{{ url_for('static', filename='uploads/' ~ img) }}" class="gallery-link">
+                    <img class="gallery-img" src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="{{ alts.get(img, '') }}">
+                </a>
+            </div>
+        {% else %}
+            <p style="grid-column:1/-1;text-align:center;color:#888;">Галерея порожня.</p>
+        {% endfor %}
     </div>
 </section>
 
@@ -103,4 +109,9 @@
         </blockquote>
     </div>
 </section>
+
+<div class="lightbox-overlay" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Закрити">&times;</button>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="gallery large">
+</div>
 {% endblock %}

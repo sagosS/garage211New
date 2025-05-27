@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Редактор галереї{% endblock %}
+{% block content %}
+<style>
+.gallery-editor-section {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.09);
+    max-width: 800px;
+    margin: 2.5rem auto 2rem auto;
+    padding: 2rem 2rem 1.5rem 2rem;
+}
+.gallery-editor-section h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+    color: #222;
+}
+.gallery-images-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-top: 1.5rem;
+}
+.gallery-image-item {
+    border: 2px solid #eee;
+    border-radius: 8px;
+    padding: 6px;
+    background: #fff;
+    position: relative;
+    transition: border 0.2s;
+}
+.gallery-image-item.selected {
+    border: 2px solid #ffb300;
+    box-shadow: 0 2px 12px rgba(255,179,0,0.12);
+}
+.gallery-image-item input[type="checkbox"] {
+    position: absolute;
+    top: 7px;
+    left: 7px;
+    width: 18px;
+    height: 18px;
+    accent-color: #ffb300;
+}
+.gallery-image-item img {
+    width: 120px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 6px;
+    display: block;
+}
+@media (max-width: 700px) {
+    .gallery-editor-section { padding: 1rem 0.5rem; }
+    .gallery-image-item img { width: 80px; height: 50px; }
+}
+</style>
+<div class="gallery-editor-section">
+    <h2>Редактор галереї</h2>
+    <form method="POST">
+        <div class="gallery-images-list">
+            {% for img in images %}
+                <label class="gallery-image-item{% if img in selected %} selected{% endif %}">
+                    <input type="checkbox" name="gallery_images" value="{{ img }}" {% if img in selected %}checked{% endif %}>
+                    <img src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="img">
+                </label>
+            {% else %}
+                <span style="color:#888;">Зображень ще немає.</span>
+            {% endfor %}
+        </div>
+        <button type="submit" style="margin-top:2rem;background:#ffb300;color:#222;padding:10px 28px;border-radius:8px;font-weight:700;border:none;cursor:pointer;">Зберегти вибір</button>
+    </form>
+    {% if selected %}
+        <div style="margin-top:2rem;">
+            <h4>Вибрані для галереї:</h4>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;">
+                {% for img in selected %}
+                    <img src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="img" style="width:60px;height:40px;object-fit:cover;border-radius:4px;">
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

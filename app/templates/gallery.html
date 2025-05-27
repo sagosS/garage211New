@@ -5,14 +5,11 @@
   <div class="gallery-grid">
     {% for img in images %}
     <div class="gallery-item">
-      <a href="{{ url_for('static', filename='images/gallery/' ~ img.full) }}" data-lightbox="gallery" data-title="{{ img.caption }}">
-        <img src="{{ url_for('static', filename='images/gallery/' ~ img.thumb) }}" alt="{{ img.caption }}">
-      </a>
-      {% if img.caption %}
-      <div class="gallery-caption">{{ img.caption }}</div>
-      {% endif %}
+        <a href="{{ url_for('static', filename='uploads/' ~ img) }}">
+            <img src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="{{ alts.get(img, '') }}">
+        </a>
     </div>
-    {% endfor %}
+{% endfor %}
   </div>
 </section>
 <!-- Lightbox2 scripts -->

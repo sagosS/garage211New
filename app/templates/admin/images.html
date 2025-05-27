@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Завантаження зображень{% endblock %}
+{% block content %}
+<style>
+.upload-section {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.09);
+    max-width: 600px;
+    margin: 2.5rem auto 2rem auto;
+    padding: 2rem 2rem 1.5rem 2rem;
+}
+.upload-section h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+    color: #222;
+}
+.upload-section form {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+.upload-section input[type="file"] {
+    flex: 1;
+}
+.upload-section button {
+    background: #ffb300;
+    color: #222;
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.upload-section button:hover {
+    background: #ff9800;
+    color: #fff;
+}
+.thumbs-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-top: 1.5rem;
+}
+.thumb-item {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 6px;
+    background: #fff;
+}
+.thumb-item img {
+    width: 110px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+@media (max-width: 700px) {
+    .upload-section { padding: 1rem 0.5rem; }
+    .thumb-item img { width: 80px; height: 50px; }
+}
+</style>
+<div class="upload-section">
+    <h2>Завантажити зображення</h2>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*" required>
+        <input type="text" name="alt" placeholder="Опис (alt) для зображення" style="margin-left:10px;max-width:200px;">
+        <button type="submit">Завантажити</button>
+    </form>
+    <h4 style="margin-top:2rem;">Мініатюри завантажених зображень:</h4>
+    <div class="thumbs-list">
+        {% for img in images %}
+            <div class="thumb-item" style="position:relative;">
+                <img src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="{{ alts.get(img, '') }}">
+                <form method="POST" action="{{ url_for('admin.delete_image', filename=img) }}" style="position:absolute;top:4px;right:4px;">
+                    <button type="submit" style="background:#ef4444;color:#fff;border:none;border-radius:4px;padding:2px 8px;cursor:pointer;font-size:1.1rem;">×</button>
+                </form>
+            </div>
+        {% else %}
+            <span style="color:#888;">Зображень ще немає.</span>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

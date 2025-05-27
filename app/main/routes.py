@@ -1,4 +1,6 @@
-from flask import render_template, redirect, url_for, flash, request, abort
+import os
+import json
+from flask import render_template, redirect, url_for, flash, request, abort, current_app
 from flask_login import login_user, login_required, logout_user
 from app.models import User
 from werkzeug.security import check_password_hash
@@ -7,7 +9,30 @@ from app.forms import ApplicationForm
 
 @main.route('/')
 def index():
-    return render_template('index.html', title="Головна сторінка")
+    upload_folder = os.path.join(current_app.static_folder, 'uploads')
+    gallery_json = os.path.join(upload_folder, 'gallery.json')
+    alts_json = os.path.join(upload_folder, 'alts.json')
+    images = []
+    alts = {}
+
+    # Завантажити вибрані картинки
+    if os.path.exists(gallery_json):
+        try:
+            with open(gallery_json, 'r') as f:
+                content = f.read().strip()
+                if content:
+                    images = json.loads(content)
+        except Exception:
+            images = []
+
+    # Завантажити alt-тексти
+    if os.path.exists(alts_json):
+        try:
+            with open(alts_json, 'r') as f:
+                alts = json.load(f)
+        except Exception:
+            alts = {}
+    return render_template('index.html', images=images, alts=alts, title="Головна сторінка")
 
 @main.route('/login', methods=['GET', 'POST'])
 def login():
@@ -136,13 +161,31 @@ def promotion_detail(promo_id):
 
 @main.route('/gallery')
 def gallery():
-    images = [
-        {"thumb": "thumb1.jpg", "full": "full1.jpg", "caption": "Станція №1"},
-        {"thumb": "thumb2.jpg", "full": "full2.jpg", "caption": "Станція №2"},
-        {"thumb": "thumb3.jpg", "full": "full3.jpg", "caption": "Наші майстри"},
-        # ...ще фото...
-    ]
-    return render_template('gallery.html', title="Галерея", images=images)
+    upload_folder = os.path.join(current_app.static_folder, 'uploads')
+    gallery_json = os.path.join(upload_folder, 'gallery.json')
+    images = []
+    if os.path.exists(gallery_json):
+        with open(gallery_json, 'r') as f:
+            images = json.load(f)
+    # Фільтруємо тільки ті, що реально існують
+    images = [img for img in images if os.path.exists(os.path.join(upload_folder, img))]
+
+    alts_json = os.path.join(upload_folder, 'alts.json')
+    alts = {}
+    if os.path.exists(alts_json):
+        with open(alts_json, 'r') as f:
+            alts = json.load(f)
+    return render_template('gallery.html', images=images, alts=alts)
+
+@main.route('/projects')
+def projects():
+    upload_folder = os.path.join(current_app.static_folder, 'uploads')
+    projects_json = os.path.join(upload_folder, 'projects.json')
+    projects = []
+    if os.path.exists(projects_json):
+        with open(projects_json, 'r') as f:
+            projects = json.load(f)
+    return render_template('projects.html', projects=projects)
 
 @main.route('/contacts')
 def contacts():
