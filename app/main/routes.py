@@ -2,7 +2,7 @@ import os
 import json
 from flask import render_template, redirect, url_for, flash, request, abort, current_app
 from flask_login import login_user, login_required, logout_user
-from app.models import User
+from app.models import User, Service
 from werkzeug.security import check_password_hash
 from app.main import main
 from app.forms import ApplicationForm
@@ -32,7 +32,10 @@ def index():
                 alts = json.load(f)
         except Exception:
             alts = {}
-    return render_template('index.html', images=images, alts=alts, title="Головна сторінка")
+
+    services = Service.query.order_by(Service.id.desc()).all()
+    
+    return render_template('index.html', images=images, alts=alts, services=services,title="Головна сторінка")
 
 @main.route('/login', methods=['GET', 'POST'])
 def login():
@@ -86,7 +89,17 @@ def book():
         # Тут обробка форми, наприклад, збереження в БД чи надсилання email
         flash('Ваша заявка прийнята!', 'success')
         return redirect(url_for('main.book'))
-    return render_template('book.html')
+    settings_path = os.path.join(current_app.static_folder, 'book_form_settings.json')
+    settings = {
+        "services": ["Діагностика", "ТО", "Ремонт ходової", "Заміна масла", "Ремонт гальмівної системи", "Інше"],
+        "year_min": 1980,
+        "year_max": 2030,
+        "year_placeholder": "Наприклад: 2015"
+    }
+    if os.path.exists(settings_path):
+        with open(settings_path, 'r') as f:
+            settings = json.load(f)
+    return render_template('book.html', settings=settings)
 
 @main.route('/news/<int:news_id>')
 def news_detail(news_id):

@@ -193,7 +193,6 @@
     min-height: 1.2em;
 }
 .delete-btn {
-    position: absolute;
     top: 7px;
     right: 7px;
     background: #ef4444;

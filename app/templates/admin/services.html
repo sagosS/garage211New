@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block content %}
+{% include 'includes/admin_navbar.html' %}
+<style>
+.service-form, .service-table {
+    background: #ffffff;
+    border-radius: 0 0 14px 14px;
+    /* box-shadow: 0 2px 16px #ffb30022; */
+    padding: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+.service-form h2 { font-size: 1.2rem; color: #ff9800; margin-bottom: 1rem; }
+.service-form input, .service-form textarea { width: 100%; margin-bottom: 1rem; border-radius: 8px; border: 1.5px solid #e5e7eb; padding: 0.7rem 1rem; background: #fffbe6; }
+.service-form button {
+    background: #ffb300;
+    color: #222;
+    border: none;
+    border-radius: 8px;
+    padding: 21px 47px;
+    font-size: 1.5em;
+    font-weight: 700;
+    cursor: pointer;
+    float: right;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+.service-form button:hover { background: #ff9800; color: #fff; }
+.service-table table { width: 100%; border-collapse: collapse; }
+.service-table th, .service-table td { padding: 10px; border-bottom: 1px solid #eee; text-align: left; }
+.service-table th { background: #fffbe6; color: #ff9800; }
+.service-table img { width: 80px; height: 54px; object-fit: cover; border-radius: 7px; background: #fff; }
+.service-table a, .service-table button { margin-right: 8px; }
+.edit-btn, .delete-btn {
+    background: none;
+    border: none;
+    padding: 2px;
+    margin-right: 6px;
+    cursor: pointer;
+    vertical-align: middle;
+    transition: background 0.18s;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.edit-btn:hover {
+    background: #fffbe6;
+}
+.delete-btn:hover {
+    background: #ffeaea;
+}
+.edit-btn svg, .delete-btn svg {
+    display: block;
+}
+</style>
+<div class="service-form">
+    <h2>Створити послугу</h2>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="text" name="title" placeholder="Назва послуги" required>
+        <textarea name="description" placeholder="Опис послуги" required></textarea>
+        <input type="number" name="price_from" step="0.01" placeholder="Ціна від" required>
+        <input type="number" name="price_to" step="0.01" placeholder="Ціна до" required>
+        <input type="file" name="image" accept="image/*" required>
+        <button type="submit">Додати послугу</button>
+    </form>
+    <div class="service-table">
+        <h2>Список послуг</h2>
+        <table>
+            <tr>
+                <th>Картинка</th>
+                <th>Назва</th>
+                <th>Опис</th>
+                <th>Ціна (від-до)</th>
+                <th>Дії</th>
+            </tr>
+            {% for s in services %}
+            <tr>
+                <td>
+                    {% if s.image %}
+                        <img src="{{ url_for('static', filename='uploads/' ~ s.image) }}" alt="">
+                    {% endif %}
+                </td>
+                <td>{{ s.title }}</td>
+                <td>{{ s.description }}</td>
+                <td>{{ s.price_from|round(2) }}&nbsp;–&nbsp;{{ s.price_to|round(2) }} грн</td>
+                <td>
+                    <a href="{{ url_for('admin.edit_service', service_id=s.id) }}" class="edit-btn" title="Редагувати">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 21h17M14.06 9.02l.92.92m2.12-2.12l-2.12-2.12a1.5 1.5 0 0 0-2.12 0l-7.07 7.07a1 1 0 0 0-.26.46l-1 4a.5.5 0 0 0 .61.61l4-1a1 1 0 0 0 .46-.26l7.07-7.07a1.5 1.5 0 0 0 0-2.12z" stroke="#ffb300" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </a>
+                    <a href="{{ url_for('admin.delete_service', service_id=s.id) }}" class="delete-btn" title="Видалити" onclick="return confirm('Видалити цю послугу?')">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6h16zm-5 4v6m-4-6v6" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+{% endblock %}

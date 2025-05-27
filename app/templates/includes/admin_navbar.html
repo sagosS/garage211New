@@ -54,6 +54,14 @@
         <svg viewBox="0 0 24 24"><path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zm-2 0H5V5h14zm-7-3l2.03-2.71 2.97 3.71H7z"/></svg>
         Зображення
     </a>
+    <a href="{{ url_for('admin.edit_book_form') }}" class="admin-nav-link{% if request.endpoint == 'admin.admin_images' %} active{% endif %}">
+        <svg viewBox="0 0 24 24"><path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zm-2 0H5V5h14zm-7-3l2.03-2.71 2.97 3.71H7z"/></svg>
+        Ред. форму Записатись
+    </a>
+    <a href="{{ url_for('admin.admin_services') }}" class="admin-nav-link{% if request.endpoint == 'admin.admin_images' %} active{% endif %}">
+        <svg viewBox="0 0 24 24"><path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zm-2 0H5V5h14zm-7-3l2.03-2.71 2.97 3.71H7z"/></svg>
+        Послуги
+    </a>
     <a href="{{ url_for('admin.register_worker') }}" class="admin-nav-link{% if request.endpoint == 'admin.register_worker' %} active{% endif %}">
         <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 8 1.34 8 4v2H4v-2c0-2.66 5.3-4 8-4zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg>
         Додати працівника

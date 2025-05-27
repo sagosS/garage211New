@@ -29,18 +29,21 @@
     </div>
 </section>
 
-<!-- GALLERY SECTION -->
-<section class="gallery-section">
-    <div class="gallery-title">Галерея</div>
-    <div class="gallery-grid">
-        {% for img in images %}
-            <div class="gallery-item">
-                <a href="{{ url_for('static', filename='uploads/' ~ img) }}" class="gallery-link">
-                    <img class="gallery-img" src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="{{ alts.get(img, '') }}">
-                </a>
-            </div>
+<!-- SERVICES SECTION -->
+<section class="services">
+    <h2>Наші послуги</h2>
+    <div class="services-list">
+        {% for s in services %}
+                <div class="service-card">
+                    {% if s.image %}
+                        <img src="{{ url_for('static', filename='uploads/' ~ s.image) }}" alt="">
+                    {% endif %}
+                    <h3>{{ s.title }}</h3>
+                    <div>{{ s.description }}</div>
+                    <div class="service-price">{{ s.price_from|round(2) }} – {{ s.price_to|round(2) }} грн</div>
+                </div>
         {% else %}
-            <p style="grid-column:1/-1;text-align:center;color:#888;">Галерея порожня.</p>
+                    <p style="grid-column:1/-1;text-align:center;color:#888;">Не має послуг.</p>
         {% endfor %}
     </div>
 </section>
@@ -62,25 +65,19 @@
     </div>
 </section>
 
-<!-- SERVICES SECTION -->
-<section class="services">
-    <h2>Наші послуги</h2>
-    <div class="services-list">
-        <div class="service-item">
-            <img src="{{ url_for('static', filename='images/hero-bg.webp') }}" alt="Діагностика">
-            <h3>Діагностика</h3>
-            <p>Сучасне обладнання для точної діагностики авто.</p>
-        </div>
-        <div class="service-item">
-            <img src="{{ url_for('static', filename='images/hero-bg.webp') }}" alt="Ремонт">
-            <h3>Ремонт</h3>
-            <p>Всі види ремонту: ходова, двигун, електрика.</p>
-        </div>
-        <div class="service-item">
-            <img src="{{ url_for('static', filename='images/hero-bg.webp') }}" alt="ТО">
-            <h3>Технічне обслуговування</h3>
-            <p>Регулярне ТО для довгої служби вашого авто.</p>
-        </div>
+<!-- GALLERY SECTION -->
+<section class="gallery-section">
+    <h2>Галерея</div>
+    <div class="gallery-grid">
+        {% for img in images %}
+            <div class="gallery-item">
+                <a href="{{ url_for('static', filename='uploads/' ~ img) }}" class="gallery-link">
+                    <img class="gallery-img" src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="{{ alts.get(img, '') }}">
+                </a>
+            </div>
+        {% else %}
+            <p style="grid-column:1/-1;text-align:center;color:#888;">Галерея порожня.</p>
+        {% endfor %}
     </div>
 </section>
 

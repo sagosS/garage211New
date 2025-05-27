@@ -1,14 +1,13 @@
 from flask import Flask
 from app.extensions import db, migrate, login_manager
-from app.models import User, Client
 from app.static_data import (
     GARAGE_NAME, GARAGE_ADDRESS, GARAGE_PHONE, GARAGE_EMAIL,
     SOCIAL_FACEBOOK, SOCIAL_INSTAGRAM, SOCIAL_TELEGRAM, SOCIAL_VIBER
 )
 from werkzeug.security import generate_password_hash
+from app.models import User
 
 def create_admin():
-    from app.models import User
     from app.extensions import db
     admin_phone = "+380000000000"
     admin_password = "123456"  # Змініть після першого входу!

@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block content %}
+{% include 'includes/admin_navbar.html' %}
+<style>
+.edit-form-section {
+    max-width: 540px;
+    margin: 2.5rem auto;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.09);
+    padding: 2.2rem 1.5rem 1.5rem 1.5rem;
+}
+.edit-form-section h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #ff9800;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+.edit-form label {
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    display: block;
+    color: #222;
+}
+.edit-form input, .edit-form textarea {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    border: 1.5px solid #e5e7eb;
+    margin-bottom: 1.1rem;
+    font-size: 1.05rem;
+    background: #fffbe6;
+    transition: border 0.2s;
+}
+.edit-form input:focus, .edit-form textarea:focus {
+    border-color: #ffb300;
+    outline: none;
+}
+.edit-form button {
+    background: #ffb300;
+    color: #222;
+    padding: 12px 0;
+    border-radius: 8px;
+    font-weight: 700;
+    border: none;
+    width: 100%;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.edit-form button:hover {
+    background: #ff9800;
+    color: #fff;
+}
+</style>
+<div class="edit-form-section">
+    <h2>Редагування форми "Записатись на обслуговування"</h2>
+    <form method="POST" class="edit-form">
+        <label for="services">Список послуг (кожна з нового рядка):</label>
+        <textarea id="services" name="services" rows="6">{{ settings.services|join('\n') }}</textarea>
+
+        <label for="year_min">Мінімальний рік випуску авто:</label>
+        <input type="number" id="year_min" name="year_min" value="{{ settings.year_min }}">
+
+        <label for="year_max">Максимальний рік випуску авто:</label>
+        <input type="number" id="year_max" name="year_max" value="{{ settings.year_max }}">
+
+        <label for="year_placeholder">Плейсхолдер для року:</label>
+        <input type="text" id="year_placeholder" name="year_placeholder" value="{{ settings.year_placeholder }}">
+
+        <button type="submit">Зберегти зміни</button>
+    </form>
+</div>
+{% endblock %}

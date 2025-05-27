@@ -2,7 +2,7 @@ import os
 from flask import render_template, request, redirect, url_for, flash, abort, current_app
 from flask_login import login_required, current_user, logout_user
 from werkzeug.security import generate_password_hash
-from app.models import User, Client
+from app.models import User, Client, Service
 from app.extensions import db
 from . import admin
 from werkzeug.utils import secure_filename
@@ -211,6 +211,99 @@ def admin_projects():
                 flash('Вкажіть назву та виберіть картинки.', 'danger')
 
     return render_template('admin/projects.html', images=images, projects=projects, edit_project=edit_project)
+
+@admin.route('/edit_book_form', methods=['GET', 'POST'])
+@login_required
+def edit_book_form():
+    settings_path = os.path.join(current_app.static_folder, 'book_form_settings.json')
+    if os.path.exists(settings_path):
+        with open(settings_path, 'r') as f:
+            settings = json.load(f)
+    else:
+        settings = {
+            "services": ["Діагностика", "ТО", "Ремонт ходової", "Заміна масла", "Ремонт гальмівної системи", "Інше"],
+            "year_min": 1980,
+            "year_max": 2030,
+            "year_placeholder": "Наприклад: 2015"
+        }
+
+    if request.method == 'POST':
+        services = request.form.get('services', '').split('\n')
+        year_min = int(request.form.get('year_min', 1980))
+        year_max = int(request.form.get('year_max', 2030))
+        year_placeholder = request.form.get('year_placeholder', 'Наприклад: 2015')
+        settings = {
+            "services": [s.strip() for s in services if s.strip()],
+            "year_min": year_min,
+            "year_max": year_max,
+            "year_placeholder": year_placeholder
+        }
+        with open(settings_path, 'w') as f:
+            json.dump(settings, f, ensure_ascii=False, indent=2)
+        flash('Налаштування форми оновлено!', 'success')
+        return redirect(url_for('admin.edit_book_form'))
+
+    return render_template('admin/edit_book_form.html', settings=settings)
+
+
+
+@admin.route('/services', methods=['GET', 'POST'])
+@login_required
+def admin_services():
+    if request.method == 'POST':
+        title = request.form['title']
+        description = request.form['description']
+        price_from = float(request.form['price_from'])
+        price_to = float(request.form['price_to'])
+        image_file = request.files.get('image')
+        image_filename = None
+        if image_file and image_file.filename:
+            image_filename = secure_filename(image_file.filename)
+            upload_path = os.path.join(current_app.static_folder, 'uploads', image_filename)
+            image_file.save(upload_path)
+        service = Service(
+            title=title,
+            description=description,
+            image=image_filename,
+            price_from=price_from,
+            price_to=price_to
+        )
+        db.session.add(service)
+        db.session.commit()
+        flash('Послугу створено!', 'success')
+        return redirect(url_for('admin.admin_services'))
+
+    services = Service.query.order_by(Service.id.desc()).all()
+    return render_template('admin/services.html', services=services)
+
+@admin.route('/services/delete/<int:service_id>')
+@login_required
+def delete_service(service_id):
+    service = Service.query.get_or_404(service_id)
+    db.session.delete(service)
+    db.session.commit()
+    flash('Послугу видалено!', 'info')
+    return redirect(url_for('admin.admin_services'))
+
+@admin.route('/services/edit/<int:service_id>', methods=['GET', 'POST'])
+@login_required
+def edit_service(service_id):
+    service = Service.query.get_or_404(service_id)
+    if request.method == 'POST':
+        service.title = request.form['title']
+        service.description = request.form['description']
+        service.price_from = float(request.form['price_from'])
+        service.price_to = float(request.form['price_to'])
+        image_file = request.files.get('image')
+        if image_file and image_file.filename:
+            image_filename = secure_filename(image_file.filename)
+            upload_path = os.path.join(current_app.static_folder, 'uploads', image_filename)
+            image_file.save(upload_path)
+            service.image = image_filename
+        db.session.commit()
+        flash('Послугу оновлено!', 'success')
+        return redirect(url_for('admin.admin_services'))
+    return render_template('admin/edit_service.html', service=service)
 
 @admin.route('/logout')
 @login_required
