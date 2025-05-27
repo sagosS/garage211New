@@ -2,59 +2,6 @@
 {% block title %}Редактор галереї{% endblock %}
 {% block content %}
 {% include 'includes/admin_navbar.html' %}
-<style>
-.gallery-editor-section {
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.09);
-    max-width: 800px;
-    margin: 2.5rem auto 2rem auto;
-    padding: 2rem 2rem 1.5rem 2rem;
-}
-.gallery-editor-section h2 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 1.2rem;
-    color: #222;
-}
-.gallery-images-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 18px;
-    margin-top: 1.5rem;
-}
-.gallery-image-item {
-    border: 2px solid #eee;
-    border-radius: 8px;
-    padding: 6px;
-    background: #fff;
-    position: relative;
-    transition: border 0.2s;
-}
-.gallery-image-item.selected {
-    border: 2px solid #ffb300;
-    box-shadow: 0 2px 12px rgba(255,179,0,0.12);
-}
-.gallery-image-item input[type="checkbox"] {
-    position: absolute;
-    top: 7px;
-    left: 7px;
-    width: 18px;
-    height: 18px;
-    accent-color: #ffb300;
-}
-.gallery-image-item img {
-    width: 120px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 6px;
-    display: block;
-}
-@media (max-width: 700px) {
-    .gallery-editor-section { padding: 1rem 0.5rem; }
-    .gallery-image-item img { width: 80px; height: 50px; }
-}
-</style>
 <div class="gallery-editor-section">
     <h2>Редактор галереї</h2>
     <form method="POST">

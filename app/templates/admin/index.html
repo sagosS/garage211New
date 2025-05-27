@@ -1,67 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Адмін-панель{% endblock %}
 {% block content %}
-<style>
-.admin-dashboard {
-    min-height: 80vh;
-    background: #f6f8fa;
-    padding: 2.5rem 0;
-}
-.admin-panel {
-    max-width: 1100px;
-    margin: 0 auto;
-    background: #fff;
-    border-radius: 18px;
-    box-shadow: 0 6px 32px rgba(0,0,0,0.10);
-    padding: 2.5rem 2rem 2rem 2rem;
-}
-.admin-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 2.5rem;
-}
-.admin-title {
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: #222;
-    letter-spacing: 1px;
-}
-.admin-cards {
-    display: flex;
-    gap: 2rem;
-    flex-wrap: wrap;
-    margin-bottom: 2.5rem;
-}
-.admin-card {
-    flex: 1 1 250px;
-    background: #fffbe6;
-    border-radius: 14px;
-    box-shadow: 0 2px 12px rgba(255,179,0,0.08);
-    padding: 2rem 1.5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    min-width: 220px;
-    margin-bottom: 1rem;
-}
-.admin-card-title {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #ff9800;
-    margin-bottom: 0.7rem;
-}
-.admin-card-value {
-    font-size: 2.1rem;
-    font-weight: 700;
-    color: #222;
-}
-@media (max-width: 900px) {
-    .admin-panel { padding: 1.2rem 0.5rem; }
-    .admin-header { flex-direction: column; gap: 1.2rem; align-items: flex-start; }
-    .admin-cards { flex-direction: column; gap: 1.2rem; }
-}
-</style>
+{% include 'includes/admin_navbar.html' %}
 <div class="admin-dashboard">
     <div class="admin-panel">
         <div class="admin-header">
@@ -70,7 +10,6 @@
                 Адмін-панель
             </div>            
         </div>
-        <div>{% include 'includes/admin_navbar.html' %}</div>
         <div class="admin-cards">
             <div class="admin-card">
                 <div class="admin-card-title">Кількість працівників</div>
