@@ -15,12 +15,12 @@
 }
 
 .navbar-container {
-    max-width: 1100px;
-    margin: 0 auto;
     display: flex;
+    margin-left: 30px;
+    margin-right: 30px;
     align-items: center;
     justify-content: space-between;
-    padding: 0 1rem;
+    /* ...інші властивості... */
 }
 
 .navbar-brand {
@@ -33,6 +33,7 @@
 }
 
 .navbar-menu {
+    margin-left: auto;
     list-style: none;
     display: flex;
     gap: 1.5rem;
@@ -41,26 +42,60 @@
     flex: 1;
     justify-content: flex-end;
 }
-
 .navbar-menu li {
-    display: flex;
-    align-items: center;
+  display: inline-block;
+  margin-right: 10px;
 }
 
-.navbar-menu a {
-    color: #f1f1f1;
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 1.1rem;
-    padding: 0.5rem 0.8rem;
-    border-radius: 4px;
-    transition: background 0.2s, color 0.2s;
+.navbar-menu li a {
+  position: relative;
+  color: #fff5c3;
+  text-decoration: none;
+  padding: 8px 0;
+  transition: color 0.2s;
+  font-weight: 500;
 }
 
-.navbar-menu a:hover,
-.navbar-menu a.active {
-    background: #ffb300;
-    color: #23272b;
+.navbar-menu li a::after {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 2px;
+  background: #ffb300;
+  transform: scaleX(0);
+  transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+  border-radius: 2px;
+}
+
+.navbar-menu li a:hover,
+.navbar-menu li a:focus {
+  color: #ffb300;
+}
+
+.navbar-menu li a:hover::after,
+.navbar-menu li a:focus::after {
+  transform: scaleX(1);
+}
+
+/* Жовта кнопка для "Записатись" */
+.navbar-btn-yellow {
+  background: #ffb300;
+  color: #222222;
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-weight: 700;
+  text-decoration: none;
+  margin-left: 18px;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(255,179,0,0.08);
+  display: inline-block;
+}
+
+.navbar-btn-yellow:hover,
+.navbar-btn-yellow:focus {
+  background: #ff9800;
+  color: #fff;
 }
 
 .navbar-btn {
