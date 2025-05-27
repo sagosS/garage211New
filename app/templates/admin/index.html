@@ -1,5 +1,28 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Адмінка</h1>
-<p>Вітаємо в адміністративній панелі!</p>
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Адмін-панель</h1>
+        <nav>
+            <ul>
+                
+                <li><a href="{{ url_for('admin.register_worker') }}">Додати працівника</a></li>
+                <li><a href="{{ url_for('admin.admin_logout') }}">Вийти</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+    </main>
+    <footer>
+        <p>&copy; 2025 Назва СТО</p>
+    </footer>
+</body>
+</html>
 {% endblock %}

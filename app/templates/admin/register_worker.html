@@ -1,0 +1,20 @@
+{% extends "admin/index.html" %}
+{% block content %}
+<div class="login-container">
+    <div class="login-box">
+        <h1>Реєстрація працівника</h1>
+        <form method="POST" action="{{ url_for('admin.register_worker') }}">
+            <label for="phone_number">Номер телефону</label>
+            <input type="tel" id="phone_number" name="phone_number" required placeholder="+380 XX XXX XX XX">
+
+            <label for="password">Пароль</label>
+            <input type="password" id="password" name="password" required placeholder="Введіть пароль">
+
+            <label for="password2">Повторіть пароль</label>
+            <input type="password" id="password2" name="password2" required placeholder="Ще раз пароль">
+
+            <button type="submit">Зареєструвати</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
