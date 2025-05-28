@@ -3,7 +3,7 @@ from datetime import datetime
 from flask import render_template, request, redirect, url_for, flash, abort, current_app
 from flask_login import login_required, current_user, logout_user
 from werkzeug.security import generate_password_hash
-from app.models import User, Client, Service, Promotion
+from app.models import User, Client, Service, Promotion, News
 from app.extensions import db
 from . import admin
 from werkzeug.utils import secure_filename
@@ -391,6 +391,53 @@ def delete_promotion(promo_id):
     db.session.commit()
     flash('Акцію видалено!', 'info')
     return redirect(url_for('admin.admin_promotions'))
+
+@admin.route('/news', methods=['GET', 'POST'])
+@login_required
+def admin_news():
+    if request.method == 'POST':
+        title = request.form['title']
+        description = request.form['description']
+        date_str = request.form['date']
+        try:
+            date = datetime.strptime(date_str, "%d.%m.%Y").date()
+        except ValueError:
+            flash("Невірний формат дати. Використовуйте дд.мм.рррр", "danger")
+            return redirect(request.url)
+        news = News(title=title, description=description, date=date)
+        db.session.add(news)
+        db.session.commit()
+        flash('Новину додано!', 'success')
+        return redirect(url_for('admin.admin_news'))
+    news_list = News.query.order_by(News.date.desc()).all()
+    return render_template('admin/news.html', news_list=news_list)
+
+@admin.route('/news/edit/<int:news_id>', methods=['GET', 'POST'])
+@login_required
+def edit_news(news_id):
+    news = News.query.get_or_404(news_id)
+    if request.method == 'POST':
+        news.title = request.form['title']
+        news.description = request.form['description']
+        date_str = request.form['date']
+        try:
+            news.date = datetime.strptime(date_str, "%d.%m.%Y").date()
+        except ValueError:
+            flash("Невірний формат дати. Використовуйте дд.мм.рррр", "danger")
+            return redirect(request.url)
+        db.session.commit()
+        flash('Новину оновлено!', 'success')
+        return redirect(url_for('admin.admin_news'))
+    return render_template('admin/edit_news.html', news=news)
+
+@admin.route('/news/delete/<int:news_id>')
+@login_required
+def delete_news(news_id):
+    news = News.query.get_or_404(news_id)
+    db.session.delete(news)
+    db.session.commit()
+    flash('Новину видалено!', 'success')
+    return redirect(url_for('admin.admin_news'))
 
 @admin.route('/logout')
 @login_required

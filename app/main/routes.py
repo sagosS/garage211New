@@ -2,7 +2,7 @@ import os
 import json
 from flask import render_template, redirect, url_for, flash, request, abort, current_app
 from flask_login import login_user, login_required, logout_user
-from app.models import User, Service, Promotion
+from app.models import User, Service, Promotion, News
 from werkzeug.security import check_password_hash
 from app.main import main
 from app.forms import ApplicationForm
@@ -35,8 +35,9 @@ def index():
 
     services = Service.query.order_by(Service.id.desc()).all()
     promotions = Promotion.query.order_by(Promotion.id.desc()).all()
+    news_list = News.query.order_by(News.date.desc()).limit(3).all()  # 3 останні новини
 
-    return render_template('index.html', images=images, alts=alts, services=services, promotions=promotions, title="Головна сторінка")
+    return render_template('index.html', images=images, alts=alts, services=services, promotions=promotions, news_list=news_list, title="Головна сторінка")
 
 @main.route('/login', methods=['GET', 'POST'])
 def login():
@@ -65,24 +66,8 @@ def worker_cabinet():
 
 @main.route('/news')
 def news():
-    news = [
-        {
-            "id": 1,
-            "title": "Відкриття нового сервісу",
-            "date": "2025-05-20",
-            "preview": "Ми відкрили новий сучасний сервіс для наших клієнтів!",
-            "image_url": url_for('static', filename='images/news1.jpg')
-        },
-        {
-            "id": 2,
-            "title": "Весняна акція",
-            "date": "2025-04-15",
-            "preview": "Знижки на всі види робіт до кінця квітня!",
-            "image_url": url_for('static', filename='images/news2.jpg')
-        },
-        # ...ще новини...
-    ]
-    return render_template('news.html', title="Новини", news=news)
+    news_list = News.query.order_by(News.date.desc()).all()
+    return render_template('news_list.html', news_list=news_list)
 
 @main.route('/book', methods=['GET', 'POST'])
 def book():

@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block content %}
+{% include 'includes/admin_navbar.html' %}
+<section class="admin-news-section">
+    <h2>Додати новину</h2>
+    <form method="POST" class="admin-news-form">
+        <input type="text" name="title" placeholder="Заголовок новини" required>
+        <textarea name="description" placeholder="Опис новини" required rows="3"></textarea>
+        <input type="text" name="date" placeholder="дд.мм.рррр" required>
+        <button type="submit">Додати</button>
+    </form>
+
+    <h2 style="margin-top:2.5rem;">Список новин</h2>
+    <div class="admin-news-table-wrap">
+        <table class="admin-news-table">
+            <tr>
+                <th>Заголовок</th>
+                <th>Опис</th>
+                <th>Дата</th>
+                <th>Дії</th>
+            </tr>
+            {% for n in news_list %}
+            <tr>
+                <td style="font-weight:600;">{{ n.title }}</td>
+                <td style="max-width:350px;">{{ n.description }}</td>
+                <td>{{ n.date.strftime('%d.%m.%Y') }}</td>
+                <td>
+                    <a href="{{ url_for('admin.edit_news', news_id=n.id) }}" class="edit-btn" title="Редагувати">
+                        <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M4 21h17M14.06 9.02l.92.92m2.12-2.12l-2.12-2.12a1.5 1.5 0 0 0-2.12 0l-7.07 7.07a1 1 0 0 0-.26.46l-1 4a.5.5 0 0 0 .61.61l4-1a1 1 0 0 0 .46-.26l7.07-7.07a1.5 1.5 0 0 0 0-2.12z" stroke="#ffb300" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </a>
+                    <a href="{{ url_for('admin.delete_news', news_id=n.id) }}" class="delete-btn" title="Видалити"
+                        onclick="return confirm('Видалити цю новину?')">
+                        <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6h16zm-5 4v6m-4-6v6" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</section>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul class="flashes">
+      {% for category, message in messages %}
+        <li class="flash-{{ category }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+<style>
+.admin-news-section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2.5rem 1rem 2rem 1rem;
+}
+.admin-news-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+    align-items: flex-end;
+    background: #fffbe6;
+    border-radius: 12px;
+    padding: 1.2rem 1.5rem 1.2rem 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 12px rgba(255,179,0,0.08);
+}
+.admin-news-form input[type="text"], .admin-news-form textarea {
+    flex: 1 1 200px;
+    padding: 0.7rem 1rem;
+    border-radius: 7px;
+    border: 1px solid #ffe082;
+    font-size: 1rem;
+    background: #fff;
+    transition: border 0.2s;
+}
+.admin-news-form input[type="text"]:focus, .admin-news-form textarea:focus {
+    border: 1.5px solid #ffb300;
+    outline: none;
+}
+.admin-news-form button {
+    background: #ffb300;
+    color: #fff;
+    font-weight: 700;
+    border: none;
+    border-radius: 7px;
+    padding: 0.7rem 2.2rem;
+    font-size: 1.08rem;
+    cursor: pointer;
+    transition: background 0.18s;
+}
+.admin-news-form button:hover {
+    background: #ef4444;
+}
+.admin-news-table-wrap {
+    overflow-x: auto;
+}
+.admin-news-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(255,179,0,0.08);
+    overflow: hidden;
+}
+.admin-news-table th, .admin-news-table td {
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid #ffe082;
+    text-align: left;
+    vertical-align: top;
+}
+.admin-news-table th {
+    background: #fffbe6;
+    font-weight: 700;
+    color: #ff9800;
+    font-size: 1.05rem;
+}
+.admin-news-table tr:last-child td {
+    border-bottom: none;
+}
+.edit-btn, .delete-btn {
+    display: inline-block;
+    margin-right: 0.5rem;
+    vertical-align: middle;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+.edit-btn svg { vertical-align: middle; }
+.delete-btn svg { vertical-align: middle; }
+.delete-btn:hover svg path { stroke: #b91c1c; }
+.edit-btn:hover svg path { stroke: #f59e42; }
+@media (max-width: 700px) {
+    .admin-news-form { flex-direction: column; gap: 0.7rem; }
+    .admin-news-table th, .admin-news-table td { padding: 0.6rem 0.5rem; }
+}
+</style>
+{% endblock %}

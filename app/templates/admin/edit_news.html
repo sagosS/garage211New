@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Редагувати новину</h2>
+<form method="POST">
+    <input type="text" name="title" value="{{ news.title }}" required>
+    <textarea name="description" required>{{ news.description }}</textarea>
+    <input type="text" name="date" value="{{ news.date.strftime('%d.%m.%Y') }}" required>
+    <button type="submit">Зберегти</button>
+    <a href="{{ url_for('admin.admin_news') }}">Скасувати</a>
+</form>
+{% endblock %}

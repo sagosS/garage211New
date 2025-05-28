@@ -59,21 +59,22 @@
 </section>
 
 <!-- NEWS SECTION -->
-<section class="news">
-    <h2>Новини</h2>
-    <div class="news-list">
-        <div class="news-item">
-            <h3>Оновлення обладнання</h3>
-            <p>Ми встановили новий стенд для розвал-сходження!</p>
-            <span class="news-date">25 травня 2025</span>
+<section class="main-news-block">
+    <h2>Останні новини</h2>
+    <div class="main-news-list">
+        {% for n in news_list %}
+        <div class="main-news-card">
+            <div class="main-news-date">{{ n.date.strftime('%d.%m.%Y') }}</div>
+            <div class="main-news-title">{{ n.title }}</div>
+            <div class="main-news-desc">{{ n.description }}</div>
         </div>
-        <div class="news-item">
-            <h3>Новий майстер</h3>
-            <p>До нашої команди приєднався досвідчений автоелектрик.</p>
-            <span class="news-date">20 травня 2025</span>
-        </div>
+        {% else %}
+        <div style="color:#888;">Новин ще немає.</div>
+        {% endfor %}
     </div>
+    <a href="{{ url_for('main.news') }}" class="main-news-more">Всі новини →</a>
 </section>
+<style>
 
 <!-- GALLERY SECTION -->
 <section class="gallery-section">
