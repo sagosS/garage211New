@@ -5,7 +5,6 @@ from flask_login import login_user, login_required, logout_user
 from app.models import User, Service, Promotion, News
 from werkzeug.security import check_password_hash
 from app.main import main
-from app.forms import ApplicationForm
 
 @main.route('/')
 def index():
