@@ -49,7 +49,7 @@ def login():
                 return redirect(url_for('admin.admin_index'))
             else:
                 return redirect(url_for('main.worker_cabinet'))
-        flash('Невірний логін або пароль')
+        flash('login_error', 'danger')
     return render_template('login.html')
 
 @main.route('/logout')
@@ -169,8 +169,6 @@ def contacts():
             msg = ContactMessage(name=name, phone=phone, message=message)
             db.session.add(msg)
             db.session.commit()
-            flash('Ваше повідомлення надіслано!', 'success')
+            flash('contact_success', 'success')
             return redirect(url_for('main.contacts'))
-        else:
-            flash('Заповніть всі поля!', 'danger')
     return render_template('contacts.html', title="Контакти")
