@@ -8,9 +8,19 @@
         <textarea name="description" required>{{ service.description }}</textarea>
         <input type="number" name="price_from" step="0.01" value="{{ service.price_from }}" required>
         <input type="number" name="price_to" step="0.01" value="{{ service.price_to }}" required>
+        <label for="promotion_id">Акція (необов'язково):</label>
+        <select name="promotion_id" id="promotion_id">
+            <option value="">Без акції</option>
+            {% for promo in promotions %}
+            <option value="{{ promo.id }}" {% if service.promotion_id==promo.id %}selected{% endif %}>
+                {{ promo.title }}
+            </option>
+            {% endfor %}
+        </select>
         <input type="file" name="image" accept="image/*">
         {% if service.image %}
-            <img src="{{ url_for('static', filename='uploads/' ~ service.image) }}" alt="" style="width:80px;height:54px;border-radius:7px;margin-bottom:10px;">
+        <img src="{{ url_for('static', filename='uploads/' ~ service.image) }}" alt=""
+            style="width:80px;height:54px;border-radius:7px;margin-bottom:10px;">
         {% endif %}
         <button type="submit">Зберегти</button>
         <a href="{{ url_for('admin.admin_services') }}" class="edit-btn" style="margin-left:10px;">Скасувати</a>

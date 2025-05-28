@@ -86,6 +86,7 @@ def news():
 
 @main.route('/book', methods=['GET', 'POST'])
 def book():
+    services = Service.query.order_by(Service.title).all()
     if request.method == 'POST':
         # Тут обробка форми, наприклад, збереження в БД чи надсилання email
         flash('Ваша заявка прийнята!', 'success')
@@ -100,7 +101,7 @@ def book():
     if os.path.exists(settings_path):
         with open(settings_path, 'r') as f:
             settings = json.load(f)
-    return render_template('book.html', settings=settings)
+    return render_template('book.html', settings=settings, services=services)
 
 @main.route('/news/<int:news_id>')
 def news_detail(news_id):
@@ -130,48 +131,20 @@ def news_detail(news_id):
 
 @main.route('/promotions')
 def promotions():
-    promotions = [
-        {
-            "id": 1,
-            "title": "Знижка 20% на діагностику",
-            "date": "2025-06-01",
-            "preview": "Отримайте знижку 20% на повну діагностику авто до кінця місяця!",
-            "image_url": url_for('static', filename='images/promo1.jpg')
-        },
-        {
-            "id": 2,
-            "title": "Безкоштовна заміна масла",
-            "date": "2025-05-15",
-            "preview": "При замовленні ТО — заміна масла безкоштовно!",
-            "image_url": url_for('static', filename='images/promo2.jpg')
-        },
-        # ...ще акції...
-    ]
-    return render_template('promotions.html', promotions=promotions)
+    promos = Promotion.query.order_by(Promotion.id.desc()).all()
+    return render_template('promotions.html', promos=promos)
 
 @main.route('/promotions/<int:promo_id>')
 def promotion_detail(promo_id):
-    promotions = [
-        {
-            "id": 1,
-            "title": "Знижка 20% на діагностику",
-            "date": "2025-06-01",
-            "content": "Детальний опис акції 1...",
-            "image_url": url_for('static', filename='images/promo1.jpg')
-        },
-        {
-            "id": 2,
-            "title": "Безкоштовна заміна масла",
-            "date": "2025-05-15",
-            "content": "Детальний опис акції 2...",
-            "image_url": url_for('static', filename='images/promo2.jpg')
-        },
-        # ...ще акції...
-    ]
-    promo = next((p for p in promotions if p["id"] == promo_id), None)
+    promo = Promotion.query.get(promo_id)
     if not promo:
         abort(404)
     return render_template('promotion_detail.html', promo=promo)
+
+@main.route('/services')
+def all_services():
+    services = Service.query.order_by(Service.title).all()
+    return render_template('services_list.html', services=services)
 
 @main.route('/gallery')
 def gallery():

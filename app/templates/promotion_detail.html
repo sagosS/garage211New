@@ -1,14 +1,159 @@
 {% extends "base.html" %}
 {% block content %}
 <section class="promotion-detail-section">
-  <h1>{{ promo.title }}</h1>
-  <div class="promotion-detail-date">
-    <i class="fas fa-calendar-alt"></i> {{ promo.date }}
-  </div>
-  <img src="{{ promo.image_url }}" alt="{{ promo.title }}" class="promotion-detail-img">
-  <div class="promotion-detail-content">
-    {{ promo.content }}
-  </div>
-  <a href="{{ url_for('main.promotions') }}" class="promotion-card-btn" style="margin-top:2rem;">← До всіх акцій</a>
+    <div class="promotion-detail-card">
+        {% if promo.image %}
+            <img class="promotion-detail-img" src="{{ url_for('static', filename='uploads/' ~ promo.image) }}" alt="{{ promo.title }}">
+        {% endif %}
+        <div class="promotion-detail-content">
+            <h1 class="promotion-detail-title">{{ promo.title }}</h1>
+            <div class="promotion-detail-desc">{{ promo.description }}</div>
+            <div class="promotion-detail-info">
+                {% if promo.price is defined and promo.price is not none %}
+                    <div class="promotion-detail-price">Ціна: <span>{{ promo.price|round(2) }} грн</span></div>
+                {% endif %}
+                {% if promo.end_date %}
+                    <div class="promotion-detail-date">Діє до: <span>
+                        {% if promo.end_date.__class__.__name__ == 'str' %}
+                            {{ promo.end_date }}
+                        {% else %}
+                            {{ promo.end_date.strftime('%d.%m.%Y') }}
+                        {% endif %}
+                    </span></div>
+                {% endif %}
+            </div>
+            {% if promo.services %}
+            <div class="promotion-detail-services">
+                <strong>Послуги, що беруть участь:</strong>
+                <ul>
+                    {% for s in promo.services %}
+                        <li>
+                            <a href="{{ url_for('main.all_services') }}#service-{{ s.id }}">{{ s.title }}</a>
+                            <span style="color:#888;">
+                                (
+                                {% if s.price_from is defined and s.price_from is not none %}
+                                    {{ s.price_from|round(2) }}
+                                {% else %}
+                                    —
+                                {% endif %}
+                                –
+                                {% if s.price_to is defined and s.price_to is not none %}
+                                    {{ s.price_to|round(2) }}
+                                {% else %}
+                                    —
+                                {% endif %}
+                                грн)
+                            </span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <a href="{{ url_for('main.all_services') }}" class="promotion-back-link">← До всіх послуг</a>
 </section>
+<style>
+.promotion-detail-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2.5rem 0 2rem 0;
+    background: #fffbe6;
+    min-height: 70vh;
+}
+.promotion-detail-card {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 6px 32px 0 rgba(255,179,0,0.13), 0 1.5px 8px rgba(0,0,0,0.07);
+    padding: 2.2rem 2.5rem 2rem 2.5rem;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 2.5rem;
+    max-width: 700px;
+    width: 100%;
+    margin-bottom: 2rem;
+}
+.promotion-detail-img {
+    width: 240px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 2px 16px rgba(255,179,0,0.10);
+    background: #fffbe6;
+}
+.promotion-detail-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+}
+.promotion-detail-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #ff9800;
+    margin-bottom: 0.5rem;
+}
+.promotion-detail-desc {
+    font-size: 1.15rem;
+    color: #333;
+    line-height: 1.6;
+}
+.promotion-detail-price {
+    font-size: 1.18rem;
+    font-weight: 700;
+    color: #1b5e20;
+    background: #e8f5e9;
+    border-radius: 8px;
+    padding: 7px 18px;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+}
+.promotion-detail-date {
+    font-size: 1.08rem;
+    color: #ef4444;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+.promotion-back-link {
+    color: #ff9800;
+    font-weight: 700;
+    text-decoration: none;
+    margin-top: 1.5rem;
+    font-size: 1.1rem;
+    transition: color 0.18s;
+}
+.promotion-back-link:hover {
+    color: #ef4444;
+    text-decoration: underline;
+}
+.promotion-detail-services {
+    margin-top: 1.2rem;
+    background: #fffbe6;
+    border-radius: 8px;
+    padding: 0.8rem 1.2rem;
+    font-size: 1.05rem;
+}
+.promotion-detail-services ul {
+    margin: 0.5rem 0 0 0;
+    padding-left: 1.2rem;
+}
+.promotion-detail-services li {
+    margin-bottom: 0.3rem;
+}
+@media (max-width: 700px) {
+    .promotion-detail-card {
+        flex-direction: column;
+        align-items: center;
+        padding: 1.2rem 0.5rem;
+        gap: 1.2rem;
+    }
+    .promotion-detail-img {
+        width: 100%;
+        max-width: 320px;
+        height: 120px;
+    }
+}
+</style>
 {% endblock %}

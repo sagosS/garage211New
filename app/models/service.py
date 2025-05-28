@@ -7,3 +7,5 @@ class Service(db.Model):
     image = db.Column(db.String(128), nullable=True)
     price_from = db.Column(db.Float, nullable=False)
     price_to = db.Column(db.Float, nullable=False)
+    promotion_id = db.Column(db.Integer, db.ForeignKey('promotions.id', name='fk_service_promotion_id'), nullable=True)
+    promotion = db.relationship('Promotion', backref='services')

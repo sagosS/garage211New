@@ -1,21 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
-<section class="promotions-section">
-  <h1>Акції</h1>
-  <div class="promotions-list">
-    {% for promo in promotions %}
-    <div class="promotion-card">
-      <div class="promotion-card-img" style="background-image: url('{{ promo.image_url }}');"></div>
-      <div class="promotion-card-content">
-        <span class="promotion-card-date">
-          <i class="fas fa-calendar-alt"></i> {{ promo.date }}
-        </span>
-        <h2>{{ promo.title }}</h2>
-        <p>{{ promo.preview }}</p>
-        <a href="{{ url_for('main.promotion_detail', promo_id=promo.id) }}" class="promotion-card-btn">Детальніше</a>
-      </div>
+<section class="promotions-page">
+    <h1>Акції</h1>
+    <div class="promotions-list">
+        {% for p in promos %}
+        <div class="promotion-card">
+            {% if p.image %}
+                <img src="{{ url_for('static', filename='uploads/' ~ p.image) }}" alt="{{ p.title }}">
+            {% endif %}
+            <h3>
+                <a href="{{ url_for('main.promotion_detail', promo_id=p.id) }}" style="color:#ff9800;">
+                    {{ p.title }}
+                </a>
+            </h3>
+            <div>{{ p.description }}</div>
+            {% if p.price is not none %}
+                <div class="promotion-price">Ціна: {{ p.price|round(2) }} грн</div>
+            {% endif %}
+            {% if p.end_date %}
+                <div class="promotion-date">Діє до: 
+                    {% if p.end_date.__class__.__name__ == 'str' %}
+                        {{ p.end_date }}
+                    {% else %}
+                        {{ p.end_date.strftime('%d.%m.%Y') }}
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+        {% else %}
+            <p style="color:#888;">Немає акцій.</p>
+        {% endfor %}
     </div>
-    {% endfor %}
-  </div>
 </section>
 {% endblock %}

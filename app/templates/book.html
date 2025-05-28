@@ -4,78 +4,79 @@
 
 {% block content %}
 <style>
-/* ...залиште попередній стиль book-section/book-form... */
+  /* ...залиште попередній стиль book-section/book-form... */
 </style>
 <div class="book-section">
-    <h2>Записатись на Обслуговування</h2>
-    <form method="POST" class="book-form" autocomplete="off">
-        <label for="name">Як звертатися до Вас:</label>
-        <input type="text" id="name" name="name" required placeholder="Ваше прізвище та ім'я">
+  <h2>Записатись на Обслуговування</h2>
+  <form method="POST" class="book-form" autocomplete="off">
+    <label for="name">Як звертатися до Вас:</label>
+    <input type="text" id="name" name="name" required placeholder="Ваше прізвище та ім'я">
 
-        <label for="phone">Номер телефону:</label>
-        <input type="tel" id="phone" name="phone" required pattern="\+38\s?\d{3}\s?\d{3}\s?\d{2}\s?\d{2}" placeholder="+38 ___ ___ __ __">
+    <label for="phone">Номер телефону:</label>
+    <input type="tel" id="phone" name="phone" required pattern="\+38\s?\d{3}\s?\d{3}\s?\d{2}\s?\d{2}"
+      placeholder="+38 ___ ___ __ __">
 
-        <label for="brand">Марка автомобіля:</label>
-        <select id="brand" name="brand" required>
-            <option value="">Оберіть марку</option>
-            <!-- JS підставить бренди -->
-        </select>
+    <label for="brand">Марка автомобіля:</label>
+    <select id="brand" name="brand" required>
+      <option value="">Оберіть марку</option>
+      <!-- JS підставить бренди -->
+    </select>
 
-        <label for="model">Модель автомобіля (необов'язково):</label>
-        <select id="model" name="model" disabled>
-            <option value="">Спочатку оберіть марку</option>
-        </select>
+    <label for="model">Модель автомобіля (необов'язково):</label>
+    <select id="model" name="model" disabled>
+      <option value="">Спочатку оберіть марку</option>
+    </select>
 
-        <label for="year">Рік випуску автомобіля (необов'язково):</label>
-        <input type="number" id="year" name="year" min="1980" max="2030" placeholder="Наприклад: 2015">
+    <label for="year">Рік випуску автомобіля (необов'язково):</label>
+    <input type="number" id="year" name="year" min="1980" max="2030" placeholder="Наприклад: 2015">
 
-        <label for="service">Потрібна послуга:</label>
-        <select id="service" name="service" required>
-            <option value="">Оберіть послугу</option>
-            {% for s in settings.services %}
-                <option>{{ s }}</option>
-            {% endfor %}
-        </select>
+    <label for="service">Потрібна послуга:</label>
+    <select id="service" name="service" required>
+      <option value="">Оберіть послугу</option>
+      {% for s in services %}
+      <option value="{{ s.title }}">{{ s.title }}</option>
+      {% endfor %}
+    </select>
 
-        <label for="date">Бажана дата обслуговування (необов'язково):</label>
-        <input type="text" id="date" name="date" placeholder="дд.мм.рррр">
+    <label for="date">Бажана дата обслуговування (необов'язково):</label>
+    <input type="text" id="date" name="date" placeholder="дд.мм.рррр">
 
-        <label for="comment">Додаткові коментарі (необов'язково):</label>
-        <textarea id="comment" name="comment" rows="3" placeholder="Ваші побажання"></textarea>
+    <label for="comment">Додаткові коментарі (необов'язково):</label>
+    <textarea id="comment" name="comment" rows="3" placeholder="Ваші побажання"></textarea>
 
-        <button type="submit">Записатись</button>
-    </form>
+    <button type="submit">Записатись</button>
+  </form>
 </div>
 <script>
-fetch("{{ url_for('static', filename='car_brands_models.json') }}")
-  .then(r => r.json())
-  .then(data => {
-    const brandSelect = document.getElementById('brand');
-    const modelSelect = document.getElementById('model');
-    // Додаємо бренди
-    Object.keys(data).forEach(brand => {
-      const opt = document.createElement('option');
-      opt.value = brand;
-      opt.textContent = brand;
-      brandSelect.appendChild(opt);
+  fetch("{{ url_for('static', filename='car_brands_models.json') }}")
+    .then(r => r.json())
+    .then(data => {
+      const brandSelect = document.getElementById('brand');
+      const modelSelect = document.getElementById('model');
+      // Додаємо бренди
+      Object.keys(data).forEach(brand => {
+        const opt = document.createElement('option');
+        opt.value = brand;
+        opt.textContent = brand;
+        brandSelect.appendChild(opt);
+      });
+      brandSelect.addEventListener('change', function () {
+        const models = data[this.value] || [];
+        modelSelect.innerHTML = '';
+        if (models.length) {
+          modelSelect.disabled = false;
+          modelSelect.innerHTML = '<option value="">Оберіть модель</option>';
+          models.forEach(model => {
+            const opt = document.createElement('option');
+            opt.value = model;
+            opt.textContent = model;
+            modelSelect.appendChild(opt);
+          });
+        } else {
+          modelSelect.disabled = true;
+          modelSelect.innerHTML = '<option value="">Спочатку оберіть марку</option>';
+        }
+      });
     });
-    brandSelect.addEventListener('change', function() {
-      const models = data[this.value] || [];
-      modelSelect.innerHTML = '';
-      if (models.length) {
-        modelSelect.disabled = false;
-        modelSelect.innerHTML = '<option value="">Оберіть модель</option>';
-        models.forEach(model => {
-          const opt = document.createElement('option');
-          opt.value = model;
-          opt.textContent = model;
-          modelSelect.appendChild(opt);
-        });
-      } else {
-        modelSelect.disabled = true;
-        modelSelect.innerHTML = '<option value="">Спочатку оберіть марку</option>';
-      }
-    });
-  });
 </script>
 {% endblock %}

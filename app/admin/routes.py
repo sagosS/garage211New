@@ -251,6 +251,8 @@ def edit_book_form():
 @admin.route('/services', methods=['GET', 'POST'])
 @login_required
 def admin_services():
+    promotions = Promotion.query.order_by(Promotion.id.desc()).all()
+    services = Service.query.order_by(Service.id.desc()).all()
     if request.method == 'POST':
         title = request.form['title']
         description = request.form['description']
@@ -273,9 +275,9 @@ def admin_services():
         db.session.commit()
         flash('Послугу створено!', 'success')
         return redirect(url_for('admin.admin_services'))
-
+        pass
     services = Service.query.order_by(Service.id.desc()).all()
-    return render_template('admin/services.html', services=services)
+    return render_template('admin/services.html', services=services, promotions=promotions)
 
 @admin.route('/services/delete/<int:service_id>')
 @login_required
@@ -290,6 +292,7 @@ def delete_service(service_id):
 @login_required
 def edit_service(service_id):
     service = Service.query.get_or_404(service_id)
+    promotions = Promotion.query.all()
     if request.method == 'POST':
         service.title = request.form['title']
         service.description = request.form['description']
@@ -301,10 +304,12 @@ def edit_service(service_id):
             upload_path = os.path.join(current_app.static_folder, 'uploads', image_filename)
             image_file.save(upload_path)
             service.image = image_filename
+        promo_id = request.form.get('promotion_id')
+        service.promotion_id = int(promo_id) if promo_id else None
         db.session.commit()
         flash('Послугу оновлено!', 'success')
         return redirect(url_for('admin.admin_services'))
-    return render_template('admin/edit_service.html', service=service)
+    return render_template('admin/edit_service.html', service=service, promotions=promotions)
 
 @admin.route('/promotions', methods=['GET', 'POST'])
 @login_required
