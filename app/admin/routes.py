@@ -3,7 +3,7 @@ from datetime import datetime
 from flask import render_template, request, redirect, url_for, flash, abort, current_app
 from flask_login import login_required, current_user, logout_user
 from werkzeug.security import generate_password_hash
-from app.models import User, Client, Service, Promotion, News
+from app.models import User, Client, Service, Promotion, News, ContactMessage
 from app.extensions import db
 from . import admin
 from werkzeug.utils import secure_filename
@@ -438,6 +438,28 @@ def delete_news(news_id):
     db.session.commit()
     flash('Новину видалено!', 'success')
     return redirect(url_for('admin.admin_news'))
+
+@admin.route('/contacts')
+@login_required
+def admin_contacts():
+    messages = ContactMessage.query.order_by(ContactMessage.created_at.desc()).all()
+    return render_template('admin/contacts.html', messages=messages)
+
+@admin.route('/contacts/read/<int:msg_id>')
+@login_required
+def mark_contact_read(msg_id):
+    msg = ContactMessage.query.get_or_404(msg_id)
+    msg.is_read = True
+    db.session.commit()
+    return redirect(url_for('admin.admin_contacts'))
+
+@admin.route('/contacts/delete/<int:msg_id>')
+@login_required
+def delete_contact(msg_id):
+    msg = ContactMessage.query.get_or_404(msg_id)
+    db.session.delete(msg)
+    db.session.commit()
+    return redirect(url_for('admin.admin_contacts'))
 
 @admin.route('/logout')
 @login_required

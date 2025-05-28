@@ -1,104 +1,103 @@
 {% extends "base.html" %}
 {% block content %}
 <section class="contacts-section">
-  <h1>Контакти</h1>
-  <div class="contacts-grid">
-    <div class="contacts-info">
-      <div class="contact-item">
-        <span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span>
-        <div>
-          <strong>Адреса:</strong><br>
-          {{ GARAGE_ADDRESS }}
+    <h1>Контакти</h1>
+    <div class="contacts-grid">
+        <div class="contacts-info">
+            <div class="contact-item">
+                <span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span>
+                <div>
+                    <strong>Адреса:</strong><br>
+                    {{ GARAGE_ADDRESS }}
+                </div>
+            </div>
+            <div class="contact-item">
+                <span class="contact-icon"><i class="fas fa-phone"></i></span>
+                <div>
+                    <strong>Телефон:</strong><br>
+                    <a href="tel:{{ GARAGE_PHONE }}">{{ GARAGE_PHONE }}</a>
+                </div>
+            </div>
+            <div class="contact-item">
+                <span class="contact-icon"><i class="fas fa-envelope"></i></span>
+                <div>
+                    <strong>Email:</strong><br>
+                    <a href="mailto:{{ GARAGE_EMAIL }}">{{ GARAGE_EMAIL }}</a>
+                </div>
+            </div>
+            <div class="contact-item">
+                <span class="contact-icon"><i class="fab fa-instagram"></i></span>
+                <div>
+                    <strong>Instagram:</strong><br>
+                    <a href="{{ SOCIAL_INSTAGRAM }}" target="_blank">@gar211sto</a>
+                </div>
+            </div>
+            <div class="contact-item">
+                <span class="contact-icon"><i class="fab fa-telegram"></i></span>
+                <div>
+                    <strong>Telegram:</strong><br>
+                    <a href="{{ SOCIAL_TELEGRAM }}" target="_blank">@garage211</a>
+                </div>
+            </div>
+            <div class="contact-item">
+                <span class="contact-icon"><i class="fab fa-facebook"></i></span>
+                <div>
+                    <strong>Facebook:</strong><br>
+                    <a href="{{ SOCIAL_FACEBOOK }}" target="_blank">/garazdvistiodinadcat</a>
+                </div>
+            </div>
+            <div class="contact-item">
+                <span class="contact-icon"><i class="fab fa-whatsapp"></i></span>
+                <div>
+                    <strong>WhatsApp:</strong><br>
+                    <a href="https://facebook.com/yourpage" target="_blank">WhatsApp.com/yourpage</a>
+                </div>
+            </div>
+            <div class="contact-item">
+                <span class="contact-icon"><i class="fab fa-viber"></i></span>
+                <div>
+                    <strong>Viber:</strong><br>
+                    <a href="{{ SOCIAL_VIBER }}" target="_blank">Гараж 211</a>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="contact-item">
-        <span class="contact-icon"><i class="fas fa-phone"></i></span>
-        <div>
-          <strong>Телефон:</strong><br>
-          <a href="tel:{{ GARAGE_PHONE }}">{{ GARAGE_PHONE }}</a>
+        <div class="contacts-form-map">
+            <form method="POST" class="contact-form">
+                <input type="text" name="name" placeholder="Ваше ім'я" required>
+                <input type="tel" name="phone" placeholder="Телефон" required>
+                <textarea name="message" rows="4" placeholder="Ваше повідомлення" required></textarea>
+                <button type="submit">Відправити</button>
+            </form>
+            <div class="contacts-map">
+                <div id="footer-map" style="width:100%;height:80%;border-radius:8px;overflow:hidden;"></div>
+                <a href="#" id="footer-route-btn" class="footer-route-btn" target="_blank" rel="noopener">
+                    Прокласти маршрут
+                </a>
+            </div>
         </div>
-      </div>
-      <div class="contact-item">
-        <span class="contact-icon"><i class="fas fa-envelope"></i></span>
-        <div>
-          <strong>Email:</strong><br>
-          <a href="mailto:{{ GARAGE_EMAIL }}">{{ GARAGE_EMAIL }}</a>
-        </div>
-      </div>
-      <div class="contact-item">
-        <span class="contact-icon"><i class="fab fa-instagram"></i></span>
-        <div>
-          <strong>Instagram:</strong><br>
-          <a href="{{ SOCIAL_INSTAGRAM }}" target="_blank">@gar211sto</a>
-        </div>
-      </div>
-      <div class="contact-item">
-        <span class="contact-icon"><i class="fab fa-telegram"></i></span>
-        <div>
-          <strong>Telegram:</strong><br>
-          <a href="{{ SOCIAL_TELEGRAM }}" target="_blank">@garage211</a>
-        </div>
-      </div>
-      <div class="contact-item">
-        <span class="contact-icon"><i class="fab fa-facebook"></i></span>
-        <div>
-          <strong>Facebook:</strong><br>
-          <a href="{{ SOCIAL_FACEBOOK }}" target="_blank">/garazdvistiodinadcat</a>
-        </div>
-      </div>
-      <div class="contact-item">
-        <span class="contact-icon"><i class="fab fa-whatsapp"></i></span>
-        <div>
-          <strong>WhatsApp:</strong><br>
-          <a href="https://facebook.com/yourpage" target="_blank">WhatsApp.com/yourpage</a>
-        </div>
-      </div>
-      <div class="contact-item">
-        <span class="contact-icon"><i class="fab fa-viber"></i></span>
-        <div>
-          <strong>Viber:</strong><br>
-          <a href="{{ SOCIAL_VIBER }}" target="_blank">Гараж 211</a>
-        </div>
-      </div>
     </div>
-    <div class="contacts-form-map">
-      <form class="contact-form">
-        <h2>Зворотній зв'язок з {{ GARAGE_NAME }}</h2>
-        <input type="text" name="name" placeholder="Ваше ім'я" required>
-        <input type="tel" name="phone" placeholder="Телефон" required>
-        <textarea name="message" rows="4" placeholder="Ваше повідомлення" required></textarea>
-        <button type="submit">Відправити</button>
-    </form>
-      <div class="contacts-map">        
-            <div id="footer-map" style="width:100%;height:80%;border-radius:8px;overflow:hidden;"></div>
-            <a href="#" id="footer-route-btn" class="footer-route-btn" target="_blank" rel="noopener">
-                Прокласти маршрут
-            </a>
-    </div>
-    </div>
-  </div>
 </section>
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Координати вашого гаража (замініть на свої або підставте через Jinja)
-    const lat = 47.901460;
-    const lon = 33.299943;
+    document.addEventListener('DOMContentLoaded', function () {
+        // Координати вашого гаража (замініть на свої або підставте через Jinja)
+        const lat = 47.901460;
+        const lon = 33.299943;
 
-    var map = L.map('contacts-map', {
-        scrollWheelZoom: false,
-        dragging: window.innerWidth > 600,
-        zoomControl: true,
-        tap: false
-    }).setView([lat, lon], 16);
+        var map = L.map('contacts-map', {
+            scrollWheelZoom: false,
+            dragging: window.innerWidth > 600,
+            zoomControl: true,
+            tap: false
+        }).setView([lat, lon], 16);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap'
-    }).addTo(map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap'
+        }).addTo(map);
 
-    L.marker([lat, lon]).addTo(map);
-});
+        L.marker([lat, lon]).addTo(map);
+    });
 </script>
 {% endblock %}

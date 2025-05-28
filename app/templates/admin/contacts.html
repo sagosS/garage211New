@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block content %}
+{% include 'includes/admin_navbar.html' %}
+<style>
+.admin-contacts-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0 1.5rem 0;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    font-size: 1.04rem;
+}
+.admin-contacts-table th, .admin-contacts-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #f3f3f3;
+    text-align: left;
+    vertical-align: top;
+}
+.admin-contacts-table th {
+    background: #ff9800;
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+.admin-contacts-table tr:last-child td {
+    border-bottom: none;
+}
+.admin-contacts-table tr.unread {
+    background: #fffbe6;
+}
+.admin-contacts-table td span {
+    font-weight: 600;
+}
+.admin-contacts-table a {
+    color: #ff9800;
+    text-decoration: none;
+    margin-right: 0.7rem;
+    font-weight: 500;
+    transition: color 0.18s;
+}
+.admin-contacts-table a:hover {
+    color: #ef4444;
+    text-decoration: underline;
+}
+@media (max-width: 700px) {
+    .admin-contacts-table, .admin-contacts-table th, .admin-contacts-table td {
+        font-size: 0.97rem;
+        padding: 0.5rem 0.4rem;
+    }
+}
+</style>
+<h2>Зворотній зв'язок</h2>
+<table class="admin-contacts-table">
+    <tr>
+        <th>Ім'я</th>
+        <th>Телефон</th>
+        <th>Повідомлення</th>
+        <th>Дата</th>
+        <th>Статус</th>
+        <th>Дії</th>
+    </tr>
+    {% for m in messages %}
+    <tr class="{% if not m.is_read %}unread{% endif %}">
+        <td>{{ m.name }}</td>
+        <td>{{ m.phone }}</td>
+        <td>{{ m.message }}</td>
+        <td>{{ m.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+        <td>
+            {% if m.is_read %}
+                <span style="color: #22c55e;">Прочитано</span>
+            {% else %}
+                <span style="color: #ef4444;">Не прочитано</span>
+            {% endif %}
+        </td>
+        <td>
+            {% if not m.is_read %}
+            <a href="{{ url_for('admin.mark_contact_read', msg_id=m.id) }}">Відмітити як прочитане</a>
+            {% endif %}
+            <a href="{{ url_for('admin.delete_contact', msg_id=m.id) }}" onclick="return confirm('Видалити?')">Видалити</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

@@ -2,7 +2,8 @@ import os
 import json
 from flask import render_template, redirect, url_for, flash, request, abort, current_app
 from flask_login import login_user, login_required, logout_user
-from app.models import User, Service, Promotion, News
+from app.models import User, Service, Promotion, News, ContactMessage
+from app import db
 from werkzeug.security import check_password_hash
 from app.main import main
 
@@ -158,6 +159,18 @@ def projects():
             projects = json.load(f)
     return render_template('projects.html', projects=projects)
 
-@main.route('/contacts')
+@main.route('/contacts', methods=['GET', 'POST'])
 def contacts():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        phone = request.form.get('phone')
+        message = request.form.get('message')
+        if name and phone and message:
+            msg = ContactMessage(name=name, phone=phone, message=message)
+            db.session.add(msg)
+            db.session.commit()
+            flash('Ваше повідомлення надіслано!', 'success')
+            return redirect(url_for('main.contacts'))
+        else:
+            flash('Заповніть всі поля!', 'danger')
     return render_template('contacts.html', title="Контакти")
