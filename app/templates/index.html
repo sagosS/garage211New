@@ -1,5 +1,13 @@
 {% extends "base.html" %}
-
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index_hero.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index_promotions.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index_services.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index_news.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index_gallery.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index_reviews.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index_advantages.css') }}">
+{% endblock %}
 {% block content %}
 <!-- HERO SECTION -->
 <section class="hero">
@@ -16,10 +24,12 @@
 
 <!-- PROMOTIONS SECTION -->
 <section class="promotions">
-    <h2>Акції</h2>
+    <div class="promotions-header">
+        <h2>Акції</h2>
+        <a href="{{ url_for('main.promotions') }}" class="promotions-more-link">Більше →</a>
+    </div>
     <div class="promotions-list">
         {% for p in promotions %}
-            <!-- у index.html -->
             <div class="promotion-item">
                 {% if p.image %}
                     <img src="{{ url_for('static', filename='uploads/' ~ p.image) }}" alt="">
@@ -34,61 +44,90 @@
                 {% endif %}
             </div>
         {% else %}
-                <p style="grid-column:1/-1;text-align:center;color:#888;">Не має акцій.</p>
+            <p style="grid-column:1/-1;text-align:center;color:#888;">Не має акцій.</p>
         {% endfor %}
     </div>
 </section>
 
-<!-- SERVICES SECTION -->
-<section class="services">
-    <h2>Наші послуги</h2>
+<!-- SERVICES SECTION (єдина, сучасна, без дублікатів) -->
+<section class="services-section">
+    <div class="services-header">
+        <h2>Наші послуги</h2>
+        <a href="{{ url_for('main.all_services') }}" class="services-more-link">Дивитись всі послуги →</a>
+    </div>
     <div class="services-list">
-        {% for s in services %}
-                <div class="service-card">
-                    {% if s.image %}
-                        <img src="{{ url_for('static', filename='uploads/' ~ s.image) }}" alt="">
-                    {% endif %}
-                    <h3>{{ s.title }}</h3>
-                    <div>{{ s.description }}</div>
-                    <div class="service-price">{{ s.price_from|round(2) }} – {{ s.price_to|round(2) }} грн</div>
+        {% for s in services[:3] %}
+            <div class="service-card">
+                {% if s.image %}
+                    <img src="{{ url_for('static', filename='uploads/' ~ s.image) }}" alt="{{ s.title }}" class="service-card-img">
+                {% endif %}
+                <h3 class="service-card-title">{{ s.title }}</h3>
+                <div class="service-card-desc">{{ s.description }}</div>
+                <div class="service-card-price">
+                    від {{ s.price_from|round(2) }} до {{ s.price_to|round(2) }} грн
                 </div>
+                {% if s.promotion %}
+                <div class="service-card-promos">
+                    <div class="service-card-promo">
+                        <span class="service-card-promo-title">{{ s.promotion.title }}</span>
+                        {% if s.promotion.price %}
+                            <span class="service-card-promo-price">{{ s.promotion.price|round(2) }} грн</span>
+                        {% endif %}
+                        {% if s.promotion.end_date %}
+                            <span class="service-card-promo-date">до {{ s.promotion.end_date }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
         {% else %}
-                    <p style="grid-column:1/-1;text-align:center;color:#888;">Не має послуг.</p>
+            <p style="grid-column:1/-1;text-align:center;color:#888;">Не має послуг.</p>
         {% endfor %}
     </div>
 </section>
+
 
 <!-- NEWS SECTION -->
 <section class="main-news-block">
-    <h2>Останні новини</h2>
-    <div class="main-news-list">
-        {% for n in news_list %}
-        <div class="main-news-card">
-            <div class="main-news-date">{{ n.date.strftime('%d.%m.%Y') }}</div>
-            <div class="main-news-title">{{ n.title }}</div>
-            <div class="main-news-desc">{{ n.description }}</div>
+    <div class="promotions-header">
+        <h2>Новини</h2>
+        <a href="{{ url_for('main.news') }}" class="promotions-more-link">Більше →</a>
+    </div>
+    <div class="promotions-list">
+        {% for n in news_list[:5] %}
+        <div class="promotion-item">
+            <h3>
+                <a href="{{ url_for('main.news_detail', news_id=n.id) }}">{{ n.title }}</a>
+            </h3>
+            <p>{{ n.description }}</p>
+            <div class="promotion-date">{{ n.date.strftime('%d.%m.%Y') }}</div>
         </div>
         {% else %}
-        <div style="color:#888;">Новин ще немає.</div>
+        <p style="grid-column:1/-1;text-align:center;color:#888;">Новин ще немає.</p>
         {% endfor %}
     </div>
-    <a href="{{ url_for('main.news') }}" class="main-news-more">Всі новини →</a>
 </section>
 
 <!-- GALLERY SECTION -->
 <section class="gallery-section">
-    <h2>Галерея</h2>
-    <div class="gallery-grid">
-        {% for img in images %}
-            <div class="gallery-item">
-                <a href="{{ url_for('static', filename='uploads/' ~ img) }}" class="gallery-link">
-                    <img class="gallery-img" src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="{{ alts.get(img, '') }}">
-                </a>
-            </div>
-        {% else %}
-            <p style="grid-column:1/-1;text-align:center;color:#888;">Галерея порожня.</p>
-        {% endfor %}
+    <div class="gallery-header">
+        <h2>Галерея</h2>
+        <a href="{{ url_for('main.gallery') }}" class="gallery-more-link">Більше →</a>
     </div>
+    <ul class="index-gallery">
+        {% for img in images[:8] %}
+        <li class="index-gallery-item">
+            <a href="{{ url_for('static', filename='uploads/' ~ img) }}" class="lightbox-link" target="_blank">
+                <img src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="Фото з галереї" class="index-gallery-img">
+                <div class="index-gallery-caption">
+                    Фото №{{ loop.index }}
+                </div>
+            </a>
+        </li>
+        {% else %}
+        <li style="grid-column:1/-1;text-align:center;color:#888;">Галерея порожня.</li>
+        {% endfor %}
+    </ul>
 </section>
 
 <!-- ADVANTAGES SECTION -->

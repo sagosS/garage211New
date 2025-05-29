@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 
 {% block title %}Записатись - СТО "Гараж 211"{% endblock %}
-
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/book.css') }}">
+{% endblock %}
 {% block content %}
 <style>
   /* ...залиште попередній стиль book-section/book-form... */

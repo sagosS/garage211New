@@ -5,9 +5,9 @@
     <div class="news-list">
         {% for n in news_list %}
         <div class="news-card">
-            <div class="news-card-date">{{ n.date.strftime('%d.%m.%Y') }}</div>
             <div class="news-card-title">{{ n.title }}</div>
             <div class="news-card-desc">{{ n.description }}</div>
+            <div class="news-card-date">{{ n.date.strftime('%d.%m.%Y') }}</div>
         </div>
         {% else %}
         <div style="color:#888;">Новин ще немає.</div>

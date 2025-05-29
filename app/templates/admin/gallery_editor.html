@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Редактор галереї{% endblock %}
 {% block content %}
-{% include 'includes/admin_navbar.html' %}
 <div class="gallery-editor-section">
     <h2>Редактор галереї</h2>
     <form method="POST">
@@ -12,20 +11,139 @@
                     <img src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="img">
                 </label>
             {% else %}
-                <span style="color:#888;">Зображень ще немає.</span>
+                <span class="gallery-empty">Зображень ще немає.</span>
             {% endfor %}
         </div>
-        <button type="submit" style="margin-top:2rem;background:#ffb300;color:#222;padding:10px 28px;border-radius:8px;font-weight:700;border:none;cursor:pointer;">Зберегти вибір</button>
+        <button type="submit" class="gallery-save-btn">Зберегти вибір</button>
     </form>
     {% if selected %}
-        <div style="margin-top:2rem;">
+        <div class="gallery-selected-block">
             <h4>Вибрані для галереї:</h4>
-            <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            <div class="gallery-selected-list">
                 {% for img in selected %}
-                    <img src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="img" style="width:60px;height:40px;object-fit:cover;border-radius:4px;">
+                    <img src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="img">
                 {% endfor %}
             </div>
         </div>
     {% endif %}
 </div>
+<style>
+.gallery-editor-section {
+    background: #f8fafc;
+    border-radius: 18px;
+    box-shadow: 0 6px 32px rgba(255,179,0,0.08);
+    max-width: 900px;
+    margin: 2.5rem auto 2rem auto;
+    padding: 2.2rem 2.5rem 1.7rem 2.5rem;
+    border: 1.5px solid #ffe082;
+}
+.gallery-editor-section h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: #ff9800;
+    letter-spacing: 0.5px;
+}
+.gallery-images-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 22px;
+    margin-top: 1.7rem;
+    padding: 0;
+    list-style: none;
+}
+.gallery-image-item {
+    border: 2px solid #eee;
+    border-radius: 12px;
+    padding: 10px 10px 6px 10px;
+    background: #fff;
+    position: relative;
+    transition: border 0.18s, box-shadow 0.18s;
+    box-shadow: 0 2px 12px rgba(255,179,0,0.06);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+.gallery-image-item.selected,
+.gallery-image-item input[type="checkbox"]:checked ~ img {
+    border: 2.5px solid #ffb300;
+    box-shadow: 0 4px 18px rgba(255,179,0,0.13);
+}
+.gallery-image-item input[type="checkbox"] {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 20px;
+    height: 20px;
+    accent-color: #ffb300;
+    z-index: 2;
+}
+.gallery-image-item img {
+    width: 120px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+    margin-top: 8px;
+    border: 2px solid #eee;
+    transition: border 0.18s;
+}
+.gallery-image-item input[type="checkbox"]:checked ~ img {
+    border: 2.5px solid #ffb300;
+}
+.gallery-empty {
+    color: #888;
+    font-size: 1.1rem;
+    grid-column: 1/-1;
+    text-align: center;
+    margin: 1.5rem 0;
+}
+.gallery-save-btn {
+    margin-top: 2rem;
+    background: linear-gradient(90deg, #ffb300 60%, #ff9800 100%);
+    color: #fff;
+    padding: 12px 38px;
+    border-radius: 8px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    font-size: 1.13rem;
+    box-shadow: 0 2px 12px rgba(255,179,0,0.08);
+    transition: background 0.18s, box-shadow 0.18s;
+    letter-spacing: 0.04em;
+    display: block;
+}
+.gallery-save-btn:hover {
+    background: linear-gradient(90deg, #ef4444 60%, #ff9800 100%);
+    box-shadow: 0 4px 18px rgba(239,68,68,0.10);
+}
+.gallery-selected-block {
+    margin-top: 2.5rem;
+}
+.gallery-selected-block h4 {
+    margin-bottom: 1rem;
+    color: #222;
+    font-size: 1.08rem;
+    font-weight: 600;
+}
+.gallery-selected-list {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.gallery-selected-list img {
+    width: 60px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 2px solid #ffe082;
+}
+@media (max-width: 700px) {
+    .gallery-editor-section { padding: 1rem 0.5rem; }
+    .gallery-images-list { gap: 10px; }
+    .gallery-image-item img { width: 80px; height: 50px; }
+    .gallery-selected-list img { width: 40px; height: 28px; }
+}
+</style>
 {% endblock %}

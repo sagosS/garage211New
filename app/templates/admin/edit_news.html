@@ -1,11 +1,27 @@
 {% extends "base.html" %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_edit_news.css') }}">
+{% endblock %}
 {% block content %}
-<h2>Редагувати новину</h2>
-<form method="POST">
-    <input type="text" name="title" value="{{ news.title }}" required>
-    <textarea name="description" required>{{ news.description }}</textarea>
-    <input type="text" name="date" value="{{ news.date.strftime('%d.%m.%Y') }}" required>
-    <button type="submit">Зберегти</button>
-    <a href="{{ url_for('admin.admin_news') }}">Скасувати</a>
-</form>
+<section class="admin-edit-news">
+    <h2>Редагувати новину</h2>
+    <form method="POST" class="admin-edit-news-form">
+        <label>
+            Заголовок
+            <input type="text" name="title" value="{{ news.title }}" required>
+        </label>
+        <label>
+            Опис
+            <textarea name="description" required>{{ news.description }}</textarea>
+        </label>
+        <label>
+            Дата
+            <input type="text" name="date" value="{{ news.date.strftime('%d.%m.%Y') }}" required>
+        </label>
+        <div class="admin-edit-news-actions">
+            <button type="submit" class="btn btn-primary">Зберегти</button>
+            <a href="{{ url_for('admin.admin_news') }}" class="btn btn-secondary">Скасувати</a>
+        </div>
+    </form>
+</section>
 {% endblock %}

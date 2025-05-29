@@ -28,7 +28,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
     {% endif %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_navbar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    {% block extra_css %}{% endblock %}
 
     <script src="{{ url_for('static', filename='js/navbar.js') }}"></script>
     <script src="{{ url_for('static', filename='js/flash_mess.js') }}"></script>
@@ -66,11 +68,10 @@
         <p>Вітаємо на нашому сайті!</p>
         {% endblock %}
     </main>
-
     {% include 'includes/footer.html' %}
 
     <script>
-        document.querySelectorAll('.gallery-link').forEach(link => {
+        document.querySelectorAll('.lightbox-link').forEach(link => {
             link.addEventListener('click', function (e) {
                 e.preventDefault();
                 const src = this.querySelector('img').getAttribute('src');

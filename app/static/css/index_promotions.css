@@ -1,0 +1,117 @@
+.promotions {
+    background: #202225;
+    border-radius: 18px;
+    margin: 2.5rem 0;
+    padding: 2em 2rem;
+    max-width: 1580px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.promotions > h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #ff9800;
+    margin-bottom: 2rem;
+    letter-spacing: 0.04em;
+    /* text-align: center; */
+}
+.promotions-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    gap: 2rem;
+}
+.promotion-item {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(255,179,0,0.07);
+    border: 1.5px solid #ffe082;
+    padding: 1.5rem 1.2rem 1.2rem 1.2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    transition: box-shadow 0.18s, border 0.18s, transform 0.18s;
+    position: relative;
+    min-height: 220px;
+}
+.promotion-item:hover {
+    box-shadow: 0 8px 32px rgba(255,179,0,0.13);
+    border-color: #ffb300;
+    transform: translateY(-4px) scale(1.03);
+}
+.promotion-item img {
+    width: 100%;
+    max-height: 130px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 1em;
+    border: 1px solid #ffe082;
+    box-shadow: 0 2px 8px rgba(255,179,0,0.06);
+}
+.promotion-item h3 {
+    font-size: 1.18rem;
+    font-weight: 700;
+    color: #ff9800;
+    margin-bottom: 0.4em;
+    margin-top: 0;
+}
+.promotion-item p {
+    font-size: 1.04rem;
+    color: #23272b;
+    margin-bottom: 0.7em;
+    margin-top: 0;
+    flex: 1 1 auto;
+}
+.promotion-price {
+    font-size: 1.08rem;
+    color: #178a3a;
+    font-weight: 700;
+    margin-bottom: 0.5em;
+    background: #fffbe6;
+    border-radius: 6px;
+    padding: 0.2em 0.7em;
+    display: inline-block;
+    box-shadow: 0 1px 4px rgba(255,179,0,0.06);
+}
+.promotion-date {
+    font-size: 0.97rem;
+    color: #888;
+    margin-bottom: 0.3em;
+    margin-top: auto;
+}
+.promotions-header {
+    display: flex;
+    /* align-items: center; */
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    gap: 1.5rem;
+}
+.promotions-header h2 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #ff9800;
+    letter-spacing: 0.04em;
+}
+.promotions-more-bottom {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+.promotions-more-link {
+    color: #ff9800;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 1.08rem;
+    transition: color 0.18s, background 0.18s;
+    border-radius: 6px;
+    padding: 0.3em 0.9em;
+    /* background: #fffbe6; */
+}
+.promotions-more-link:hover {
+    color: #fff;
+    background: linear-gradient(90deg, #ffb300 60%, #ff9800 100%);
+}
+@media (max-width: 900px) {
+    .promotions { padding: 1.2rem 0.7rem; }
+    .promotions-list { grid-template-columns: 1fr; }
+}

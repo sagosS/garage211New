@@ -1,0 +1,41 @@
+.advantages {
+    margin: 3rem 0 2rem 0;
+    text-align: center;
+}
+
+.advantages h2 {
+    font-size: 2rem;
+    color: #ffb300;
+    margin-bottom: 2rem;
+    letter-spacing: 1px;
+}
+
+.advantages-list {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 900px;
+}
+
+.advantages-list li {
+    background: #23272b;
+    border-radius: 12px;
+    padding: 1.2rem 2rem;
+    color: #fff;
+    font-weight: 500;
+    font-size: 1.1rem;
+    box-shadow: 0 2px 12px rgba(255, 179, 0, 0.07), 0 1px 4px rgba(0, 0, 0, 0.07);
+    transition: transform 0.2s, box-shadow 0.2s;
+    min-width: 180px;
+}
+
+.advantages-list li:hover {
+    transform: translateY(-6px) scale(1.04);
+    box-shadow: 0 8px 24px rgba(255, 179, 0, 0.10), 0 2px 12px rgba(0, 0, 0, 0.13);
+    background: #2d2f33;
+    color: #ffb300;
+}

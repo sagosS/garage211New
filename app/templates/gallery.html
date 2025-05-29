@@ -1,18 +1,28 @@
 {% extends "base.html" %}
+{% block title %}Галерея - {{ GARAGE_NAME }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/gallery.css') }}">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" rel="stylesheet">
+{% endblock %}
 {% block content %}
 <section class="gallery-section">
-  <h1>Галерея</h1>
-  <div class="gallery-grid">
-    {% for img in images %}
-    <div class="gallery-item">
-        <a href="{{ url_for('static', filename='uploads/' ~ img) }}">
-            <img src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="{{ alts.get(img, '') }}">
-        </a>
+    <div class="gallery-header">
+        <h1>Галерея</h1>
+        <a href="{{ url_for('main.index') }}" class="gallery-back-link">← На головну</a>
     </div>
-{% endfor %}
-  </div>
+    <ul class="gallery-grid">
+        {% for img in images %}
+        <li class="gallery-item">
+            <a href="{{ url_for('static', filename='uploads/' ~ img) }}" data-lightbox="gallery" data-title="{{ alts.get(img, '') }}">
+                <img src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="{{ alts.get(img, '') }}">
+            </a>
+            <div class="gallery-caption">{{ alts.get(img, '') }}</div>
+        </li>
+        {% else %}
+        <li style="grid-column:1/-1;text-align:center;color:#888;">Галерея порожня.</li>
+        {% endfor %}
+    </ul>
 </section>
-<!-- Lightbox2 scripts -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
 {% endblock %}

@@ -1,0 +1,110 @@
+.hero {
+    position: relative;
+    min-height: 100vh;
+    width: 100vw;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 0 0 24px 24px;
+}
+
+.hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100vw;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    pointer-events: none;
+    user-select: none;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(24, 26, 27, 0.7);
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    color: #fff;
+    text-align: center;
+    width: 100%;
+    padding: 2rem 1rem;
+}
+
+.hero-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #fff;
+}
+
+.hero-content p {
+    font-size: 1.3rem;
+    margin-bottom: 2rem;
+    color: #ffd54f;
+}
+
+.hero-btn {
+    font-size: 1.2rem;
+    padding: 0.9rem 2.2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    border: none;
+    cursor: pointer;
+    background: #ffb300;
+    color: #23272b;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s;
+}
+
+.hero-btn:hover {
+    background: #ffd54f;
+    color: #181a1b;
+}
+
+/* === Адаптивність === */
+@media (max-width: 1200px) {
+
+    .hero,
+    .hero-bg {
+        width: 100vw;
+        margin-left: -50vw;
+        margin-right: -50vw;
+        left: 50%;
+        right: 50%;
+    }
+}
+
+@media (max-width: 900px) {
+    .hero {
+        min-height: 100vh;
+        border-radius: 0 0 12px 12px;
+    }
+
+    .hero-content h1 {
+        font-size: 1.5rem;
+    }
+
+    .hero-content p {
+        font-size: 1rem;
+    }
+
+    .hero-btn {
+        font-size: 1rem;
+        padding: 0.7rem 1.5rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .hero-content {
+        padding: 1rem 0.2rem;
+    }
+}

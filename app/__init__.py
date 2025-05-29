@@ -43,8 +43,8 @@ def create_app():
     login_manager.init_app(app)
     login_manager.login_view = 'main.login'  # маршрут для логіну  # type: ignore
 
-    with app.app_context():
-        create_admin()
+    # with app.app_context():
+    #     create_admin()
 
     @login_manager.user_loader
     def load_user(user_id):

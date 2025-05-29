@@ -1,13 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
-{% include 'includes/admin_navbar.html' %}
 <section class="admin-news-section">
-    <h2>Додати новину</h2>
-    <form method="POST" class="admin-news-form">
-        <input type="text" name="title" placeholder="Заголовок новини" required>
-        <textarea name="description" placeholder="Опис новини" required rows="3"></textarea>
-        <input type="text" name="date" placeholder="дд.мм.рррр" required>
-        <button type="submit">Додати</button>
+    <h2 class="admin-news-title">Додати новину</h2>
+    <form method="POST" class="admin-news-form-modern">
+        <div class="news-form-group">
+            <label for="news-title">Заголовок</label>
+            <input id="news-title" type="text" name="title" placeholder="Заголовок новини" required>
+        </div>
+        <div class="news-form-group">
+            <label for="news-date">Дата</label>
+            <input id="news-date" type="text" name="date" placeholder="дд.мм.рррр" required>
+        </div>
+        <div class="news-form-group news-form-group-full">
+            <label for="news-description">Опис</label>
+            <textarea id="news-description" name="description" placeholder="Опис новини" required rows="3"></textarea>
+        </div>
+        <button type="submit" class="news-form-btn">+ Додати новину</button>
     </form>
 
     <h2 style="margin-top:2.5rem;">Список новин</h2>
@@ -48,51 +56,84 @@
   {% endif %}
 {% endwith %}
 <style>
-.admin-news-section {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 2.5rem 1rem 2rem 1rem;
+.admin-news-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ff9800;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.5px;
 }
-.admin-news-form {
+.admin-news-form-modern {
     display: flex;
     flex-wrap: wrap;
-    gap: 1.2rem;
-    align-items: flex-end;
-    background: #fffbe6;
-    border-radius: 12px;
-    padding: 1.2rem 1.5rem 1.2rem 1.5rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 2px 12px rgba(255,179,0,0.08);
+    gap: 1.5rem 2.5rem;
+    align-items: flex-start;
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 2rem 2.5rem 1.5rem 2.5rem;
+    margin-bottom: 2.5rem;
+    box-shadow: 0 4px 24px rgba(255,179,0,0.08);
+    border: 1.5px solid #ffe082;
 }
-.admin-news-form input[type="text"], .admin-news-form textarea {
-    flex: 1 1 200px;
-    padding: 0.7rem 1rem;
-    border-radius: 7px;
-    border: 1px solid #ffe082;
-    font-size: 1rem;
+.news-form-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 220px;
+    min-width: 180px;
+    margin-bottom: 0.5rem;
+}
+.news-form-group-full {
+    flex-basis: 100%;
+}
+.admin-news-form-modern label {
+    font-size: 1.01rem;
+    font-weight: 600;
+    color: #ff9800;
+    margin-bottom: 0.4em;
+    letter-spacing: 0.03em;
+}
+.admin-news-form-modern input[type="text"],
+.admin-news-form-modern textarea {
+    padding: 0.8rem 1.1rem;
+    border-radius: 8px;
+    border: 1.5px solid #ffe082;
+    font-size: 1.04rem;
     background: #fff;
-    transition: border 0.2s;
+    transition: border 0.2s, box-shadow 0.2s;
+    font-family: inherit;
+    resize: none;
 }
-.admin-news-form input[type="text"]:focus, .admin-news-form textarea:focus {
+.admin-news-form-modern input[type="text"]:focus,
+.admin-news-form-modern textarea:focus {
     border: 1.5px solid #ffb300;
     outline: none;
+    box-shadow: 0 2px 8px rgba(255,179,0,0.08);
 }
-.admin-news-form button {
-    background: #ffb300;
+.news-form-btn {
+    background: linear-gradient(90deg, #ffb300 60%, #ff9800 100%);
     color: #fff;
     font-weight: 700;
     border: none;
-    border-radius: 7px;
-    padding: 0.7rem 2.2rem;
-    font-size: 1.08rem;
+    border-radius: 8px;
+    padding: 0.9rem 2.5rem;
+    font-size: 1.13rem;
     cursor: pointer;
-    transition: background 0.18s;
+    margin-top: 1.2rem;
+    box-shadow: 0 2px 12px rgba(255,179,0,0.08);
+    transition: background 0.18s, box-shadow 0.18s;
+    letter-spacing: 0.04em;
 }
-.admin-news-form button:hover {
-    background: #ef4444;
+.news-form-btn:hover {
+    background: linear-gradient(90deg, #ef4444 60%, #ff9800 100%);
+    box-shadow: 0 4px 18px rgba(239,68,68,0.10);
 }
-.admin-news-table-wrap {
-    overflow-x: auto;
+@media (max-width: 900px) {
+    .admin-news-form-modern {
+        flex-direction: column;
+        gap: 1.1rem;
+        padding: 1.2rem 0.7rem 1.2rem 0.7rem;
+    }
+    .news-form-btn { width: 100%; }
 }
 .admin-news-table {
     width: 100%;

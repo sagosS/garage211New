@@ -1,0 +1,49 @@
+.reviews {
+    margin: 3rem 0 2rem 0;
+    text-align: center;
+}
+
+.reviews h2 {
+    font-size: 2rem;
+    color: #ffb300;
+    margin-bottom: 2rem;
+    letter-spacing: 1px;
+}
+
+.reviews-list {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    max-width: 900px;
+}
+
+.reviews-list blockquote {
+    background: #23272b;
+    border-left: 4px solid #ffb300;
+    border-radius: 12px;
+    padding: 1.5rem 1.2rem;
+    color: #fff;
+    max-width: 320px;
+    min-width: 220px;
+    font-style: italic;
+    box-shadow: 0 2px 12px rgba(255, 179, 0, 0.07), 0 1px 4px rgba(0, 0, 0, 0.07);
+    margin: 0;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.reviews-list blockquote:hover {
+    transform: translateY(-6px) scale(1.04);
+    box-shadow: 0 8px 24px rgba(255, 179, 0, 0.10), 0 2px 12px rgba(0, 0, 0, 0.13);
+    background: #2d2f33;
+    color: #ffb300;
+}
+
+.reviews-list footer {
+    font-size: 0.95rem;
+    color: #ffd54f;
+    margin-top: 0.7rem;
+    font-style: normal;
+    text-align: right;
+}

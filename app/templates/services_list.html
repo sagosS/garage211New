@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/services.css') }}">
+{% endblock %}
 {% block content %}
 <section class="services-page">
     <h1>Наші послуги</h1>

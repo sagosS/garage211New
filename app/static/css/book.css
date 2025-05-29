@@ -1,0 +1,67 @@
+.book-section {
+    max-width: 480px;
+    margin: 2.5rem auto;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.09);
+    padding: 2.2rem 1.5rem 1.5rem 1.5rem;
+}
+
+.book-section h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ff9800;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.book-form label {
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    display: block;
+    color: #222;
+}
+
+.book-form input,
+.book-form select,
+.book-form textarea {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    border: 1.5px solid #e5e7eb;
+    margin-bottom: 1.1rem;
+    font-size: 1.05rem;
+    background: #fffbe6;
+    transition: border 0.2s;
+}
+
+.book-form input:focus,
+.book-form select:focus,
+.book-form textarea:focus {
+    border-color: #ffb300;
+    outline: none;
+}
+
+.book-form button {
+    background: #ffb300;
+    color: #222;
+    padding: 12px 0;
+    border-radius: 8px;
+    font-weight: 700;
+    border: none;
+    width: 100%;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.book-form button:hover {
+    background: #ff9800;
+    color: #fff;
+}
+
+@media (max-width: 600px) {
+    .book-section {
+        padding: 1.2rem 0.5rem;
+    }
+}

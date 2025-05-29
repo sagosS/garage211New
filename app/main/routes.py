@@ -34,10 +34,11 @@ def index():
             alts = {}
 
     services = Service.query.order_by(Service.id.desc()).all()
+    services_with_promos = [s for s in services if s.promotion][:6]
     promotions = Promotion.query.order_by(Promotion.id.desc()).all()
     news_list = News.query.order_by(News.date.desc()).limit(3).all()  # 3 останні новини
 
-    return render_template('index.html', images=images, alts=alts, services=services, promotions=promotions, news_list=news_list, title="Головна сторінка")
+    return render_template('index.html', images=images, alts=alts, services=services, services_with_promos=services_with_promos, promotions=promotions, news_list=news_list, title="Головна сторінка")
 
 @main.route('/login', methods=['GET', 'POST'])
 def login():
@@ -56,7 +57,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    flash('Ви вийшли з кабінету', 'info')
+    flash('login_success', 'info')
     return redirect(url_for('main.index'))
 
 @main.route('/cabinet')
@@ -67,7 +68,8 @@ def worker_cabinet():
 @main.route('/news')
 def news():
     news_list = News.query.order_by(News.date.desc()).all()
-    return render_template('news_list.html', news_list=news_list)
+    news = News.query.order_by(News.date.desc()).limit(3).all()  # або інша ваша логіка
+    return render_template('news_list.html', news=news, news_list=news_list)
 
 @main.route('/book', methods=['GET', 'POST'])
 def book():

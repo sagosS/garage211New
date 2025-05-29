@@ -1,0 +1,76 @@
+.admin-edit-news {
+    max-width: 500px;
+    margin: 2.5rem auto;
+    background: #fffbe6;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(255,179,0,0.10);
+    padding: 2.2rem 2rem 1.5rem 2rem;
+    border: 1.5px solid #ffe082;
+}
+.admin-edit-news h2 {
+    text-align: center;
+    color: #ff9800;
+    font-weight: 800;
+    margin-bottom: 1.7rem;
+}
+.admin-edit-news-form label {
+    display: block;
+    margin-bottom: 1.2rem;
+    color: #23272b;
+    font-weight: 600;
+    font-size: 1.07rem;
+}
+.admin-edit-news-form input[type="text"],
+.admin-edit-news-form textarea {
+    width: 100%;
+    padding: 0.7em 1em;
+    border: 1.5px solid #ffe082;
+    border-radius: 8px;
+    font-size: 1.07rem;
+    margin-top: 0.4em;
+    background: #fff;
+    transition: border 0.18s;
+    box-sizing: border-box;
+}
+.admin-edit-news-form input[type="text"]:focus,
+.admin-edit-news-form textarea:focus {
+    border-color: #ffb300;
+    outline: none;
+}
+.admin-edit-news-form textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+.admin-edit-news-actions {
+    display: flex;
+    gap: 1.2rem;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+}
+.btn {
+    padding: 0.5em 1.5em;
+    border-radius: 7px;
+    border: none;
+    font-size: 1.07rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+    text-decoration: none;
+    display: inline-block;
+}
+.btn-primary {
+    background: linear-gradient(90deg, #ffb300 60%, #ff9800 100%);
+    color: #fff;
+}
+.btn-primary:hover {
+    background: #ff9800;
+}
+.btn-secondary {
+    background: #fffbe6;
+    color: #ff9800;
+    border: 1.5px solid #ffe082;
+}
+.btn-secondary:hover {
+    background: #ffe082;
+    color: #b45309;
+}
