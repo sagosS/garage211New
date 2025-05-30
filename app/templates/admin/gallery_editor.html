@@ -2,14 +2,19 @@
 {% block title %}Редактор галереї{% endblock %}
 {% block content %}
 <div class="gallery-editor-section">
-    <h2>Редактор галереї</h2>
+    <div class="gallery-header">
+        <h2>Редактор галереї</h2>
+        <a href="{{ url_for('admin.admin_images') }}" class="gallery-back-link">← До зображень</a>
+    </div>
     <form method="POST">
         <div class="gallery-images-list">
             {% for img in images %}
+            {% if img.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp', '.svg')) %}
                 <label class="gallery-image-item{% if img in selected %} selected{% endif %}">
                     <input type="checkbox" name="gallery_images" value="{{ img }}" {% if img in selected %}checked{% endif %}>
                     <img src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="img">
                 </label>
+            {% endif %}
             {% else %}
                 <span class="gallery-empty">Зображень ще немає.</span>
             {% endfor %}
@@ -29,37 +34,56 @@
 </div>
 <style>
 .gallery-editor-section {
-    background: #f8fafc;
+    background: #fff;
     border-radius: 18px;
-    box-shadow: 0 6px 32px rgba(255,179,0,0.08);
-    max-width: 900px;
+    box-shadow: 0 6px 32px rgba(255,179,0,0.10);
+    max-width: 950px;
     margin: 2.5rem auto 2rem auto;
-    padding: 2.2rem 2.5rem 1.7rem 2.5rem;
+    padding: 2.2rem 2.5rem 2.2rem 2.5rem;
     border: 1.5px solid #ffe082;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
 }
-.gallery-editor-section h2 {
+.gallery-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.2rem;
+}
+.gallery-header h2 {
     font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 1.5rem;
+    font-weight: 800;
     color: #ff9800;
     letter-spacing: 0.5px;
+    margin: 0;
+}
+.gallery-back-link {
+    color: #ff9800;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 1.05rem;
+    transition: color 0.18s;
+}
+.gallery-back-link:hover {
+    color: #ef4444;
 }
 .gallery-images-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 22px;
-    margin-top: 1.7rem;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 24px;
+    margin-top: 0.5rem;
     padding: 0;
     list-style: none;
 }
 .gallery-image-item {
-    border: 2px solid #eee;
-    border-radius: 12px;
-    padding: 10px 10px 6px 10px;
-    background: #fff;
+    border: 2px solid #ffe082;
+    border-radius: 14px;
+    padding: 12px 12px 8px 12px;
+    background: #fffbe6;
     position: relative;
     transition: border 0.18s, box-shadow 0.18s;
-    box-shadow: 0 2px 12px rgba(255,179,0,0.06);
+    box-shadow: 0 2px 12px rgba(255,179,0,0.07);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -72,22 +96,23 @@
 }
 .gallery-image-item input[type="checkbox"] {
     position: absolute;
-    top: 10px;
-    left: 10px;
-    width: 20px;
-    height: 20px;
+    top: 12px;
+    left: 12px;
+    width: 22px;
+    height: 22px;
     accent-color: #ffb300;
     z-index: 2;
 }
 .gallery-image-item img {
-    width: 120px;
-    height: 80px;
+    width: 130px;
+    height: 90px;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 10px;
     display: block;
-    margin-top: 8px;
+    margin-top: 10px;
     border: 2px solid #eee;
     transition: border 0.18s;
+    background: #fff;
 }
 .gallery-image-item input[type="checkbox"]:checked ~ img {
     border: 2.5px solid #ffb300;
@@ -100,50 +125,56 @@
     margin: 1.5rem 0;
 }
 .gallery-save-btn {
-    margin-top: 2rem;
+    margin: 2.2rem auto 0 auto;
     background: linear-gradient(90deg, #ffb300 60%, #ff9800 100%);
     color: #fff;
-    padding: 12px 38px;
-    border-radius: 8px;
+    padding: 13px 44px;
+    border-radius: 9px;
     font-weight: 700;
     border: none;
     cursor: pointer;
-    font-size: 1.13rem;
-    box-shadow: 0 2px 12px rgba(255,179,0,0.08);
-    transition: background 0.18s, box-shadow 0.18s;
+    font-size: 1.15rem;
+    box-shadow: 0 2px 12px rgba(255,179,0,0.10);
+    transition: background 0.18s, box-shadow 0.18s, transform 0.13s;
     letter-spacing: 0.04em;
     display: block;
 }
 .gallery-save-btn:hover {
     background: linear-gradient(90deg, #ef4444 60%, #ff9800 100%);
     box-shadow: 0 4px 18px rgba(239,68,68,0.10);
+    transform: translateY(-2px) scale(1.03);
 }
 .gallery-selected-block {
     margin-top: 2.5rem;
+    background: #fffbe6;
+    border-radius: 12px;
+    padding: 1.1rem 1.2rem;
+    border: 1.5px solid #ffe082;
 }
 .gallery-selected-block h4 {
     margin-bottom: 1rem;
-    color: #222;
+    color: #ff9800;
     font-size: 1.08rem;
-    font-weight: 600;
+    font-weight: 700;
 }
 .gallery-selected-list {
     display: flex;
-    gap: 12px;
+    gap: 14px;
     flex-wrap: wrap;
 }
 .gallery-selected-list img {
     width: 60px;
     height: 40px;
     object-fit: cover;
-    border-radius: 6px;
+    border-radius: 7px;
     border: 2px solid #ffe082;
+    background: #fff;
 }
-@media (max-width: 700px) {
+@media (max-width: 900px) {
     .gallery-editor-section { padding: 1rem 0.5rem; }
-    .gallery-images-list { gap: 10px; }
-    .gallery-image-item img { width: 80px; height: 50px; }
-    .gallery-selected-list img { width: 40px; height: 28px; }
+    .gallery-images-list { gap: 12px; }
+    .gallery-image-item img { width: 90px; height: 60px; }
+    .gallery-selected-list img { width: 38px; height: 26px; }
 }
 </style>
 {% endblock %}

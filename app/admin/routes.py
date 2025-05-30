@@ -3,11 +3,13 @@ from datetime import datetime
 from flask import render_template, request, redirect, url_for, flash, abort, current_app
 from flask_login import login_required, current_user, logout_user
 from werkzeug.security import generate_password_hash
-from app.models import User, Client, Service, Promotion, News, ContactMessage
+from app.models import User, Client, Service, Promotion, News, ContactMessage, MaterialAsset
 from app.extensions import db
 from . import admin
 from werkzeug.utils import secure_filename
 import json
+import pandas as pd
+import requests
 
 @admin.route('/')
 @login_required
@@ -188,13 +190,14 @@ def admin_projects():
 
     if request.method == 'POST':
         name = request.form.get('name', '').strip()
+        description = request.form.get('description', '').strip()  # ДОДАЙТЕ ЦЕ
         selected = request.form.getlist('project_images')
         idx = request.form.get('idx')
         if idx:  # Редагування
             try:
                 idx = int(idx)
                 if name and selected and 0 <= idx < len(projects):
-                    projects[idx] = {'name': name, 'images': selected}
+                    projects[idx] = {'name': name, 'description': description, 'images': selected}  # ДОДАЙТЕ description
                     with open(projects_json, 'w') as f:
                         json.dump(projects, f, ensure_ascii=False)
                     flash('Проєкт оновлено!', 'success')
@@ -203,7 +206,7 @@ def admin_projects():
                 flash('Помилка редагування.', 'danger')
         else:  # Додавання
             if name and selected:
-                projects.append({'name': name, 'images': selected})
+                projects.append({'name': name, 'description': description, 'images': selected})  # ДОДАЙТЕ description
                 with open(projects_json, 'w') as f:
                     json.dump(projects, f, ensure_ascii=False)
                 flash('Проєкт створено!', 'success')
@@ -460,6 +463,175 @@ def delete_contact(msg_id):
     db.session.delete(msg)
     db.session.commit()
     return redirect(url_for('admin.admin_contacts'))
+
+@admin.route('/assets', methods=['GET', 'POST'])
+@login_required
+def admin_assets():
+    edit_id = request.args.get('edit')
+    delete_id = request.args.get('delete')
+    assets = MaterialAsset.query.all()
+
+    # Видалення
+    if delete_id:
+        asset = MaterialAsset.query.get_or_404(delete_id)
+        if asset.photo:
+            photo_path = os.path.join(current_app.static_folder, 'assets_photos', asset.photo)
+            if os.path.exists(photo_path):
+                os.remove(photo_path)
+        db.session.delete(asset)
+        db.session.commit()
+        flash('Матеріальну цінність видалено!', 'success')
+        return redirect(url_for('admin.admin_assets'))
+
+    # Редагування
+    edit_asset = None
+    if edit_id:
+        edit_asset = MaterialAsset.query.get_or_404(edit_id)
+
+    if request.method == 'POST':
+        name = request.form.get('name', '').strip()
+        code = request.form.get('code', '').strip()
+        price = request.form.get('price', '').strip()
+        quantity = request.form.get('quantity', '').strip()
+        photo_file = request.files.get('photo')
+        photo_url = request.form.get('photo_url', '').strip()
+        asset_id = request.form.get('asset_id')
+        photo_filename = None
+
+        # if photo_file and photo_file.filename:
+        #     photo_filename = secure_filename(photo_file.filename)
+        #     photo_folder = os.path.join(current_app.static_folder, 'assets_photos')
+        #     os.makedirs(photo_folder, exist_ok=True)
+        #     photo_path = os.path.join(photo_folder, photo_filename)
+        #     photo_file.save(photo_path)
+        # elif photo_url:
+        if photo_url:
+            try:
+                photo_filename = os.path.basename(photo_url.split("?")[0])
+                photo_folder = os.path.join(current_app.static_folder, 'assets_photos')
+                os.makedirs(photo_folder, exist_ok=True)
+                photo_path = os.path.join(photo_folder, photo_filename)
+                r = requests.get(photo_url, timeout=10)
+                # Перевірка, що це зображення і не порожнє
+                if r.status_code == 200 and r.headers.get('Content-Type', '').startswith('image/'):
+                    with open(photo_path, 'wb') as f:
+                        f.write(r.content)
+                    if os.path.getsize(photo_path) > 0:
+                        asset.photo = photo_filename
+                    else:
+                        os.remove(photo_path)
+                        flash('Фото з URL порожнє або пошкоджене.', 'danger')
+                else:
+                    flash('Не вдалося завантажити фото з URL або це не зображення.', 'danger')
+            except Exception as e:
+                flash('Помилка при завантаженні фото з URL: ' + str(e), 'danger')
+
+        if asset_id:  # Оновлення існуючого
+            asset = MaterialAsset.query.get_or_404(asset_id)
+            asset.name = name
+            asset.code = code
+            asset.price = float(price)
+            asset.quantity = int(quantity)
+            # Оновлення фото тільки якщо є новий файл або новий URL
+            if photo_file and photo_file.filename:
+                # Видалити старе фото
+                if asset.photo:
+                    old_photo_path = os.path.join(current_app.static_folder, 'assets_photos', asset.photo)
+                    if os.path.exists(old_photo_path):
+                        os.remove(old_photo_path)
+                photo_filename = secure_filename(photo_file.filename)
+                photo_folder = os.path.join(current_app.static_folder, 'assets_photos')
+                os.makedirs(photo_folder, exist_ok=True)
+                photo_path = os.path.join(photo_folder, photo_filename)
+                photo_file.save(photo_path)
+                asset.photo = photo_filename
+            elif photo_url:
+                try:
+                    # Видалити старе фото
+                    if asset.photo:
+                        old_photo_path = os.path.join(current_app.static_folder, 'assets_photos', asset.photo)
+                        if os.path.exists(old_photo_path):
+                            os.remove(old_photo_path)
+                    photo_filename = os.path.basename(photo_url.split("?")[0])
+                    photo_folder = os.path.join(current_app.static_folder, 'assets_photos')
+                    os.makedirs(photo_folder, exist_ok=True)
+                    photo_path = os.path.join(photo_folder, photo_filename)
+                    r = requests.get(photo_url, timeout=10)
+                    # Перевірка, що це дійсно зображення і файл не порожній
+                    if r.status_code == 200 and r.headers.get('Content-Type', '').startswith('image/'):
+                        with open(photo_path, 'wb') as f:
+                            f.write(r.content)
+                        asset.photo = photo_filename
+                    else:
+                        flash('Не вдалося завантажити фото з URL або це не зображення.', 'danger')
+                except Exception:
+                    flash('Помилка при завантаженні фото з URL', 'danger')
+            # Якщо не вибрано нове фото і не вказано новий URL — залишаємо старе фото
+            db.session.commit()
+            flash('Матеріальну цінність оновлено!', 'success')
+            return redirect(url_for('admin.admin_assets'))
+        else:  # Додавання нового
+            photo_filename = None
+            if photo_file and photo_file.filename:
+                photo_filename = secure_filename(photo_file.filename)
+                photo_folder = os.path.join(current_app.static_folder, 'assets_photos')
+                os.makedirs(photo_folder, exist_ok=True)
+                photo_path = os.path.join(photo_folder, photo_filename)
+                photo_file.save(photo_path)
+            asset = MaterialAsset(
+                name=name,
+                code=code,
+                price=float(price),
+                quantity=int(quantity),
+                photo=photo_filename
+            )
+            db.session.add(asset)
+            db.session.commit()
+            flash('Матеріальну цінність додано!', 'success')
+            return redirect(url_for('admin.admin_assets'))
+
+    return render_template('admin/asset.html', assets=assets, edit_asset=edit_asset)
+
+@admin.route('/assets/import', methods=['GET', 'POST'])
+def admin_import_assets():
+    if request.method == 'POST':
+        file = request.files.get('excel')
+        if not file:
+            flash('Оберіть Excel-файл!', 'danger')
+            return redirect(url_for('admin.import_assets'))
+        try:
+            df = pd.read_excel(file)
+            imported = 0
+            for _, row in df.iterrows():
+                name = str(row.get('name', '')).strip()
+                code = str(row.get('code', '')).strip()
+                try:
+                    price = float(row.get('price', ''))
+                except Exception:
+                    price = None
+                try:
+                    quantity = int(row.get('quantity', 0))
+                except Exception:
+                    quantity = 0
+                # Перевірка на валідність
+                if not name or not code or price is None or pd.isna(price):
+                    continue  # пропустити невалідний рядок
+                asset = MaterialAsset(
+                    name=name,
+                    code=code,
+                    price=price,
+                    quantity=quantity,
+                    photo=None
+                )
+                db.session.add(asset)
+                imported += 1
+            db.session.commit()
+            flash(f'Імпортовано успішно! Додано: {imported}', 'success')
+            return redirect(url_for('admin.admin_assets'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Помилка імпорту: {e}', 'danger')
+    return render_template('admin/import_assets.html')
 
 @admin.route('/logout')
 @login_required

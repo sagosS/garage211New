@@ -17,4 +17,88 @@
         </form>
     </div>
 </div>
+<style>
+    .login-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(120deg, #fffbe6 0%, #ffe0b2 100%);
+    }
+
+    .login-box {
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 4px 32px rgba(255, 179, 0, 0.13);
+        padding: 2.5rem 2.5rem 2rem 2.5rem;
+        max-width: 370px;
+        width: 100%;
+        border: 1.5px solid #ffe082;
+        display: flex;
+        flex-direction: column;
+        gap: 1.2rem;
+    }
+
+    .login-box h1 {
+        text-align: center;
+        color: #ff9800;
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 1.5rem;
+        letter-spacing: 0.03em;
+    }
+
+    .login-box label {
+        font-weight: 600;
+        color: #ff9800;
+        margin-bottom: 0.3rem;
+        display: block;
+        letter-spacing: 0.01em;
+    }
+
+    .login-box input[type="tel"],
+    .login-box input[type="password"] {
+        width: 100%;
+        padding: 0.7rem 1rem;
+        border-radius: 8px;
+        border: 1.5px solid #ffe082;
+        background: #fffbe6;
+        font-size: 1rem;
+        margin-bottom: 1.1rem;
+        transition: border 0.18s, box-shadow 0.18s;
+        outline: none;
+    }
+
+    .login-box input:focus {
+        border-color: #ffb300;
+        box-shadow: 0 2px 12px #ffe08244;
+    }
+
+    .login-box button[type="submit"] {
+        width: 100%;
+        padding: 0.8rem 0;
+        background: linear-gradient(90deg, #ffb300 0%, #ff9800 100%);
+        color: #fff;
+        font-weight: 700;
+        font-size: 1.1rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-top: 0.5rem;
+        box-shadow: 0 2px 8px #ffe08244;
+        transition: background 0.18s, transform 0.13s;
+    }
+
+    .login-box button[type="submit"]:hover {
+        background: linear-gradient(90deg, #ff9800 0%, #ffb300 100%);
+        transform: translateY(-2px) scale(1.03);
+    }
+
+    @media (max-width: 600px) {
+        .login-box {
+            padding: 1.2rem 0.7rem 1rem 0.7rem;
+            max-width: 98vw;
+        }
+    }
+</style>
 {% endblock %}

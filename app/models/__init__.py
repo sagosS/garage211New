@@ -4,3 +4,4 @@ from .service import Service
 from .promotions import Promotion
 from .news import News
 from .contacts import ContactMessage
+from .material_asset import MaterialAsset

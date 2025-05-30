@@ -1,0 +1,426 @@
+{% extends "base.html" %}
+{% block title %}Матеріальні цінності — Адмін-панель{% endblock %}
+{% block content %}
+<section class="admin-assets-section">
+    <h2 class="admin-section-title">Матеріальні цінності</h2>
+    <form method="POST" enctype="multipart/form-data" class="admin-asset-form">
+        {% if edit_asset %}
+        <input type="hidden" name="asset_id" value="{{ edit_asset.id }}">
+        {% endif %}
+        <div class="asset-form-group">
+            <label>Найменування</label>
+            <input class="asset-input" type="text" name="name" placeholder="Назва" required
+                value="{{ edit_asset.name if edit_asset else '' }}">
+        </div>
+        <div class="asset-form-group">
+            <label>Код</label>
+            <input class="asset-input" type="text" name="code" placeholder="Код" required
+                value="{{ edit_asset.code if edit_asset else '' }}">
+        </div>
+        <div class="asset-form-group">
+            <label>Ціна</label>
+            <input class="asset-input" type="number" name="price" placeholder="Ціна" step="0.01" min="0" required
+                value="{{ edit_asset.price if edit_asset else '' }}">
+        </div>
+        <div class="asset-form-group">
+            <label>Кількість</label>
+            <input class="asset-input" type="number" name="quantity" placeholder="Кількість" min="0" required
+                value="{{ edit_asset.quantity if edit_asset else '' }}">
+        </div>
+        <div class="asset-form-group">
+            <label>Фото</label>
+            <input class="asset-input" type="file" name="photo" accept="image/*" {% if not edit_asset %}required{% endif
+                %}>
+            {% if edit_asset and edit_asset.photo %}
+            <img src="{{ url_for('static', filename='assets_photos/' ~ edit_asset.photo) }}" alt="Фото"
+                class="asset-table-img" style="margin-top:0.5em;">
+            {% endif %}
+        </div>
+        <div class="asset-form-group">
+            <label>Фото (URL)</label>
+            <input class="asset-input" type="url" name="photo_url" placeholder="https://example.com/image.jpg">
+            <span style="font-size:0.95em;color:#888;">Можна або завантажити файл, або вказати URL</span>
+        </div>
+        <div class="asset-form-actions">
+            <button type="submit" class="asset-btn">{% if edit_asset %}Зберегти зміни{% else %}Додати{% endif
+                %}</button>
+            {% if edit_asset %}
+            <a href="{{ url_for('admin.admin_assets') }}" class="asset-btn cancel-btn"
+                style="background:#fff0f0;color:#ef4444;">Скасувати</a>
+            {% endif %}
+        </div>
+
+        <a href="{{ url_for('admin.admin_import_assets') }}" class="asset-btn" style="margin-bottom:1em;">Імпорт з
+            Excel</a>
+    </form>
+
+    <div class="assets-list">
+        <h3 class="assets-list-title">Таблиця матеріальних цінностей</h3>
+        <div class="assets-table-wrapper">
+            <table class="assets-table">
+                <thead>
+                    <tr>
+                        <th>Фото</th>
+                        <th>Найменування</th>
+                        <th>Код</th>
+                        <th>Ціна</th>
+                        <th>Кількість</th>
+                        <th>Дії</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for asset in assets %}
+                    <tr>
+                        <td>
+                            {% if asset.photo and asset.photo|length > 0 %}
+                            <img src="{{ url_for('static', filename='assets_photos/' ~ asset.photo) }}"
+                                 alt="Фото"
+                                 class="asset-table-img asset-img-zoom"
+                                 onclick="showAssetImgModal(this)">
+                            {% else %}
+                            <span style="color:#bbb;">Немає фото</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ asset.name }}</td>
+                        <td>{{ asset.code }}</td>
+                        <td>{{ asset.price }}</td>
+                        <td>{{ asset.quantity }}</td>
+                        <td class="asset-table-actions">
+                            <a href="{{ url_for('admin.admin_assets', edit=asset.id) }}" class="icon-btn"
+                                title="Редагувати" aria-label="Редагувати">
+                                <!-- Кольорова ручка (Material Design) -->
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                                    <path
+                                        d="M3 17.25V21h3.75l11.06-11.06a1.5 1.5 0 0 0 0-2.12l-2.83-2.83a1.5 1.5 0 0 0-2.12 0L3 17.25z"
+                                        fill="#fffbe6" stroke="#ff9800" stroke-width="1.5" />
+                                    <path d="M14.06 5.02l2.92 2.92" stroke="#ff9800" stroke-width="1.5"
+                                        stroke-linecap="round" />
+                                </svg>
+                            </a>
+                            <a href="{{ url_for('admin.admin_assets', delete=asset.id) }}" class="icon-btn"
+                                title="Видалити" aria-label="Видалити" onclick="return confirm('Видалити цінність?')">
+                                <!-- Кольоровий кошик (Material Design) -->
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                                    <rect x="5" y="7" width="14" height="12" rx="2" fill="#fffbe6" stroke="#ef4444"
+                                        stroke-width="1.5" />
+                                    <path d="M9 10v6M12 10v6M15 10v6" stroke="#ef4444" stroke-width="1.5"
+                                        stroke-linecap="round" />
+                                    <path d="M3 7h18" stroke="#ef4444" stroke-width="1.5" stroke-linecap="round" />
+                                    <path d="M10 7V5a2 2 0 0 1 4 0v2" stroke="#ef4444" stroke-width="1.5"
+                                        stroke-linecap="round" />
+                                </svg>
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" style="color:#888;text-align:center;">Даних ще немає.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" style="font-weight:700; color:#ff9800; text-align:right;">Всього матеріальних цінностей:</td>
+                        <td style="font-weight:700; color:#222;">
+                            {{ assets|sum(attribute='price') }}
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</section>
+<div id="assetImgModal" class="asset-img-modal" onclick="this.style.display='none'">
+    <span class="asset-img-modal-close"
+        onclick="document.getElementById('assetImgModal').style.display='none';event.stopPropagation();">&times;</span>
+    <img class="asset-img-modal-content" id="assetImgModalImg">
+</div>
+<style>
+    .admin-assets-section {
+        margin: 2.5rem auto 0 auto;
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 6px 32px rgba(255, 179, 0, 0.10);
+        max-width: 1260px;
+        padding: 2.2rem 2.5rem 2.2rem 2.5rem;
+        border: 1.5px solid #ffe082;
+        flex-direction: column;
+        gap: 2rem;
+        align-items: center;
+    }
+
+    .admin-section-title {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #ff9800;
+        margin-bottom: 1.5rem;
+        letter-spacing: 0.5px;
+        text-align: center;
+        width: 100%;
+    }
+
+    .admin-asset-form {
+        background: #f8fafc;
+        border-radius: 16px;
+        padding: 2rem 2.5rem 1.5rem 2.5rem;
+        margin-bottom: 2.5rem;
+        box-shadow: 0 4px 24px rgba(255, 179, 0, 0.08);
+        border: 1.5px solid #ffe082;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem 2.5rem;
+        align-items: flex-start;
+        width: 100%;
+        max-width: 700px;
+    }
+
+    .asset-form-group {
+        flex: 1 1 220px;
+        min-width: 180px;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 0.5rem;
+    }
+
+    .asset-form-group label {
+        font-size: 1.01rem;
+        font-weight: 600;
+        color: #ff9800;
+        margin-bottom: 0.4em;
+        letter-spacing: 0.03em;
+    }
+
+    .asset-input {
+        padding: 0.8rem 1.1rem;
+        border-radius: 8px;
+        border: 1.5px solid #ffe082;
+        font-size: 1.04rem;
+        background: #fff;
+        transition: border 0.2s, box-shadow 0.2s;
+        font-family: inherit;
+    }
+
+    .asset-input:focus {
+        border: 1.5px solid #ffb300;
+        outline: none;
+        box-shadow: 0 2px 8px rgba(255, 179, 0, 0.08);
+    }
+
+    .asset-form-actions {
+        flex-basis: 100%;
+        margin-top: 1.2rem;
+        display: flex;
+        gap: 1.2rem;
+        justify-content: flex-end;
+    }
+
+    .asset-btn {
+        background: linear-gradient(90deg, #ffb300 60%, #ff9800 100%);
+        color: #fff;
+        font-weight: 700;
+        border: none;
+        border-radius: 8px;
+        padding: 0.9rem 2.5rem;
+        font-size: 1.13rem;
+        cursor: pointer;
+        box-shadow: 0 2px 12px rgba(255, 179, 0, 0.08);
+        transition: background 0.18s, box-shadow 0.18s;
+        letter-spacing: 0.04em;
+    }
+
+    .asset-btn:hover {
+        background: linear-gradient(90deg, #ef4444 60%, #ff9800 100%);
+        box-shadow: 0 4px 18px rgba(239, 68, 68, 0.10);
+    }
+
+    .cancel-btn {
+        background: #fff0f0 !important;
+        color: #ef4444 !important;
+        border: none;
+    }
+
+    .assets-list-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 1.2rem;
+        color: #222;
+        text-align: center;
+    }
+
+    .assets-table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        margin-bottom: 2rem;
+    }
+
+    .assets-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 12px rgba(255, 179, 0, 0.07);
+        font-size: 1rem;
+    }
+
+    .assets-table th,
+    .assets-table td {
+        padding: 0.7em 0.8em;
+        border-bottom: 1px solid #ffe082;
+        text-align: left;
+        vertical-align: middle;
+    }
+
+    .assets-table th {
+        background: #fffbe6;
+        color: #ff9800;
+        font-weight: 700;
+        font-size: 1.05rem;
+        letter-spacing: 0.03em;
+    }
+
+    .assets-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .asset-table-img {
+        width: 46px;
+        height: 29px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1.5px solid #ffe082;
+        background: #fffbe6;
+        box-shadow: 0 1px 4px rgba(255, 179, 0, 0.07);
+    }
+
+    .asset-table-actions {
+        display: flex;
+        gap: 0.3em;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .icon-btn svg {
+        display: block;
+        vertical-align: middle;
+        transition: transform 0.15s;
+    }
+
+    .icon-btn {
+        background: none;
+        border: none;
+        padding: 0.3em 0.5em;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.18s, box-shadow 0.18s, transform 0.15s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+    }
+
+    .icon-btn:hover {
+        background: #fffbe6;
+        box-shadow: 0 2px 8px rgba(255, 179, 0, 0.08);
+        transform: scale(1.08);
+    }
+
+    .icon-btn[title="Видалити"]:hover {
+        background: #fff0f0;
+    }
+
+    .icon-btn[title="Видалити"]:hover svg rect,
+    .icon-btn[title="Видалити"]:hover svg path {
+        stroke: #b91c1c;
+    }
+
+    .icon-btn[title="Редагувати"]:hover svg path {
+        stroke: #178a3a;
+    }
+
+    .asset-img-zoom {
+        cursor: zoom-in;
+        transition: box-shadow 0.18s, transform 0.18s;
+    }
+
+    .asset-img-zoom:hover {
+        box-shadow: 0 4px 24px 0 rgba(255, 179, 0, 0.18);
+        transform: scale(1.04);
+    }
+
+    .asset-img-modal {
+        display: none;
+        position: fixed;
+        z-index: 10000;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.75);
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .asset-img-modal-content {
+        margin: auto;
+        display: block;
+        max-width: 90vw;
+        max-height: 90vh;
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(255, 179, 0, 0.18);
+        background: #fff;
+    }
+
+    .asset-img-modal-close {
+        position: absolute;
+        top: 32px;
+        right: 48px;
+        color: #fff;
+        font-size: 3rem;
+        font-weight: bold;
+        cursor: pointer;
+        z-index: 10001;
+        text-shadow: 0 2px 12px #000;
+        transition: color 0.18s;
+    }
+
+    .asset-img-modal-close:hover {
+        color: #ff9800;
+    }
+
+    @media (max-width: 900px) {
+        .admin-asset-form {
+            flex-direction: column;
+            gap: 1.1rem;
+            padding: 1.2rem 0.7rem 1.2rem 0.7rem;
+            max-width: 98vw;
+        }
+
+        .asset-btn {
+            width: 100%;
+            margin-bottom: 0.7rem;
+        }
+
+        .assets-table th,
+        .assets-table td {
+            padding: 0.5em 0.4em;
+            font-size: 0.95rem;
+        }
+
+        .asset-table-img {
+            width: 70px;
+            height: 46px;
+        }
+    }
+</style>
+<script>
+    function showAssetImgModal(img) {
+        var modal = document.getElementById('assetImgModal');
+        var modalImg = document.getElementById('assetImgModalImg');
+        modal.style.display = "flex";
+        modalImg.src = img.src;
+    }
+</script>
+{% endblock %}
