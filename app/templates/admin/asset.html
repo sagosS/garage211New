@@ -64,7 +64,7 @@
                         <th>Найменування</th>
                         <th>Код</th>
                         <th>Ціна</th>
-                        <th>Кількість</th>
+                        <th>шт.</th>
                         <th>Дії</th>
                     </tr>
                 </thead>
@@ -83,7 +83,7 @@
                         </td>
                         <td>{{ asset.name }}</td>
                         <td>{{ asset.code }}</td>
-                        <td>{{ asset.price }}</td>
+                        <td><b>{{ asset.price }}</b></td>
                         <td>{{ asset.quantity }}</td>
                         <td class="asset-table-actions">
                             <a href="{{ url_for('admin.admin_assets', edit=asset.id) }}" class="icon-btn"
@@ -248,7 +248,7 @@
         text-align: center;
     }
 
-    .assets-table-wrapper {
+     .assets-table-wrapper {
         width: 100%;
         overflow-x: auto;
         margin-bottom: 2rem;
@@ -256,62 +256,100 @@
 
     .assets-table {
         width: 100%;
-        border-collapse: collapse;
+        border-collapse: separate;
+        border-spacing: 0;
         background: #fff;
-        border-radius: 12px;
+        border-radius: 18px;
         overflow: hidden;
-        box-shadow: 0 2px 12px rgba(255, 179, 0, 0.07);
+        box-shadow: 0 6px 32px rgba(255, 179, 0, 0.13);
         font-size: 1rem;
+        margin-bottom: 0;
+        transition: box-shadow 0.2s;
     }
 
-    .assets-table th,
-    .assets-table td {
-        padding: 0.7em 0.8em;
-        border-bottom: 1px solid #ffe082;
-        text-align: left;
-        vertical-align: middle;
+    .assets-table thead tr {
+        background: linear-gradient(90deg, #fffbe6 60%, #ffe082 100%);
     }
 
     .assets-table th {
-        background: #fffbe6;
         color: #ff9800;
-        font-weight: 700;
-        font-size: 1.05rem;
-        letter-spacing: 0.03em;
+        font-weight: 800;
+        font-size: 1.08rem;
+        letter-spacing: 0.04em;
+        border-bottom: 2.5px solid #ffb300;
+        text-align: center;
+        padding: 1.1em 1.1em 1em 1.1em;
+        background: transparent;
+        position: sticky;
+        top: 0;
+        z-index: 2;
     }
 
-    .assets-table tr:last-child td {
+    .assets-table tbody tr {
+        transition: background 0.18s, box-shadow 0.18s;
+        border-radius: 12px;
+    }
+
+    .assets-table tbody tr:hover {
+        background: #fffde7;
+        box-shadow: 0 2px 12px rgba(255, 179, 0, 0.08);
+    }
+
+    .assets-table td {
+        font-size: 1.04rem;
+        color: #222;
+        /* text-align: center; */
+        vertical-align: middle;
+        padding: 1em 1.1em;
+        border-bottom: 1.5px solid #ffe082;
+        background: #fff;
+        transition: background 0.18s;
+    }
+
+    .assets-table tbody tr:last-child td {
         border-bottom: none;
     }
 
+    .assets-table tfoot td {
+        background: #fffbe6;
+        border-top: 2.5px solid #ffb300;
+        border-bottom: none;
+        font-size: 1.08rem;
+        font-weight: 700;
+        color: #ff9800;
+        text-align: right;
+        padding: 1em 1.1em;
+    }
+
     .asset-table-img {
-        width: 46px;
-        height: 29px;
+        width: 60px;
+        height: 60px;
         object-fit: cover;
-        border-radius: 8px;
+        border-radius: 10px;
         border: 1.5px solid #ffe082;
         background: #fffbe6;
-        box-shadow: 0 1px 4px rgba(255, 179, 0, 0.07);
+        box-shadow: 0 1px 6px rgba(255, 179, 0, 0.10);
+        transition: box-shadow 0.18s, transform 0.18s;
+        cursor: zoom-in;
+    }
+
+    .asset-table-img:hover {
+        box-shadow: 0 4px 24px 0 rgba(255, 179, 0, 0.18);
+        transform: scale(1.07);
     }
 
     .asset-table-actions {
-        display: flex;
-        gap: 0.3em;
+        /* display: flex;
+        gap: 0.5em; */
         align-items: center;
-        justify-content: flex-start;
-    }
-
-    .icon-btn svg {
-        display: block;
-        vertical-align: middle;
-        transition: transform 0.15s;
+        justify-content: center;
     }
 
     .icon-btn {
         background: none;
         border: none;
         padding: 0.3em 0.5em;
-        border-radius: 5px;
+        border-radius: 7px;
         cursor: pointer;
         transition: background 0.18s, box-shadow 0.18s, transform 0.15s;
         display: inline-flex;
@@ -320,10 +358,16 @@
         line-height: 1;
     }
 
+    .icon-btn svg {
+        display: block;
+        vertical-align: middle;
+        transition: transform 0.15s;
+    }
+
     .icon-btn:hover {
         background: #fffbe6;
         box-shadow: 0 2px 8px rgba(255, 179, 0, 0.08);
-        transform: scale(1.08);
+        transform: scale(1.12);
     }
 
     .icon-btn[title="Видалити"]:hover {
@@ -339,81 +383,68 @@
         stroke: #178a3a;
     }
 
-    .asset-img-zoom {
-        cursor: zoom-in;
-        transition: box-shadow 0.18s, transform 0.18s;
-    }
-
-    .asset-img-zoom:hover {
-        box-shadow: 0 4px 24px 0 rgba(255, 179, 0, 0.18);
-        transform: scale(1.04);
-    }
-
-    .asset-img-modal {
-        display: none;
-        position: fixed;
-        z-index: 10000;
-        left: 0;
-        top: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.75);
-        justify-content: center;
-        align-items: center;
+    .assets-list-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 1.2rem;
+        color: #222;
         text-align: center;
+        letter-spacing: 0.03em;
     }
 
-    .asset-img-modal-content {
-        margin: auto;
-        display: block;
-        max-width: 90vw;
-        max-height: 90vh;
-        border-radius: 12px;
-        box-shadow: 0 8px 32px rgba(255, 179, 0, 0.18);
-        background: #fff;
+    /* Сучасний скролбар */
+    .assets-table-wrapper::-webkit-scrollbar {
+        height: 8px;
+        background: #fffbe6;
+        border-radius: 8px;
     }
-
-    .asset-img-modal-close {
-        position: absolute;
-        top: 32px;
-        right: 48px;
-        color: #fff;
-        font-size: 3rem;
-        font-weight: bold;
-        cursor: pointer;
-        z-index: 10001;
-        text-shadow: 0 2px 12px #000;
-        transition: color 0.18s;
-    }
-
-    .asset-img-modal-close:hover {
-        color: #ff9800;
+    .assets-table-wrapper::-webkit-scrollbar-thumb {
+        background: #ffe082;
+        border-radius: 8px;
     }
 
     @media (max-width: 900px) {
-        .admin-asset-form {
-            flex-direction: column;
-            gap: 1.1rem;
-            padding: 1.2rem 0.7rem 1.2rem 0.7rem;
-            max-width: 98vw;
-        }
-
-        .asset-btn {
-            width: 100%;
-            margin-bottom: 0.7rem;
-        }
-
         .assets-table th,
         .assets-table td {
-            padding: 0.5em 0.4em;
-            font-size: 0.95rem;
+            padding: 0.5em 0.3em;
+            font-size: 0.93rem;
         }
-
         .asset-table-img {
-            width: 70px;
-            height: 46px;
+            width: 38px;
+            height: 26px;
         }
     }
+
+    .asset-img-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0; top: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.65);
+    align-items: center;
+    justify-content: center;
+    cursor: zoom-out;
+}
+.asset-img-modal-content {
+    max-width: 90vw;
+    max-height: 90vh;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    background: #fff;
+    display: block;
+    margin: auto;
+}
+.asset-img-modal-close {
+    position: absolute;
+    top: 2.5vh;
+    right: 3vw;
+    font-size: 2.5rem;
+    color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+    z-index: 10001;
+    text-shadow: 0 2px 8px #000;
+}
 </style>
 <script>
     function showAssetImgModal(img) {
