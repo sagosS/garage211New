@@ -1,5 +1,7 @@
 from .user import User
 from .client import Client
+from .order import Order
+from .employee import Employee
 from .service import Service
 from .promotions import Promotion
 from .news import News

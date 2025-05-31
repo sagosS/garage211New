@@ -1,6 +1,381 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Кабінет працівника</h2>
-<p>Вітаємо, {{ current_user.phone_number }}!</p>
-<a href="{{ url_for('main.logout') }}">Вийти</a>
+<div class="worker-cabinet-container">
+    <div class="worker-card glassy">
+        <div class="worker-avatar">
+            <svg width="60" height="60" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="8" r="5" fill="#ffe082" stroke="#ff9800" stroke-width="2" />
+                <ellipse cx="12" cy="18" rx="8" ry="4" fill="#fffbe6" stroke="#ff9800" stroke-width="2" />
+            </svg>
+        </div>
+        <div class="worker-info">
+            <div class="worker-name">
+                {{ current_user.last_name }} {{ current_user.first_name }}
+            </div>
+            <div class="worker-phone">Телефон: {{ current_user.phone_number }}</div>
+            <div class="worker-role">Роль: {{ current_user.role or "Майстер" }}</div>
+        </div>
+        <a href="{{ url_for('main.logout') }}" class="worker-logout-btn">Вийти</a>
+    </div>
+
+    <div class="worker-orders-section glassy">
+        <h3>Мої замовлення</h3>
+        <table class="worker-orders-table">
+            <thead>
+                <tr>
+                    <th>№</th>
+                    <th>Дата</th>
+                    <th>Бажана дата</th>
+                    <th>Авто</th>
+                    <th>Послуга</th>
+                    <th>Статус</th>
+                    <th>Ціна</th>
+                    <th>Дія</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr class="{% if order.status == 'завершена' %}order-row-inactive{% endif %}">
+                    <td>{{ order.id }}</td>
+                    <td>{{ order.created_at.strftime('%d.%m.%Y') }}</td>
+                    <td>
+                        {% if order.arrival_date %}
+                        {{ order.arrival_date.strftime('%d.%m.%Y') }}
+                        {% else %}
+                        —
+                        {% endif %}
+                    </td>
+                    <td>{{ order.brand }} {{ order.model or '' }} ({{ order.year or '' }})</td>
+                    <td>{{ order.repair }}</td>
+                    <td>
+                        <span class="order-status order-status-{{ order.status|replace(' ', '_') }}">
+                            {{ order.status }}
+                        </span>
+                    </td>
+                    <td>
+                        {% if order.price %}
+                        <span class="order-price">{{ order.price }} ₴</span>
+                        {% else %}
+                        <span class="order-price-empty">—</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form method="post" action="{{ url_for('main.worker_update_status', order_id=order.id) }}">
+                            <select name="status" class="worker-status-select" {% if order.status=='завершена'
+                                %}disabled{% endif %}>
+                                <option value="в роботі" {% if order.status=='в роботі' %}selected{% endif %}>В роботі
+                                </option>
+                                <option value="завершена" {% if order.status=='завершена' %}selected{% endif %}>
+                                    Завершено</option>
+                            </select>
+                            <button type="submit" class="worker-status-btn" {% if order.status=='завершена' %}disabled
+                                style="opacity:0.5;cursor:not-allowed;" {% endif %}>OK</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="8" style="text-align:center;color:#bbb;">Немає замовлень</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    body {
+        background: linear-gradient(120deg, #fffbe6 0%, #ffe082 100%);
+    }
+
+    .worker-cabinet-container {
+        display: flex;
+        flex-direction: column;
+        gap: 2.5em;
+        align-items: center;
+        margin-top: 2em;
+    }
+
+    .glassy {
+        background: rgba(255, 251, 230, 0.85);
+        box-shadow: 0 8px 32px 0 rgba(255, 168, 0, 0.12);
+        backdrop-filter: blur(2px);
+        border-radius: 18px;
+        border: 1.5px solid #ffe082;
+    }
+
+    .worker-card {
+        display: flex;
+        align-items: center;
+        gap: 2em;
+        padding: 2em 2.5em;
+        min-width: 340px;
+        max-width: 520px;
+        width: 100%;
+        margin-bottom: 1em;
+        position: relative;
+    }
+
+    .worker-avatar {
+        flex-shrink: 0;
+        background: #fffbe6;
+        border-radius: 50%;
+        padding: 0.5em;
+        box-shadow: 0 2px 8px #ffe08280;
+    }
+
+    .worker-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3em;
+        font-size: 1.08em;
+    }
+
+    .worker-name {
+        font-weight: 700;
+        color: #ff9800;
+        font-size: 1.18em;
+    }
+
+    .worker-phone,
+    .worker-role {
+        color: #b26a00;
+        font-size: 1em;
+    }
+
+    .worker-logout-btn {
+        position: absolute;
+        right: 2em;
+        top: 2em;
+        background: #fff0f0;
+        color: #ef4444;
+        border: none;
+        border-radius: 7px;
+        padding: 0.4em 1.2em;
+        font-size: 1em;
+        font-weight: 700;
+        text-decoration: none;
+        transition: background 0.18s, color 0.18s;
+    }
+
+    .worker-logout-btn:hover {
+        background: #ef4444;
+        color: #fff;
+    }
+
+    .worker-orders-section {
+        width: 100%;
+        max-width: 1680px;
+        padding: 2em 1.5em 2.5em 1.5em;
+        margin-bottom: 2em;
+    }
+
+    .worker-orders-section h3 {
+        color: #ff9800;
+        font-size: 1.25em;
+        font-weight: 700;
+        margin-bottom: 1.2em;
+        letter-spacing: 0.01em;
+    }
+
+    .worker-orders-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        background: #fffbe6;
+        border-radius: 14px;
+        overflow: hidden;
+        font-size: 1.07em;
+        box-shadow: 0 2px 8px #ffe08280;
+    }
+
+    .worker-orders-table th,
+    .worker-orders-table td {
+        padding: 0.7em 1.1em;
+        border-bottom: 1px solid #ffe082;
+        text-align: left;
+        white-space: nowrap;
+    }
+
+    .worker-orders-table th {
+        background: #ffe082;
+        color: #b26a00;
+        font-weight: 700;
+        border-right: 1px solid #ffe082;
+    }
+
+    .worker-orders-table tr:last-child th,
+    .worker-orders-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .order-status {
+        display: inline-block;
+        padding: 0.22em 1em;
+        border-radius: 12px;
+        font-size: 0.98em;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        background: #ffe082;
+        color: #b26a00;
+        border: 1.5px solid #ffd54f;
+        min-width: 90px;
+        text-align: center;
+    }
+
+    .order-status-в_обробці {
+        background: #fffbe6;
+        color: #b26a00;
+        border-color: #ffe082;
+    }
+
+    .order-status-прийнята {
+        background: #e3fcec;
+        color: #178a3a;
+        border-color: #b9f6ca;
+    }
+
+    .order-status-в_роботі {
+        background: #e3f2fd;
+        color: #1976d2;
+        border-color: #90caf9;
+    }
+
+    .order-status-завершена {
+        background: #f0fff4;
+        color: #178a3a;
+        border-color: #b9f6ca;
+    }
+
+    .order-price {
+        color: #178a3a;
+        font-weight: 700;
+    }
+
+    .order-price-empty {
+        color: #bbb;
+    }
+
+    .worker-status-select {
+        border: 1.5px solid #ffe082;
+        border-radius: 7px;
+        padding: 0.2em 0.7em;
+        font-size: 1em;
+        background: #fff;
+        color: #222;
+        margin-right: 0.4em;
+    }
+
+    .worker-status-btn {
+        background: #ff9800;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        padding: 0.2em 0.9em;
+        font-size: 1em;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background 0.18s;
+    }
+
+    .worker-status-btn:hover {
+        background: #178a3a;
+    }
+
+    .order-row-inactive {
+        opacity: 0.6;
+        pointer-events: none;
+        background: #f7f7f7 !important;
+    }
+
+    /* --- MOBILE ADAPTATION --- */
+    @media (max-width: 900px) {
+        .worker-cabinet-container {
+            gap: 1.2em;
+        }
+
+        .worker-card,
+        .worker-orders-section {
+            max-width: 100%;
+            min-width: 0;
+            padding: 1em 0.5em;
+        }
+
+        .worker-orders-table th,
+        .worker-orders-table td {
+            padding: 0.4em 0.5em;
+            font-size: 0.97em;
+        }
+    }
+
+    @media (max-width: 650px) {
+        .worker-card {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1em;
+            padding: 1em 0.7em;
+            min-width: 0;
+        }
+        .worker-logout-btn {
+            position: static;
+            margin-top: 1em;
+            width: 100%;
+            text-align: center;
+        }
+        .worker-orders-section {
+            padding: 1em 0.2em 1.5em 0.2em;
+        }
+        .worker-orders-table,
+        .worker-orders-table thead,
+        .worker-orders-table tbody,
+        .worker-orders-table tr {
+            display: block;
+            width: 100%;
+        }
+        .worker-orders-table thead {
+            display: none;
+        }
+        .worker-orders-table tr {
+            margin-bottom: 1.1em;
+            background: #fffbe6;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #ffe08280;
+            padding: 0.7em 0.5em;
+        }
+        .worker-orders-table td {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.35em 0.7em;
+            border: none;
+            font-size: 1em;
+            border-bottom: 1px solid #ffe08222;
+        }
+        .worker-orders-table td:before {
+            content: attr(data-label);
+            font-weight: 700;
+            color: #ff9800;
+            margin-right: 0.7em;
+            min-width: 110px;
+            display: inline-block;
+        }
+        .worker-orders-table tr:last-child td {
+            border-bottom: none;
+        }
+    }
+</style>
+
+<script>
+    // Додає data-label для мобільної таблиці
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.innerWidth <= 650) {
+            const labels = ["№", "Дата", "Бажана дата", "Авто", "Послуга", "Статус", "Ціна", "Дія"];
+            document.querySelectorAll('.worker-orders-table tbody tr').forEach(function (row) {
+                row.querySelectorAll('td').forEach(function (cell, idx) {
+                    cell.setAttribute('data-label', labels[idx]);
+                });
+            });
+        }
+    });
+</script>
 {% endblock %}

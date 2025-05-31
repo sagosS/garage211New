@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="orders-title">Заявки на обслуговування</h2>
+<div class="orders-table-wrapper">
+    <table class="orders-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Дата</th>
+                <th>Клієнт</th>
+                <th>Телефон</th>
+                <th>Марка</th>
+                <th>Модель</th>
+                <th>Рік</th>
+                <th>VIN</th>
+                <th>Ремонт</th>
+                <th>Ціна</th>
+                <th>Статус</th>
+                <th>Дії</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.created_at.strftime('%Y-%m-%d') }}</td>
+                <td>{{ order.name }}</td>
+                <td>{{ order.phone }}</td>
+                <td>{{ order.brand }}</td>
+                <td>{{ order.model or '' }}</td>
+                <td>{{ order.year or '' }}</td>
+                <td>{{ order.vin or '' }}</td>
+                <td>{{ order.repair or '' }}</td>
+                <td>
+                    {% if order.price %}
+                    <span class="order-price">{{ order.price }} ₴</span>
+                    {% else %}
+                    <span class="order-price-empty">—</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <span class="order-status order-status-{{ order.status|default('в_обробці')|replace(' ', '_') }}">
+                        {{ order.status or 'в обробці' }}
+                    </span>
+                </td>
+                <td>
+                    <a href="{{ url_for('admin.edit_order', order_id=order.id) }}" class="order-action-btn"
+                        title="Редагувати">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <path
+                                d="M3 17.25V21h3.75l11.06-11.06a1.5 1.5 0 0 0 0-2.12l-2.83-2.83a1.5 1.5 0 0 0-2.12 0L3 17.25z"
+                                fill="#fffbe6" stroke="#ff9800" stroke-width="1.5" />
+                            <path d="M14.06 5.02l2.92 2.92" stroke="#ff9800" stroke-width="1.5"
+                                stroke-linecap="round" />
+                        </svg>
+                    </a>
+                    <a href="{{ url_for('admin.order_status', order_id=order.id) }}" class="order-action-btn"
+                        title="Обробити">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="9" stroke="#178a3a" stroke-width="2" fill="#f0fff4" />
+                            <path d="M8 12l2.5 2.5L16 9" stroke="#178a3a" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                    </a>
+                    <a href="{{ url_for('admin.order_calculate', order_id=order.id) }}" class="order-action-btn"
+                        title="Розрахунок">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <rect x="4" y="4" width="16" height="16" rx="4" fill="#e3fcec" stroke="#178a3a"
+                                stroke-width="2" />
+                            <path d="M8 12h8M8 16h5" stroke="#178a3a" stroke-width="2" stroke-linecap="round" />
+                        </svg>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<style>
+    .orders-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        color: #222;
+        letter-spacing: 0.03em;
+        text-align: center;
+    }
+
+    .orders-table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        margin-bottom: 2rem;
+    }
+
+    .orders-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 6px 32px rgba(255, 179, 0, 0.13);
+        font-size: 1rem;
+        margin-bottom: 0;
+        transition: box-shadow 0.2s;
+    }
+
+    .orders-table th,
+    .orders-table td {
+        padding: 0.85em 1.1em;
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    .orders-table th {
+        background: #fffbe6;
+        color: #ff9800;
+        font-weight: 800;
+        font-size: 1.08rem;
+        letter-spacing: 0.04em;
+        border-bottom: 2.5px solid #ffb300;
+        position: sticky;
+        top: 0;
+        z-index: 2;
+    }
+
+    .orders-table tbody tr {
+        transition: background 0.18s, box-shadow 0.18s;
+        border-radius: 12px;
+    }
+
+    .orders-table tbody tr:hover {
+        background: #fffde7;
+        box-shadow: 0 2px 12px rgba(255, 179, 0, 0.08);
+    }
+
+    .orders-table td {
+        font-size: 1.01rem;
+        color: #222;
+        border-bottom: 1.5px solid #ffe082;
+        background: #fff;
+        transition: background 0.18s;
+    }
+
+    .orders-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .order-action-btn {
+        background: none;
+        border: none;
+        padding: 0.3em 0.5em;
+        border-radius: 7px;
+        cursor: pointer;
+        transition: background 0.18s, box-shadow 0.18s, transform 0.15s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+    }
+
+    .order-action-btn svg {
+        display: block;
+        vertical-align: middle;
+        transition: transform 0.15s;
+    }
+
+    .order-action-btn:hover {
+        background: #fffbe6;
+        box-shadow: 0 2px 8px rgba(255, 179, 0, 0.08);
+        transform: scale(1.12);
+    }
+
+    .order-price {
+        font-weight: 700;
+        color: #178a3a;
+        background: #f0fff4;
+        border-radius: 6px;
+        padding: 0.2em 0.7em;
+        font-size: 1.04em;
+    }
+
+    .order-price-empty {
+        color: #bbb;
+        font-size: 1.04em;
+    }
+
+    .order-status {
+        display: inline-block;
+        padding: 0.22em 1em;
+        border-radius: 12px;
+        font-size: 0.98em;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        background: #ffe082;
+        color: #b26a00;
+        border: 1.5px solid #ffd54f;
+        min-width: 90px;
+        text-align: center;
+    }
+
+    .order-status-в_обробці {
+        background: #fffbe6;
+        color: #b26a3a;
+        border-color: #ffe082;
+    }
+
+    .order-status-прийнята {
+        background: #e3fcec;
+        color: #178a3a;
+        border-color: #b9f6ca;
+    }
+
+    .order-status-в_роботі {
+        background: #e3f2fd;
+        color: #1976d2;
+        border-color: #90caf9;
+    }
+
+    .order-status-завершена {
+        background: #f0fff4;
+        color: #178a3a;
+        border-color: #b9f6ca;
+    }
+
+    @media (max-width: 900px) {
+
+        .orders-table th,
+        .orders-table td {
+            padding: 0.5em 0.3em;
+            font-size: 0.93rem;
+        }
+    }
+</style>
+{% endblock %}

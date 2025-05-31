@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="order-status-title">Обробка заявки №{{ order.id }}</h2>
+<form method="POST" class="order-status-form">
+    <div class="order-status-group">
+        <label>Стан заявки:</label>
+        <select name="status" required>
+            <option value="в обробці" {% if order.status == 'в обробці' %}selected{% endif %}>В обробці</option>
+            <option value="прийнята" {% if order.status == 'прийнята' %}selected{% endif %}>Прийнята</option>
+            <option value="в роботі" {% if order.status == 'в роботі' %}selected{% endif %}>В роботі</option>
+            <option value="завершена" {% if order.status == 'завершена' %}selected{% endif %}>Завершена</option>
+        </select>
+    </div>
+    <div class="order-status-group">
+        <label>Призначити працівника:</label>
+        <select name="employee_id">
+            <option value="">— Не призначено —</option>
+            {% for employee in employees %}
+                <option value="{{ employee.id }}" {% if order.employee_id == employee.id %}selected{% endif %}>
+                    {{ employee.name }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="order-status-actions">
+        <button type="submit" class="order-status-btn">Зберегти</button>
+        <a href="{{ url_for('admin.admin_orders') }}" class="order-status-btn cancel-btn">Назад</a>
+    </div>
+</form>
+<style>
+.order-status-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: #222;
+    letter-spacing: 0.03em;
+    text-align: center;
+}
+.order-status-form {
+    max-width: 420px;
+    margin: 0 auto;
+    background: #fffbe6;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(255, 179, 0, 0.10);
+    padding: 2.2rem 2rem 1.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+}
+.order-status-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+.order-status-group label {
+    font-weight: 600;
+    color: #ff9800;
+    font-size: 1.01rem;
+    margin-bottom: 0.1em;
+}
+.order-status-group select {
+    border: 1.5px solid #ffe082;
+    border-radius: 7px;
+    padding: 0.55em 0.9em;
+    font-size: 1.01rem;
+    background: #fff;
+    color: #222;
+    transition: border 0.18s, box-shadow 0.18s;
+}
+.order-status-group select:focus {
+    border-color: #ff9800;
+    outline: none;
+    box-shadow: 0 2px 8px rgba(255, 179, 0, 0.08);
+}
+.order-status-actions {
+    display: flex;
+    gap: 1.2em;
+    justify-content: flex-end;
+    margin-top: 1.2rem;
+}
+.order-status-btn {
+    background: linear-gradient(90deg, #ff9800 60%, #ffe082 100%);
+    color: #222;
+    border: none;
+    border-radius: 7px;
+    padding: 0.6em 1.6em;
+    font-size: 1.08rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.18s, box-shadow 0.18s, color 0.18s;
+    box-shadow: 0 2px 8px rgba(255, 179, 0, 0.08);
+    text-decoration: none;
+    text-align: center;
+}
+.order-status-btn:hover {
+    background: linear-gradient(90deg, #ef4444 60%, #ff9800 100%);
+    color: #fff;
+}
+.cancel-btn {
+    background: #fff0f0 !important;
+    color: #ef4444 !important;
+    border: none;
+}
+@media (max-width: 600px) {
+    .order-status-form {
+        padding: 1.2rem 0.7rem 1rem 0.7rem;
+    }
+}
+</style>
+{% endblock %}

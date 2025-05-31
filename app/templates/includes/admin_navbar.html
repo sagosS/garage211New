@@ -131,6 +131,19 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{ url_for('admin.admin_orders') }}"
+                        class="admin-nav-link{% if request.endpoint == 'admin.admin_orders' %} active{% endif %}">
+                        <span class="admin-nav-icon">
+                            <!-- Контакт: телефон -->
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M22 16.92V21a2 2 0 0 1-2.18 2A19.72 19.72 0 0 1 3 5.18 2 2 0 0 1 5 3h4.09a2 2 0 0 1 2 1.72l.72 5.06a2 2 0 0 1-1.12 2.18l-2.2 1.1a16 16 0 0 0 6.29 6.29l1.1-2.2a2 2 0 0 1 2.18-1.12l5.06.72A2 2 0 0 1 22 16.92z" />
+                            </svg>
+                        </span>
+                        <span>Заявки</span>
+                    </a>
+                </li>
+                <li>
                     <a href="{{ url_for('admin.admin_assets') }}"
                         class="admin-nav-link{% if request.endpoint == 'admin.admin_assets' %} active{% endif %}">
                         <span class="admin-nav-icon">

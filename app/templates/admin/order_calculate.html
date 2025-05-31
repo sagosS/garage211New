@@ -1,0 +1,306 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="order-calc-title">
+    <svg width="28" height="28" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:8px;">
+        <rect x="2" y="4" width="20" height="16" rx="4" fill="#fffbe6" stroke="#ff9800" stroke-width="2" />
+        <path d="M7 8h10M7 12h7M7 16h5" stroke="#ff9800" stroke-width="2" stroke-linecap="round" />
+    </svg>
+    Розрахунок замовлення №{{ order.id }}
+</h2>
+
+<div class="order-calc-flex">
+    <table class="order-calc-table glassy">
+        <tr>
+            <th>Марка</th>
+            <td>{{ order.brand }}</td>
+        </tr>
+        <tr>
+            <th>Модель</th>
+            <td>{{ order.model or '—' }}</td>
+        </tr>
+        <tr>
+            <th>Рік випуску</th>
+            <td>{{ order.year or '—' }}</td>
+        </tr>
+        <tr>
+            <th>Послуга</th>
+            <td>
+                {{ order.repair or '—' }}
+                {% set service = services | selectattr('title', 'equalto', order.repair) | first %}
+                {% if service %}
+                <span class="order-service-price">
+                    (від {{ service.price_from|int }} ₴{% if service.price_to and service.price_to != service.price_from
+                    %}
+                    до {{ service.price_to|int }} ₴{% endif %})
+                </span>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>Акція</th>
+            <td>
+                {% if promotion %}
+                <span class="order-service-promo">
+                    <svg width="18" height="18" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:4px;">
+                        <circle cx="12" cy="12" r="10" fill="#ff9800" opacity="0.18" />
+                        <path d="M7 13l3 3 7-7" stroke="#ff9800" stroke-width="2" fill="none" stroke-linecap="round" />
+                    </svg>
+                    <b>{{ promotion.title }}</b>
+                    {% if promotion.price %}
+                    <span class="order-service-promo-price">— {{ promotion.price|int }} ₴</span>
+                    {% endif %}
+                    {% if promotion.description %}
+                    <span class="order-service-promo-text">{{ promotion.description }}</span>
+                    {% endif %}
+                    {% if promotion.end_date %}
+                    <span class="order-service-promo-text">до {{ promotion.end_date.strftime('%d.%m.%Y') }}</span>
+                    {% endif %}
+                </span>
+                {% else %}
+                <span style="color:#bbb;">—</span>
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+
+    <div class="order-calc-form-wrapper glassy">
+        <form method="POST" class="order-calc-form">
+            <div class="order-calc-group">
+                <label>Стан заявки:</label>
+                <select name="status" required>
+                    <option value="в обробці" {% if order.status=='в обробці' %}selected{% endif %}>В обробці</option>
+                    <option value="прийнята" {% if order.status=='прийнята' %}selected{% endif %}>Прийнята</option>
+                    <option value="в роботі" {% if order.status=='в роботі' %}selected{% endif %}>В роботі</option>
+                    <option value="завершена" {% if order.status=='завершена' %}selected{% endif %}>Завершена</option>
+                </select>
+            </div>
+            <div class="order-calc-group">
+                <label>Призначити працівника:</label>
+                <select name="employee_id">
+                    <option value="">— Не призначено —</option>
+                    {% for employee in employees %}
+                    <option value="{{ employee.id }}" {% if order.employee_id==employee.id %}selected{% endif %}>
+                        {{ employee.last_name }} {{ employee.first_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="order-calc-group">
+                <label>Ціна:</label>
+                <input type="number" step="0.01" name="price" value="{{ order.price or '' }}">
+            </div>
+            <div class="order-calc-actions">
+                <button type="submit" class="order-calc-btn">💾 Зберегти</button>
+                <a href="{{ url_for('admin.admin_orders') }}" class="order-calc-btn cancel-btn">Назад</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    body {
+        background: linear-gradient(120deg, #fffbe6 0%, #ffe082 100%);
+    }
+
+    .order-calc-title {
+        font-size: 1.6rem;
+        font-weight: 800;
+        margin-bottom: 2rem;
+        color: #ff9800;
+        letter-spacing: 0.03em;
+        text-align: center;
+        text-shadow: 0 2px 8px #ffe08280;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5em;
+    }
+
+    .order-calc-flex {
+        display: flex;
+        gap: 2.5em;
+        align-items: flex-start;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .glassy {
+        background: rgba(255, 251, 230, 0.85);
+        box-shadow: 0 8px 32px 0 rgba(255, 168, 0, 0.12);
+        backdrop-filter: blur(2px);
+        border-radius: 18px;
+        border: 1.5px solid #ffe082;
+    }
+
+    .order-calc-table {
+        width: 100%;
+        max-width: 520px;
+        margin: 0;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: 1.12rem;
+        overflow: hidden;
+    }
+
+    .order-calc-table th,
+    .order-calc-table td {
+        padding: 1em 1.5em;
+        border-bottom: 1px solid #ffe082;
+        text-align: left;
+    }
+
+    .order-calc-table th {
+        background: #ffe082;
+        color: #b26a00;
+        font-weight: 700;
+        width: 170px;
+        border-right: 1px solid #ffe082;
+        font-size: 1.08em;
+        letter-spacing: 0.01em;
+    }
+
+    .order-calc-table tr:last-child th,
+    .order-calc-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .order-service-price {
+        color: #178a3a;
+        font-weight: 700;
+        margin-left: 0.5em;
+        font-size: 1.01em;
+    }
+
+    .order-service-promo {
+        color: #fff;
+        background: linear-gradient(90deg, #ff9800 60%, #ffd54f 100%);
+        border-radius: 8px;
+        padding: 0.18em 1em;
+        font-size: 1.01em;
+        font-weight: 700;
+        margin-left: 0.7em;
+        letter-spacing: 0.04em;
+        box-shadow: 0 2px 8px rgba(255, 179, 0, 0.10);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5em;
+    }
+
+    .order-service-promo-price {
+        color: #fff;
+        background: #ef4444;
+        border-radius: 6px;
+        padding: 0.1em 0.7em;
+        margin-left: 0.7em;
+        font-weight: 700;
+        display: inline-block;
+    }
+
+    .order-service-promo-text {
+        color: #b26a00;
+        margin-left: 0.7em;
+        font-size: 0.97em;
+        font-weight: 500;
+        display: inline-block;
+    }
+
+    .order-calc-form-wrapper {
+        min-width: 320px;
+        max-width: 420px;
+        width: 100%;
+        margin: 0;
+    }
+
+    .order-calc-form {
+        background: transparent;
+        border-radius: 16px;
+        padding: 2.2rem 2rem 1.5rem 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.1rem;
+    }
+
+    .order-calc-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+    .order-calc-group label {
+        font-weight: 700;
+        color: #ff9800;
+        font-size: 1.08rem;
+        margin-bottom: 0.1em;
+        letter-spacing: 0.01em;
+    }
+
+    .order-calc-group select,
+    .order-calc-group input {
+        border: 1.5px solid #ffe082;
+        border-radius: 7px;
+        padding: 0.55em 0.9em;
+        font-size: 1.08rem;
+        background: #fff;
+        color: #222;
+        transition: border 0.18s, box-shadow 0.18s;
+        margin-top: 0.2em;
+    }
+
+    .order-calc-group select:focus,
+    .order-calc-group input:focus {
+        border-color: #ff9800;
+        outline: none;
+        box-shadow: 0 2px 8px rgba(255, 179, 0, 0.08);
+    }
+
+    .order-calc-actions {
+        display: flex;
+        gap: 1.2em;
+        justify-content: flex-end;
+        margin-top: 1.2rem;
+    }
+
+    .order-calc-btn {
+        background: linear-gradient(90deg, #ff9800 60%, #ffe082 100%);
+        color: #222;
+        border: none;
+        border-radius: 7px;
+        padding: 0.7em 2em;
+        font-size: 1.13rem;
+        font-weight: 800;
+        cursor: pointer;
+        transition: background 0.18s, box-shadow 0.18s, color 0.18s;
+        box-shadow: 0 2px 8px rgba(255, 179, 0, 0.08);
+        text-decoration: none;
+        text-align: center;
+        letter-spacing: 0.01em;
+    }
+
+    .order-calc-btn:hover {
+        background: linear-gradient(90deg, #ef4444 60%, #ff9800 100%);
+        color: #fff;
+    }
+
+    .cancel-btn {
+        background: #fff0f0 !important;
+        color: #ef4444 !important;
+        border: none;
+    }
+
+    @media (max-width: 900px) {
+        .order-calc-flex {
+            flex-direction: column;
+            gap: 2em;
+            align-items: stretch;
+        }
+
+        .order-calc-form-wrapper {
+            max-width: 100%;
+        }
+
+        .order-calc-table {
+            max-width: 100%;
+        }
+    }
+</style>
+{% endblock %}

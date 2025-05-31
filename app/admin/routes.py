@@ -3,7 +3,7 @@ from datetime import datetime
 from flask import render_template, request, redirect, url_for, flash, abort, current_app
 from flask_login import login_required, current_user, logout_user
 from werkzeug.security import generate_password_hash
-from app.models import User, Client, Service, Promotion, News, ContactMessage, MaterialAsset
+from app.models import User, Client, Order, Employee, Service, Promotion, News, ContactMessage, MaterialAsset
 from app.extensions import db
 from . import admin
 from werkzeug.utils import secure_filename
@@ -215,6 +215,75 @@ def admin_projects():
                 flash('Вкажіть назву та виберіть картинки.', 'danger')
 
     return render_template('admin/projects.html', images=images, projects=projects, edit_project=edit_project)
+
+@admin.route('/orders')
+@login_required
+def admin_orders():
+    orders = Order.query.order_by(Order.created_at.desc()).all()
+    return render_template('admin/orders.html', orders=orders)
+
+@admin.route('/orders/edit/<int:order_id>', methods=['GET', 'POST'])
+@login_required
+def edit_order(order_id):
+    order = Order.query.get_or_404(order_id)
+    if request.method == 'POST':
+        order.desired_date = request.form.get('desired_date')
+        order.delivery_date = request.form.get('delivery_date')
+        order.brand = request.form.get('brand')
+        order.model = request.form.get('model')
+        order.year = request.form.get('year')
+        order.vin = request.form.get('vin')
+        order.name = request.form.get('name')
+        order.phone = request.form.get('phone')
+        order.comment = request.form.get('comment')
+        order.repair = request.form.get('repair')
+        order.parts = request.form.get('parts')
+        price = request.form.get('price')
+        order.price = float(price) if price else None
+        db.session.commit()
+        flash('Заявку оновлено!', 'success')
+        return redirect(url_for('admin.admin_orders'))
+    return render_template('admin/edit_order.html', order=order)
+
+@admin.route('/order_status/<int:order_id>', methods=['GET', 'POST'])
+@login_required
+def order_status(order_id):
+    order = Order.query.get_or_404(order_id)
+    employees = Employee.query.order_by(Employee.name).all()
+    if request.method == 'POST':
+        order.status = request.form.get('status')
+        emp_id = request.form.get('employee_id')
+        order.employee_id = int(emp_id) if emp_id else None
+        db.session.commit()
+        flash('Заявку оновлено!', 'success')
+        return redirect(url_for('admin.admin_orders'))
+    return render_template('admin/order_status.html', order=order, employees=employees)
+
+@admin.route('/order_calculate/<int:order_id>', methods=['GET', 'POST'])
+@login_required
+def order_calculate(order_id):
+    order = Order.query.get_or_404(order_id)
+    # Брати всіх користувачів з роллю "Працівник" (і не адмінів)
+    employees = User.query.filter(User.role == 'Майстер', User.is_admin == False).order_by(User.last_name, User.first_name).all()
+    services = Service.query.all()
+    service = next((s for s in services if s.title == order.repair), None)
+    promotion = service.promotion if service and service.promotion_id else None
+    if request.method == 'POST':
+        order.status = request.form.get('status')
+        emp_id = request.form.get('employee_id')
+        order.employee_id = int(emp_id) if emp_id else None
+        price = request.form.get('price')
+        order.price = float(price) if price else None
+        db.session.commit()
+        flash('Заявку оновлено!', 'success')
+        return redirect(url_for('admin.admin_orders'))
+    return render_template(
+        'admin/order_calculate.html',
+        order=order,
+        employees=employees,
+        services=services,
+        promotion=promotion
+    )
 
 @admin.route('/edit_book_form', methods=['GET', 'POST'])
 @login_required

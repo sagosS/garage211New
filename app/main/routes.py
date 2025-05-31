@@ -1,11 +1,12 @@
 import os
 import json
 from flask import render_template, redirect, url_for, flash, request, abort, current_app
-from flask_login import login_user, login_required, logout_user
-from app.models import User, Service, Promotion, News, ContactMessage
+from flask_login import login_user, login_required, logout_user, current_user
+from app.models import User, Client, Order, Service, Promotion, News, ContactMessage
 from app import db
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 from app.main import main
+from datetime import datetime
 
 @main.route('/')
 def index():
@@ -63,7 +64,22 @@ def logout():
 @main.route('/cabinet')
 @login_required
 def worker_cabinet():
-    return render_template('worker_cabinet.html')
+    orders = Order.query.filter_by(employee_id=current_user.id).order_by(Order.created_at.desc()).all()
+    return render_template('worker_cabinet.html', orders=orders)
+
+@main.route('/worker_update_status/<int:order_id>', methods=['POST'])
+@login_required
+def worker_update_status(order_id):
+    order = Order.query.get_or_404(order_id)
+    if order.employee_id != current_user.id:
+        flash('Ви не можете змінювати цей заказ', 'danger')
+        return redirect(url_for('main.worker_cabinet'))
+    new_status = request.form.get('status')
+    if new_status in ['в роботі', 'завершена']:
+        order.status = new_status
+        db.session.commit()
+        flash('Статус оновлено!', 'success')
+    return redirect(url_for('main.worker_cabinet'))
 
 @main.route('/news')
 def news():
@@ -75,12 +91,50 @@ def news():
 def book():
     services = Service.query.order_by(Service.title).all()
     if request.method == 'POST':
-        # Тут обробка форми, наприклад, збереження в БД чи надсилання email
+        name = request.form.get('name')
+        phone = request.form.get('phone')
+        brand = request.form.get('brand')
+        model = request.form.get('model')
+        year = request.form.get('year')
+        vin = request.form.get('vin')
+        service = request.form.get('service')
+        desired_date = request.form.get('date')
+        comment = request.form.get('comment')
+
+        # Додаємо клієнта, якщо не існує
+        client = Client.query.filter_by(phone_number=phone).first()
+        if not client:
+            client = Client(
+                phone_number=phone,
+                password=generate_password_hash(phone)  # пароль = номер телефону
+            )
+            db.session.add(client)
+            db.session.commit()
+
+        # Додаємо заявку
+        order = Order(
+            created_at=datetime.utcnow(),
+            desired_date=desired_date,
+            delivery_date=None,  # можна додати поле у форму
+            brand=brand,
+            model=model,
+            year=year,
+            vin=vin,
+            name=name,
+            phone=phone,
+            comment=comment,
+            repair=service,
+            parts=None,
+            price=None,
+            client_id=client.id
+        )
+        db.session.add(order)
+        db.session.commit()
         flash('Ваша заявка прийнята!', 'success')
-        return redirect(url_for('main.book'))
+        return redirect(url_for('main.index'))
     settings_path = os.path.join(current_app.static_folder, 'book_form_settings.json')
     settings = {
-        "services": ["Діагностика", "ТО", "Ремонт ходової", "Заміна масла", "Ремонт гальмівної системи", "Інше"],
+        # "services": ["Діагностика", "ТО", "Ремонт ходової", "Заміна масла", "Ремонт гальмівної системи", "Інше"],
         "year_min": 1980,
         "year_max": 2030,
         "year_placeholder": "Наприклад: 2015"
@@ -88,6 +142,7 @@ def book():
     if os.path.exists(settings_path):
         with open(settings_path, 'r') as f:
             settings = json.load(f)
+    services = Service.query.order_by(Service.title).all()
     return render_template('book.html', settings=settings, services=services)
 
 @main.route('/news/<int:news_id>')

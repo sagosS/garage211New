@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="edit-order-title">Редагування заявки №{{ order.id }}</h2>
+<form method="POST" class="edit-order-form">
+    <div class="edit-order-group">
+        <label>Бажана дата обслуговування:</label>
+        <input type="text" name="desired_date" value="{{ order.desired_date or '' }}">
+    </div>
+    <div class="edit-order-group">
+        <label>Дата здачі:</label>
+        <input type="text" name="delivery_date" value="{{ order.delivery_date or '' }}">
+    </div>
+    <div class="edit-order-group">
+        <label>Марка:</label>
+        <input type="text" name="brand" value="{{ order.brand }}">
+    </div>
+    <div class="edit-order-group">
+        <label>Модель:</label>
+        <input type="text" name="model" value="{{ order.model or '' }}">
+    </div>
+    <div class="edit-order-group">
+        <label>Рік:</label>
+        <input type="text" name="year" value="{{ order.year or '' }}">
+    </div>
+    <div class="edit-order-group">
+        <label>VIN:</label>
+        <input type="text" name="vin" value="{{ order.vin or '' }}">
+    </div>
+    <div class="edit-order-group">
+        <label>Ім'я:</label>
+        <input type="text" name="name" value="{{ order.name }}">
+    </div>
+    <div class="edit-order-group">
+        <label>Телефон:</label>
+        <input type="text" name="phone" value="{{ order.phone }}">
+    </div>
+    <div class="edit-order-group">
+        <label>Коментар:</label>
+        <textarea name="comment" rows="2">{{ order.comment or '' }}</textarea>
+    </div>
+    <div class="edit-order-group">
+        <label>Ремонт:</label>
+        <input type="text" name="repair" value="{{ order.repair or '' }}">
+    </div>
+    <div class="edit-order-group">
+        <label>Запчастини:</label>
+        <input type="text" name="parts" value="{{ order.parts or '' }}">
+    </div>
+    <div class="edit-order-group">
+        <label>Ціна:</label>
+        <input type="number" step="0.01" name="price" value="{{ order.price or '' }}">
+    </div>
+    <div class="edit-order-actions">
+        <button type="submit" class="edit-order-btn">Зберегти</button>
+        <a href="{{ url_for('admin.admin_orders') }}" class="edit-order-btn cancel-btn">Назад</a>
+    </div>
+</form>
+<style>
+.edit-order-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: #222;
+    letter-spacing: 0.03em;
+    text-align: center;
+}
+.edit-order-form {
+    max-width: 480px;
+    margin: 0 auto;
+    background: #fffbe6;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(255, 179, 0, 0.10);
+    padding: 2.2rem 2rem 1.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+}
+.edit-order-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+.edit-order-group label {
+    font-weight: 600;
+    color: #ff9800;
+    font-size: 1.01rem;
+    margin-bottom: 0.1em;
+}
+.edit-order-group input,
+.edit-order-group textarea {
+    border: 1.5px solid #ffe082;
+    border-radius: 7px;
+    padding: 0.55em 0.9em;
+    font-size: 1.01rem;
+    background: #fff;
+    color: #222;
+    transition: border 0.18s, box-shadow 0.18s;
+}
+.edit-order-group input:focus,
+.edit-order-group textarea:focus {
+    border-color: #ff9800;
+    outline: none;
+    box-shadow: 0 2px 8px rgba(255, 179, 0, 0.08);
+}
+.edit-order-actions {
+    display: flex;
+    gap: 1.2em;
+    justify-content: flex-end;
+    margin-top: 1.2rem;
+}
+.edit-order-btn {
+    background: linear-gradient(90deg, #ff9800 60%, #ffe082 100%);
+    color: #222;
+    border: none;
+    border-radius: 7px;
+    padding: 0.6em 1.6em;
+    font-size: 1.08rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.18s, box-shadow 0.18s, color 0.18s;
+    box-shadow: 0 2px 8px rgba(255, 179, 0, 0.08);
+    text-decoration: none;
+    text-align: center;
+}
+.edit-order-btn:hover {
+    background: linear-gradient(90deg, #ef4444 60%, #ff9800 100%);
+    color: #fff;
+}
+.cancel-btn {
+    background: #fff0f0 !important;
+    color: #ef4444 !important;
+    border: none;
+}
+@media (max-width: 600px) {
+    .edit-order-form {
+        padding: 1.2rem 0.7rem 1rem 0.7rem;
+    }
+}
+</style>
+{% endblock %}
