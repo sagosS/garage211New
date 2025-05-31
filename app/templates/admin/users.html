@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+{% block title %}Користувачі{% endblock %}
+{% block content %}
+
+<div class="users-panel glassy">
+    <h2 class="users-title">
+        <svg width="28" height="28" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:8px;">
+            <circle cx="12" cy="12" r="10" fill="#ffe082" stroke="#ff9800" stroke-width="2"/>
+            <path d="M8 16c0-2.21 3.58-2.21 3.58 0M12 12a3 3 0 100-6 3 3 0 000 6z" stroke="#ff9800" stroke-width="2" fill="none"/>
+        </svg>
+        Користувачі системи
+    </h2>
+    <table class="users-table">
+        <thead>
+            <tr>
+                <th>№</th>
+                <th>Прізвище</th>
+                <th>Ім'я</th>
+                <th>Телефон</th>
+                <th>Роль</th>
+                <th>Адмін</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.last_name or '—' }}</td>
+                <td>{{ user.first_name or '—' }}</td>
+                <td>{{ user.phone_number }}</td>
+                <td>
+                    <span class="user-role user-role-{{ user.role|default('none')|lower|replace(' ', '_') }}">
+                        {{ user.role or '—' }}
+                    </span>
+                </td>
+                <td>
+                    {% if user.is_admin %}
+                        <span class="user-admin user-admin-yes">Так</span>
+                    {% else %}
+                        <span class="user-admin user-admin-no">Ні</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" style="text-align:center;color:#bbb;">Користувачів не знайдено</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<style>
+.users-panel {
+    background: rgba(255, 251, 230, 0.95);
+    border-radius: 18px;
+    box-shadow: 0 8px 32px 0 rgba(255, 168, 0, 0.12);
+    padding: 2.5em 2em 2em 2em;
+    margin: 2em auto;
+    max-width: 1100px;
+    width: 100%;
+}
+.users-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #ff9800;
+    letter-spacing: 0.03em;
+    margin-bottom: 1.5em;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+.users-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #fffbe6;
+    border-radius: 14px;
+    overflow: hidden;
+    font-size: 1.07em;
+    box-shadow: 0 2px 8px #ffe08280;
+}
+.users-table th, .users-table td {
+    padding: 0.7em 1.1em;
+    border-bottom: 1px solid #ffe082;
+    text-align: left;
+}
+.users-table th {
+    background: #ffe082;
+    color: #b26a00;
+    font-weight: 700;
+}
+.users-table tr:last-child th,
+.users-table tr:last-child td {
+    border-bottom: none;
+}
+.user-role {
+    display: inline-block;
+    padding: 0.18em 1em;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 700;
+    background: #ffe082;
+    color: #b26a00;
+    border: 1.5px solid #ffd54f;
+}
+.user-role-майстер, .user-role-працівник {
+    background: #e3fcec;
+    color: #178a3a;
+    border-color: #b9f6ca;
+}
+.user-role-клієнт {
+    background: #e3f2fd;
+    color: #1976d2;
+    border-color: #90caf9;
+}
+.user-admin {
+    display: inline-block;
+    padding: 0.18em 0.8em;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 700;
+}
+.user-admin-yes {
+    background: #ff9800;
+    color: #fff;
+}
+.user-admin-no {
+    background: #ffe082;
+    color: #b26a00;
+}
+@media (max-width: 900px) {
+    .users-panel {
+        padding: 1em 0.3em;
+    }
+    .users-title {
+        font-size: 1.2rem;
+    }
+    .users-table th, .users-table td {
+        padding: 0.4em 0.5em;
+        font-size: 0.97em;
+    }
+}
+@media (max-width: 650px) {
+    .users-table, .users-table thead, .users-table tbody, .users-table tr {
+        display: block;
+        width: 100%;
+    }
+    .users-table thead {
+        display: none;
+    }
+    .users-table tr {
+        margin-bottom: 1.1em;
+        background: #fffbe6;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px #ffe08280;
+        padding: 0.7em 0.5em;
+    }
+    .users-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.35em 0.7em;
+        border: none;
+        font-size: 1em;
+        border-bottom: 1px solid #ffe08222;
+    }
+    .users-table td:before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: #ff9800;
+        margin-right: 0.7em;
+        min-width: 110px;
+        display: inline-block;
+    }
+    .users-table tr:last-child td {
+        border-bottom: none;
+    }
+}
+</style>
+<script>
+    // Додає data-label для мобільної таблиці
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.innerWidth <= 650) {
+            const labels = ["№", "Прізвище", "Ім'я", "Телефон", "Роль", "Адмін"];
+            document.querySelectorAll('.users-table tbody tr').forEach(function (row) {
+                row.querySelectorAll('td').forEach(function (cell, idx) {
+                    cell.setAttribute('data-label', labels[idx]);
+                });
+            });
+        }
+    });
+</script>
+{% endblock %}

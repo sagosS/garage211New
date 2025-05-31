@@ -14,9 +14,55 @@ import requests
 @admin.route('/')
 @login_required
 def admin_index():
-    workers_count = User.query.filter_by(is_admin=False).count()
+    # Підрахунок працівників (роль "Майстер" або "Працівник", не адмін)
+    workers_count = User.query.filter(User.role.in_(['Майстер', 'Працівник']), User.is_admin == False).count()
+    # Підрахунок клієнтів (роль "Клієнт" або без ролі)
     clients_count = Client.query.count()
-    return render_template('admin/index.html', workers_count=workers_count, clients_count=clients_count)
+    # Всього заявок
+    orders_count = Order.query.count()
+    # Активні заявки (не завершені)
+    active_orders_count = Order.query.filter(Order.status != 'завершена').count()
+    # Завершені заявки
+    finished_orders_count = Order.query.filter(Order.status == 'завершена').count()
+    # Середній чек
+    avg_order_price = db.session.query(db.func.avg(Order.price)).scalar()
+    # Останні 5 заявок
+    last_orders = Order.query.order_by(Order.created_at.desc()).limit(5).all()
+    # Статистика по статусах
+    from collections import defaultdict
+    status_counts = defaultdict(int)
+    for order in Order.query.all():
+        status_counts[order.status] += 1
+
+    return render_template(
+        'admin/index.html',
+        workers_count=workers_count,
+        clients_count=clients_count,
+        orders_count=orders_count,
+        active_orders_count=active_orders_count,
+        finished_orders_count=finished_orders_count,
+        avg_order_price=avg_order_price,
+        last_orders=last_orders,
+        status_counts=status_counts
+    )
+
+@admin.route('/users')
+@login_required
+def admin_users():
+    users = User.query.order_by(User.last_name, User.first_name).all()
+    return render_template('admin/users.html', users=users)
+
+@admin.route('/clients')
+@login_required
+def admin_clients():
+    clients = Client.query.order_by(Client.id.desc()).all()
+    # Для кожного клієнта знайти кількість замовлень
+    client_orders = {c.id: Order.query.filter_by(client_id=c.id).count() for c in clients}
+    return render_template(
+        'admin/clients.html',
+        clients=clients,
+        client_orders=client_orders
+    )
 
 @admin.route('/register_worker', methods=['GET', 'POST'])
 @login_required

@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+{% block title %}Клієнти{% endblock %}
+{% block content %}
+
+<div class="clients-panel glassy">
+    <h2 class="clients-title">
+        <svg width="28" height="28" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:8px;">
+            <circle cx="12" cy="12" r="10" fill="#e3f2fd" stroke="#1976d2" stroke-width="2" />
+            <path d="M8 16c0-2.21 3.58-2.21 3.58 0M12 12a3 3 0 100-6 3 3 0 000 6z" stroke="#1976d2" stroke-width="2"
+                fill="none" />
+        </svg>
+        Клієнти системи
+    </h2>
+    <table class="clients-table">
+        <thead>
+            <tr>
+                <th>№</th>
+                <th>Ім'я</th>
+                <th>Телефон</th>
+                <th>Дата реєстрації</th>
+                <th>Замовлення</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for client in clients %}
+            <tr>
+                <td>{{ client.id }}</td>
+                <td>{{ client.name or '—' }}</td>
+                <td>{{ client.phone_number }}</td>
+                <td>
+                    {% if client.created_at %}
+                    {% if client.created_at.__class__.__name__ == 'datetime' %}
+                    {{ client.created_at.strftime('%d.%m.%Y') }}
+                    {% else %}
+                    {{ client.created_at }}
+                    {% endif %}
+                    {% else %}
+                    —
+                    {% endif %}
+                </td>
+                <td>
+                    <span class="orders-badge">{{ client_orders[client.id] }}</span>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" style="text-align:center;color:#bbb;">Клієнтів не знайдено</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<style>
+    .clients-panel {
+        background: rgba(227, 242, 253, 0.97);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px 0 rgba(25, 118, 210, 0.10);
+        padding: 2.5em 2em 2em 2em;
+        margin: 2em auto;
+        max-width: 1680px;
+        width: 100%;
+    }
+
+    .clients-title {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: #1976d2;
+        letter-spacing: 0.03em;
+        margin-bottom: 1.5em;
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+    }
+
+    .clients-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        background: #fff;
+        border-radius: 14px;
+        overflow: hidden;
+        font-size: 1.07em;
+        box-shadow: 0 2px 8px #90caf9;
+    }
+
+    .clients-table th,
+    .clients-table td {
+        padding: 0.7em 1.1em;
+        border-bottom: 1px solid #90caf9;
+        text-align: left;
+    }
+
+    .clients-table th {
+        background: #e3f2fd;
+        color: #1976d2;
+        font-weight: 700;
+    }
+
+    .clients-table tr:last-child th,
+    .clients-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .orders-badge {
+        display: inline-block;
+        min-width: 2.2em;
+        padding: 0.18em 0.7em;
+        border-radius: 12px;
+        background: #1976d2;
+        color: #fff;
+        font-weight: 700;
+        font-size: 1em;
+        text-align: center;
+        box-shadow: 0 2px 8px #90caf9;
+    }
+
+    @media (max-width: 900px) {
+        .clients-panel {
+            padding: 1em 0.3em;
+        }
+
+        .clients-title {
+            font-size: 1.2rem;
+        }
+
+        .clients-table th,
+        .clients-table td {
+            padding: 0.4em 0.5em;
+            font-size: 0.97em;
+        }
+    }
+
+    @media (max-width: 650px) {
+
+        .clients-table,
+        .clients-table thead,
+        .clients-table tbody,
+        .clients-table tr {
+            display: block;
+            width: 100%;
+        }
+
+        .clients-table thead {
+            display: none;
+        }
+
+        .clients-table tr {
+            margin-bottom: 1.1em;
+            background: #e3f2fd;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #90caf9;
+            padding: 0.7em 0.5em;
+        }
+
+        .clients-table td {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.35em 0.7em;
+            border: none;
+            font-size: 1em;
+            border-bottom: 1px solid #90caf922;
+        }
+
+        .clients-table td:before {
+            content: attr(data-label);
+            font-weight: 700;
+            color: #1976d2;
+            margin-right: 0.7em;
+            min-width: 110px;
+            display: inline-block;
+        }
+
+        .clients-table tr:last-child td {
+            border-bottom: none;
+        }
+    }
+</style>
+<script>
+    // Додає data-label для мобільної таблиці
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.innerWidth <= 650) {
+            const labels = ["№", "Прізвище", "Ім'я", "Телефон", "Дата реєстрації", "Кількість замовлень"];
+            document.querySelectorAll('.clients-table tbody tr').forEach(function (row) {
+                row.querySelectorAll('td').forEach(function (cell, idx) {
+                    cell.setAttribute('data-label', labels[idx]);
+                });
+            });
+        }
+    });
+</script>
+{% endblock %}
