@@ -25,7 +25,6 @@ def get_meta(page_type, slug=None):
     return MetaTag.query.filter_by(page='default').first()
 
 @main.route('/')
-@cache.cached(timeout=300)  # Кешує сторінку на 5 хвилин
 def index():
     upload_folder = os.path.join(current_app.static_folder, 'uploads')
     gallery_json = os.path.join(upload_folder, 'gallery.json')
@@ -272,7 +271,6 @@ def page_not_found(e):
     return render_template('404.html', meta=get_meta('404')), 404
 
 @main.route('/login', methods=['GET', 'POST'])
-@cache.cached(timeout=300)
 def login():
     if request.method == 'POST':
         user = User.query.filter_by(phone_number=request.form['phone_number']).first()
@@ -287,7 +285,6 @@ def login():
     return render_template('login.html', meta=meta)
 
 @main.route('/logout')
-@cache.cached(timeout=300)
 @login_required
 def logout():
     logout_user()
