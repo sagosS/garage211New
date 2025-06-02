@@ -10,14 +10,14 @@
       <span></span>
     </label>
     <ul class="navbar-menu">
-      <li><a href="{{ url_for('main.index') }}">Головна</a></li>
-      <li><a href="{{ url_for('main.all_services') }}">Послуги</a></li>
-      <li><a href="{{ url_for('main.news') }}">Новини</a></li>
-      <li><a href="{{ url_for('main.promotions') }}">Акції</a></li>
-      <li><a href="{{ url_for('main.gallery') }}">Галерея</a></li>
-      <li><a href="{{ url_for('main.projects') }}">Проєкти</a></li>
-      <li><a href="{{ url_for('main.contacts') }}">Контакти</a></li>
-      <li><a href="{{ url_for('main.login') }}">@персонал</a></li>
+      <li><a  rel="canonical" href="{{ url_for('main.index', _external=True) }}">Головна</a></li>
+      <li><a  rel="canonical" href="{{ url_for('main.all_services', _external=True) }}">Послуги</a></li>
+      <li><a  rel="canonical" href="{{ url_for('main.news', _external=True) }}">Новини</a></li>
+      <li><a  rel="canonical" href="{{ url_for('main.promotions', _external=True) }}">Акції</a></li>
+      <li><a  rel="canonical" href="{{ url_for('main.gallery', _external=True) }}">Галерея</a></li>
+      <li><a  rel="canonical" href="{{ url_for('main.projects', _external=True) }}">Проєкти</a></li>
+      <li><a  rel="canonical" href="{{ url_for('main.contacts', _external=True) }}">Контакти</a></li>
+      <li><a  rel="canonical" href="{{ url_for('main.login', _external=True) }}">@персонал</a></li>
       {% if current_user.is_authenticated %}
           <a href="{% if current_user.is_admin %}{{ url_for('admin.admin_index') }}{% else %}{{ url_for('main.worker_cabinet') }}{% endif %}" 
             style="background: #22c55e; color: #fff; padding: 8px 18px; border-radius: 6px; margin-right: 10px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center;">

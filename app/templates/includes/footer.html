@@ -55,11 +55,14 @@
             <div class="footer-col">
                 <h3>Навігація</h3>
                 <ul class="footer-links">
-                    <li><a href="{{ url_for('main.index') }}">Головна</a></li>
-                    <li><a href="{{ url_for('main.all_services') }}">Послуги</a></li>
-                    <li><a href="{{ url_for('main.news') }}">Новини</a></li>
-                    <li><a href="{{ url_for('main.book') }}">Запис онлайн</a></li>
-                    <li><a href="{{ url_for('main.contacts') }}">Контакти</a></li>
+                    <li><a rel="canonical" href="{{ url_for('main.index', _external=True) }}">Головна</a></li>
+                    <li><a rel="canonical" href="{{ url_for('main.all_services', _external=True) }}">Послуги</a></li>
+                    <li><a rel="canonical" href="{{ url_for('main.news', _external=True) }}">Новини</a></li>
+                    <li><a rel="canonical" href="{{ url_for('main.promotions', _external=True) }}">Акції</a></li>
+                    <li><a rel="canonical" href="{{ url_for('main.gallery', _external=True) }}">Галерея</a></li>
+                    <li><a rel="canonical" href="{{ url_for('main.projects', _external=True) }}">Проєкти</a></li>
+                    <li><a rel="canonical" href="{{ url_for('main.contacts', _external=True) }}">Контакти</a></li>
+                    <li><a rel="canonical" href="{{ url_for('main.book', _external=True) }}">Запис онлайн</a></li>
                 </ul>
             </div>
         </div>
@@ -67,11 +70,11 @@
             <div class="copyright">
                 &copy; {{ current_year }} СТО "Гараж 211"
                 |
-                <a href="{{ url_for('main.login') }}">@персонал</a>
+                <a rel="canonical" href="{{ url_for('main.login', _external=True) }}">@персонал</a>
             </div>
         </div>
     </div>
 </footer>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="{{ url_for('static', filename='js/map.js') }}"></script>
