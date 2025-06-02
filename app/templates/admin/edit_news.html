@@ -14,6 +14,11 @@
             Опис
             <textarea name="description" required>{{ news.description }}</textarea>
         </label>
+        <div class="form-group">
+            <label for="slug">URL (slug):</label>
+            <input type="text" name="slug" id="slug" value="{{ news.slug if news else '' }}" required>
+            <small>Наприклад: vesnyana-aktsiya, diagnostics, skidka-10</small>
+        </div>
         <label>
             Дата
             <input type="text" name="date" value="{{ news.date.strftime('%d.%m.%Y') }}" required>

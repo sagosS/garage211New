@@ -3,7 +3,7 @@ from datetime import datetime
 from flask import render_template, request, redirect, url_for, flash, abort, current_app
 from flask_login import login_required, current_user, logout_user
 from werkzeug.security import generate_password_hash
-from app.models import MetaTag, User, Client, Order, Employee, Service, Promotion, News, ContactMessage, MaterialAsset
+from app.models import MetaTag, SitemapPage, RobotsTxt, User, Client, Order, Employee, Service, Promotion, News, ContactMessage, MaterialAsset
 from app.extensions import db
 from . import admin
 from werkzeug.utils import secure_filename
@@ -391,6 +391,7 @@ def admin_services():
     if request.method == 'POST':
         title = request.form['title']
         description = request.form['description']
+        slug = request.form['slug']
         price_from = float(request.form['price_from'])
         price_to = float(request.form['price_to'])
         image_file = request.files.get('image')
@@ -402,6 +403,7 @@ def admin_services():
         service = Service(
             title=title,
             description=description,
+            slug=slug,
             image=image_filename,
             price_from=price_from,
             price_to=price_to
@@ -410,7 +412,6 @@ def admin_services():
         db.session.commit()
         flash('Послугу створено!', 'success')
         return redirect(url_for('admin.admin_services'))
-        pass
     services = Service.query.order_by(Service.id.desc()).all()
     return render_template('admin/services.html', services=services, promotions=promotions)
 
@@ -431,6 +432,7 @@ def edit_service(service_id):
     if request.method == 'POST':
         service.title = request.form['title']
         service.description = request.form['description']
+        service.slug = request.form['slug']
         service.price_from = float(request.form['price_from'])
         service.price_to = float(request.form['price_to'])
         image_file = request.files.get('image')
@@ -452,6 +454,7 @@ def admin_promotions():
     if request.method == 'POST':
         title = request.form['title']
         description = request.form['description']
+        slug = request.form['slug']
         price = request.form.get('price')
         end_date = request.form.get('end_date')
         price = float(price) if price else None
@@ -474,6 +477,7 @@ def admin_promotions():
         promo = Promotion(
             title=title,
             description=description,
+            slug=slug,
             image=image_filename,
             price=price,
             end_date=end_date
@@ -493,6 +497,7 @@ def edit_promotion(promo_id):
     if request.method == 'POST':
         promo.title = request.form['title']
         promo.description = request.form['description']
+        promo.slug = request.form['slug']
         price = request.form.get('price')
         end_date = request.form.get('end_date')
         promo.price = float(price) if price else None
@@ -506,7 +511,7 @@ def edit_promotion(promo_id):
                 return redirect(request.url)
         else:
             promo.end_date = None
-            
+
         image_file = request.files.get('image')
         if image_file and image_file.filename:
             image_filename = secure_filename(image_file.filename)
@@ -518,13 +523,13 @@ def edit_promotion(promo_id):
         return redirect(url_for('admin.admin_promotions'))
     return render_template('admin/edit_promotions.html', promo=promo)
 
-@admin.route('/promotions/delete/<int:promo_id>')
+@admin.route('/promotions/delete/<int:promo_id>', methods=['GET', 'POST'])
 @login_required
 def delete_promotion(promo_id):
     promo = Promotion.query.get_or_404(promo_id)
     db.session.delete(promo)
     db.session.commit()
-    flash('Акцію видалено!', 'info')
+    flash('Акцію видалено!', 'success')
     return redirect(url_for('admin.admin_promotions'))
 
 @admin.route('/news', methods=['GET', 'POST'])
@@ -534,12 +539,13 @@ def admin_news():
         title = request.form['title']
         description = request.form['description']
         date_str = request.form['date']
+        slug = request.form['slug']
         try:
             date = datetime.strptime(date_str, "%d.%m.%Y").date()
         except ValueError:
             flash("Невірний формат дати. Використовуйте дд.мм.рррр", "danger")
             return redirect(request.url)
-        news = News(title=title, description=description, date=date)
+        news = News(title=title, description=description, date=date, slug=slug)
         db.session.add(news)
         db.session.commit()
         flash('Новину додано!', 'success')
@@ -547,6 +553,7 @@ def admin_news():
     news_list = News.query.order_by(News.date.desc()).all()
     return render_template('admin/news.html', news_list=news_list)
 
+# --- Редагування новини ---
 @admin.route('/news/edit/<int:news_id>', methods=['GET', 'POST'])
 @login_required
 def edit_news(news_id):
@@ -554,6 +561,7 @@ def edit_news(news_id):
     if request.method == 'POST':
         news.title = request.form['title']
         news.description = request.form['description']
+        news.slug = request.form['slug']
         date_str = request.form['date']
         try:
             news.date = datetime.strptime(date_str, "%d.%m.%Y").date()
@@ -564,6 +572,7 @@ def edit_news(news_id):
         flash('Новину оновлено!', 'success')
         return redirect(url_for('admin.admin_news'))
     return render_template('admin/edit_news.html', news=news)
+
 
 @admin.route('/news/delete/<int:news_id>')
 @login_required
@@ -771,3 +780,43 @@ def admin_logout():
     logout_user()
     flash('Ви вийшли з адмінки', 'info')
     return redirect(url_for('main.index'))
+
+@admin.route('/sitemap', methods=['GET', 'POST'])
+@login_required
+def edit_sitemap():
+    if request.method == 'POST':
+        url = request.form.get('url')
+        lastmod = request.form.get('lastmod')
+        changefreq = request.form.get('changefreq')
+        priority = request.form.get('priority')
+        if url:
+            page = SitemapPage(url=url, lastmod=lastmod, changefreq=changefreq, priority=priority)
+            db.session.add(page)
+            db.session.commit()
+            flash('Сторінку додано до sitemap!', 'success')
+        return redirect(url_for('admin.edit_sitemap'))
+    pages = SitemapPage.query.all()
+    return render_template('admin/edit_sitemap.html', pages=pages, now=datetime.utcnow)
+
+@admin.route('/sitemap/delete/<int:page_id>', methods=['POST'])
+@login_required
+def delete_sitemap_page(page_id):
+    page = SitemapPage.query.get_or_404(page_id)
+    db.session.delete(page)
+    db.session.commit()
+    flash('Сторінку видалено з sitemap!', 'success')
+    return redirect(url_for('admin.edit_sitemap'))
+
+@admin.route('/robots', methods=['GET', 'POST'])
+@login_required
+def edit_robots():
+    robots = RobotsTxt.query.first()
+    if not robots:
+        robots = RobotsTxt(content="")
+        db.session.add(robots)
+    if request.method == 'POST':
+        robots.content = request.form.get('content', '')
+        db.session.commit()
+        flash('robots.txt оновлено!', 'success')
+        return redirect(url_for('admin.edit_robots'))
+    return render_template('admin/edit_robots.html', robots=robots)

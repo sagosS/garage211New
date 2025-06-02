@@ -8,3 +8,4 @@ class Promotion(db.Model):
     image = db.Column(db.String(128), nullable=True)
     price = db.Column(db.Float, nullable=True)
     end_date = db.Column(db.Date, nullable=True)
+    slug = db.Column(db.String(128), unique=True, nullable=False)

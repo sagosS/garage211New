@@ -593,3 +593,4 @@ cython_debug/
 .cursorignore
 .cursorindexingignore
 app/static/uploads/
+app/zdelat.txt

@@ -1,4 +1,6 @@
 from .meta_teg import MetaTag
+from .sitemap_page import SitemapPage
+from .robots_txt import RobotsTxt
 from .user import User
 from .client import Client
 from .order import Order

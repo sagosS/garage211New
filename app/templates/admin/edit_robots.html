@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}Редагування robots.txt{% endblock %}
+{% block content %}
+<div class="robots-panel glassy">
+    <h2 class="robots-title">
+        <i class="fa-solid fa-robot" style="color:#ff9800;font-size:1.3em;margin-right:8px;"></i>
+        Редагування robots.txt
+    </h2>
+    <form method="post" class="robots-form">
+        <textarea name="content" rows="12" class="robots-textarea" placeholder="User-agent: *&#10;Disallow:">{{ robots.content or '' }}</textarea>
+        <button type="submit" class="robots-btn">Зберегти</button>
+    </form>
+    <div class="robots-link-wrap">
+        <a href="{{ url_for('main.robots_txt') }}" target="_blank" class="robots-link">
+            <i class="fa-solid fa-eye"></i> Переглянути robots.txt
+        </a>
+    </div>
+</div>
+<style>
+.robots-panel {
+    background: rgba(255, 251, 230, 0.97);
+    border-radius: 18px;
+    box-shadow: 0 8px 32px 0 rgba(255, 168, 0, 0.12);
+    padding: 2.5em 2em 2em 2em;
+    margin: 2em auto;
+    max-width: 600px;
+    width: 100%;
+}
+.robots-title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #ff9800;
+    letter-spacing: 0.03em;
+    margin-bottom: 1.5em;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+.robots-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2em;
+}
+.robots-textarea {
+    width: 100%;
+    min-height: 220px;
+    border: 1.5px solid #ffe082;
+    border-radius: 8px;
+    padding: 1em;
+    font-size: 1.08em;
+    background: #fffbe6;
+    color: #b26a00;
+    font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
+    transition: border 0.18s;
+    outline: none;
+    resize: vertical;
+}
+.robots-textarea:focus {
+    border-color: #ff9800;
+    background: #fffde7;
+}
+.robots-btn {
+    background: #ff9800;
+    color: #fff;
+    border-radius: 7px;
+    padding: 0.7em 2em;
+    font-size: 1.08em;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: background 0.18s;
+    box-shadow: 0 2px 8px #ffe08280;
+    align-self: flex-end;
+}
+.robots-btn:hover {
+    background: #ef4444;
+    color: #fff;
+}
+.robots-link-wrap {
+    margin-top: 1.2em;
+    text-align: right;
+}
+.robots-link {
+    color: #1976d2;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1em;
+    transition: color 0.18s;
+}
+.robots-link:hover {
+    color: #ff9800;
+    text-decoration: underline;
+}
+@media (max-width: 650px) {
+    .robots-panel {
+        padding: 1em 0.3em;
+    }
+    .robots-title {
+        font-size: 1.1rem;
+    }
+}
+</style>
+{% endblock %}

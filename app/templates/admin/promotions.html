@@ -61,42 +61,47 @@
 <div class="promotion-table">
     <h2>Список акцій</h2>
     <table>
-        <tr>
-            <th>Картинка</th>
-            <th>Назва</th>
-            <th>Опис</th>
-            <th>Ціна</th>
-            <th>Дата закінчення</th>
-        </tr>
-        {% for p in promotions %}
-        <tr>
-            <td>
-                {% if p.image %}
-                    <img src="{{ url_for('static', filename='uploads/' ~ p.image) }}" alt="">
-                {% endif %}
-            </td>
-            <td>{{ p.title }}</td>
-            <td>{{ p.description }}</td>
-            <td>
-                {% if p.price %}
-                    {{ p.price|round(2) }} грн
-                {% else %}
-                    —
-                {% endif %}
-            </td>
-            <td>
-                {{ p.end_date or '—' }}
-            </td>
-            <td>
-                <a href="{{ url_for('admin.edit_promotion', promo_id=p.id) }}" class="edit-btn" title="Редагувати">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 21h17M14.06 9.02l.92.92m2.12-2.12l-2.12-2.12a1.5 1.5 0 0 0-2.12 0l-7.07 7.07a1 1 0 0 0-.26.46l-1 4a.5.5 0 0 0 .61.61l4-1a1 1 0 0 0 .46-.26l7.07-7.07a1.5 1.5 0 0 0 0-2.12z" stroke="#ffb300" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </a>
-                <a href="{{ url_for('admin.delete_promotion', promo_id=p.id) }}" class="delete-btn" title="Видалити" onclick="return confirm('Видалити цю акцію?')">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6h16zm-5 4v6m-4-6v6" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </a>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
+    <tr>
+        <th>Картинка</th>
+        <th>Назва</th>
+        <th>Опис</th>
+        <th>Ціна</th>
+        <th>Дата закінчення</th>
+        <th>ЧПУ (slug)</th>
+        <th></th>
+    </tr>
+    {% for p in promotions %}
+    <tr>
+        <td>
+            {% if p.image %}
+                <img src="{{ url_for('static', filename='uploads/' ~ p.image) }}" alt="">
+            {% endif %}
+        </td>
+        <td>{{ p.title }}</td>
+        <td>{{ p.description }}</td>
+        <td>
+            {% if p.price %}
+                {{ p.price|round(2) }} грн
+            {% else %}
+                —
+            {% endif %}
+        </td>
+        <td>
+            {{ p.end_date or '—' }}
+        </td>
+        <td>
+            {{ p.slug or '—' }}
+        </td>
+        <td>
+            <a href="{{ url_for('admin.edit_promotion', promo_id=p.id) }}" class="edit-btn" title="Редагувати">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 21h17M14.06 9.02l.92.92m2.12-2.12l-2.12-2.12a1.5 1.5 0 0 0-2.12 0l-7.07 7.07a1 1 0 0 0-.26.46l-1 4a.5.5 0 0 0 .61.61l4-1a1 1 0 0 0 .46-.26l7.07-7.07a1.5 1.5 0 0 0 0-2.12z" stroke="#ffb300" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a href="{{ url_for('admin.delete_promotion', promo_id=p.id) }}" class="delete-btn" title="Видалити" onclick="return confirm('Видалити цю акцію?')">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6h16zm-5 4v6m-4-6v6" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
 </div>
 {% endblock %}

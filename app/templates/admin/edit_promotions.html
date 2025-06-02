@@ -1,18 +1,157 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="promotion-form">
-    <h2>Редагувати акцію</h2>
-    <form method="POST" enctype="multipart/form-data">
-        <input type="text" name="title" value="{{ promo.title }}" required>
-        <textarea name="description" required>{{ promo.description }}</textarea>
-        <input type="number" name="price" step="0.01" value="{{ promo.price }}">
-        <input type="text" name="end_date" value="{{ promo.end_date.strftime('%d.%m.%Y') if promo.end_date else '' }}" placeholder="Дата закінчення (напр. 31.07.2025)">
-        <input type="file" name="image" accept="image/*">
+<div class="promotion-form glassy">
+    <h2 class="promotion-form-title">
+        <i class="fa-solid fa-gift" style="color:#ff9800;font-size:1.2em;margin-right:8px;"></i>
+        Редагувати акцію
+    </h2>
+    <form method="POST" enctype="multipart/form-data" class="promotion-edit-form">
+        <label>
+            <span>Заголовок</span>
+            <input type="text" name="title" value="{{ promo.title }}" required>
+        </label>
+        <label>
+            <span>Опис</span>
+            <textarea name="description" required>{{ promo.description }}</textarea>
+        </label>
+        <label>
+            <span>Ціна</span>
+            <input type="number" name="price" step="0.01" value="{{ promo.price }}">
+        </label>
+        <label>
+            <span>Дата закінчення</span>
+            <input type="text" name="end_date" value="{{ promo.end_date.strftime('%d.%m.%Y') if promo.end_date else '' }}"
+                placeholder="Дата закінчення (напр. 31.07.2025)">
+        </label>
+        <div class="form-group">
+            <label for="slug">URL (slug):</label>
+            <input type="text" name="slug" id="slug" value="{{ promo.slug if promo else '' }}" required>
+            <small>Наприклад: vesnyana-aktsiya, diagnostics, skidka-10</small>
+        </div>
+        <label>
+            <span>Зображення</span>
+            <input type="file" name="image" accept="image/*">
+        </label>
         {% if promo.image %}
-            <img src="{{ url_for('static', filename='uploads/' ~ promo.image) }}" alt="" style="width:80px;height:54px;border-radius:7px;margin-bottom:10px;">
+        <div class="promo-image-preview">
+            <img src="{{ url_for('static', filename='uploads/' ~ promo.image) }}" alt=""
+                style="width:90px;height:60px;border-radius:7px;margin-bottom:10px;object-fit:cover;">
+        </div>
         {% endif %}
-        <button type="submit">Зберегти</button>
-        <a href="{{ url_for('admin.admin_promotions') }}" class="edit-btn" style="margin-left:10px;">Скасувати</a>
+        <div class="promotion-form-actions">
+            <button type="submit" class="promotion-btn">Зберегти</button>
+            <a href="{{ url_for('admin.admin_promotions') }}" class="promotion-cancel-btn">Скасувати</a>
+        </div>
     </form>
 </div>
+<style>
+.promotion-form.glassy {
+    background: rgba(255, 251, 230, 0.97);
+    border-radius: 18px;
+    box-shadow: 0 8px 32px 0 rgba(255, 168, 0, 0.12);
+    padding: 2.5em 2em 2em 2em;
+    margin: 2em auto;
+    max-width: 500px;
+    width: 100%;
+}
+.promotion-form-title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #ff9800;
+    letter-spacing: 0.03em;
+    margin-bottom: 1.5em;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+.promotion-edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2em;
+}
+.promotion-edit-form label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 500;
+    color: #b26a00;
+    gap: 0.3em;
+}
+.promotion-edit-form input[type="text"],
+.promotion-edit-form input[type="number"],
+.promotion-edit-form input[type="file"],
+.promotion-edit-form textarea {
+    border: 1.5px solid #ffe082;
+    border-radius: 8px;
+    padding: 0.6em 1em;
+    font-size: 1.08em;
+    background: #fffbe6;
+    color: #b26a00;
+    transition: border 0.18s;
+    outline: none;
+}
+.promotion-edit-form input:focus,
+.promotion-edit-form textarea:focus {
+    border-color: #ff9800;
+    background: #fffde7;
+}
+.promotion-edit-form textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+.promotion-form .form-group {
+    margin-bottom: 0.5em;
+}
+.promotion-form .form-group small {
+    color: #b26a00;
+    font-size: 0.93em;
+    margin-top: 0.2em;
+}
+.promo-image-preview {
+    margin-bottom: 0.5em;
+}
+.promotion-form-actions {
+    display: flex;
+    gap: 1em;
+    margin-top: 1.2em;
+}
+.promotion-btn {
+    background: #ff9800;
+    color: #fff;
+    border-radius: 7px;
+    padding: 0.7em 2em;
+    font-size: 1.08em;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: background 0.18s;
+    box-shadow: 0 2px 8px #ffe08280;
+}
+.promotion-btn:hover {
+    background: #ef4444;
+    color: #fff;
+}
+.promotion-cancel-btn {
+    background: #fffbe6;
+    color: #b26a00;
+    border-radius: 7px;
+    padding: 0.7em 2em;
+    font-size: 1.08em;
+    font-weight: 700;
+    border: 1.5px solid #ffe082;
+    text-decoration: none;
+    transition: background 0.18s, color 0.18s;
+}
+.promotion-cancel-btn:hover {
+    background: #ffe082;
+    color: #ff9800;
+}
+@media (max-width: 650px) {
+    .promotion-form.glassy {
+        padding: 1em 0.3em;
+    }
+    .promotion-form-title {
+        font-size: 1.1rem;
+    }
+}
+</style>
 {% endblock %}

@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% block title %}Редагування sitemap.xml{% endblock %}
+{% block content %}
+<div class="sitemap-panel glassy">
+    <h2 class="sitemap-title">
+        <svg width="28" height="28" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:8px;">
+            <rect x="3" y="12" width="4" height="8" fill="#ffe082" stroke="#ff9800" stroke-width="2"/>
+            <rect x="9" y="8" width="4" height="12" fill="#ffe082" stroke="#ff9800" stroke-width="2"/>
+            <rect x="15" y="4" width="4" height="16" fill="#ffe082" stroke="#ff9800" stroke-width="2"/>
+        </svg>
+        Редагування sitemap.xml
+    </h2>
+    <form method="post" class="sitemap-form">
+        <input type="url" name="url" placeholder="https://example.com/page" required>
+        <input type="text" name="lastmod" placeholder="2025-06-02" value="{{ now().date() }}">
+        <input type="text" name="changefreq" placeholder="weekly" value="weekly">
+        <input type="number" step="0.1" min="0" max="1" name="priority" placeholder="0.8" value="0.8">
+        <button type="submit" class="sitemap-btn">Додати</button>
+    </form>
+    <div class="sitemap-table-wrap">
+        <table class="sitemap-table">
+            <thead>
+                <tr>
+                    <th>URL</th>
+                    <th>lastmod</th>
+                    <th>changefreq</th>
+                    <th>priority</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for page in pages %}
+                <tr>
+                    <td><a href="{{ page.url }}" target="_blank" rel="noopener">{{ page.url }}</a></td>
+                    <td>{{ page.lastmod }}</td>
+                    <td>{{ page.changefreq }}</td>
+                    <td>{{ page.priority }}</td>
+                    <td>
+                        <form method="post" action="{{ url_for('admin.delete_sitemap_page', page_id=page.id) }}" style="display:inline;">
+                            <button type="submit" class="sitemap-del-btn" title="Видалити" onclick="return confirm('Видалити цю сторінку з sitemap?')">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<style>
+.sitemap-panel {
+    background: rgba(255, 251, 230, 0.97);
+    border-radius: 18px;
+    box-shadow: 0 8px 32px 0 rgba(255, 168, 0, 0.12);
+    padding: 2.5em 2em 2em 2em;
+    margin: 2em auto;
+    max-width: 800px;
+    width: 100%;
+}
+.sitemap-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ff9800;
+    letter-spacing: 0.03em;
+    margin-bottom: 1.5em;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+.sitemap-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    margin-bottom: 2em;
+    align-items: center;
+}
+.sitemap-form input[type="url"],
+.sitemap-form input[type="text"],
+.sitemap-form input[type="number"] {
+    border: 1.5px solid #ffe082;
+    border-radius: 8px;
+    padding: 0.6em 1em;
+    font-size: 1.08em;
+    background: #fffbe6;
+    color: #b26a00;
+    transition: border 0.18s;
+    outline: none;
+    min-width: 160px;
+}
+.sitemap-form input:focus {
+    border-color: #ff9800;
+    background: #fffde7;
+}
+.sitemap-btn {
+    background: #ff9800;
+    color: #fff;
+    border-radius: 7px;
+    padding: 0.7em 2em;
+    font-size: 1.08em;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: background 0.18s;
+    box-shadow: 0 2px 8px #ffe08280;
+}
+.sitemap-btn:hover {
+    background: #ef4444;
+    color: #fff;
+}
+.sitemap-table-wrap {
+    overflow-x: auto;
+}
+.sitemap-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px #ff980022;
+}
+.sitemap-table th, .sitemap-table td {
+    padding: 0.7em 1em;
+    text-align: left;
+}
+.sitemap-table th {
+    background: #fffbe6;
+    color: #b26a00;
+    font-weight: 700;
+    border-bottom: 2px solid #ffe082;
+}
+.sitemap-table tr:nth-child(even) {
+    background: #fffde7;
+}
+.sitemap-table tr:hover {
+    background: #ffe08244;
+}
+.sitemap-del-btn {
+    background: none;
+    border: none;
+    color: #ef4444;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: color 0.18s;
+}
+.sitemap-del-btn:hover {
+    color: #b91c1c;
+}
+@media (max-width: 900px) {
+    .sitemap-panel {
+        padding: 1em 0.3em;
+    }
+    .sitemap-title {
+        font-size: 1.1rem;
+    }
+    .sitemap-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+</style>
+{% endblock %}

@@ -14,12 +14,9 @@
             <h3>{{ s.title }}</h3>
             <div>{{ s.description }}</div>
             <div class="service-price">{{ s.price_from|round(2) }} – {{ s.price_to|round(2) }} грн</div>
-            {% if s.promotion %}
+            {% if s.promotion and s.promotion.slug %}
             <div class="service-promo">
-                <a href="{{ url_for('main.promotion_detail', promo_id=s.promotion.id) }}"
-                    style="color:#ef4444; font-weight:700;">
-                    Акція: {{ s.promotion.title }}
-                </a>
+                <a href="{{ url_for('main.promotion_detail', slug=s.promotion.slug) }}">{{ s.promotion.title }}</a>
             </div>
             {% endif %}
         </div>

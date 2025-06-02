@@ -25,6 +25,7 @@
                 <th>Заголовок</th>
                 <th>Опис</th>
                 <th>Дата</th>
+                <th>ЧПУ (slug)</th>
                 <th>Дії</th>
             </tr>
             {% for n in news_list %}
@@ -32,13 +33,22 @@
                 <td style="font-weight:600;">{{ n.title }}</td>
                 <td style="max-width:350px;">{{ n.description }}</td>
                 <td>{{ n.date.strftime('%d.%m.%Y') }}</td>
+                <td>{{ n.slug or '—' }}</td>
                 <td>
                     <a href="{{ url_for('admin.edit_news', news_id=n.id) }}" class="edit-btn" title="Редагувати">
-                        <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M4 21h17M14.06 9.02l.92.92m2.12-2.12l-2.12-2.12a1.5 1.5 0 0 0-2.12 0l-7.07 7.07a1 1 0 0 0-.26.46l-1 4a.5.5 0 0 0 .61.61l4-1a1 1 0 0 0 .46-.26l7.07-7.07a1.5 1.5 0 0 0 0-2.12z" stroke="#ffb300" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
+                            <path
+                                d="M4 21h17M14.06 9.02l.92.92m2.12-2.12l-2.12-2.12a1.5 1.5 0 0 0-2.12 0l-7.07 7.07a1 1 0 0 0-.26.46l-1 4a.5.5 0 0 0 .61.61l4-1a1 1 0 0 0 .46-.26l7.07-7.07a1.5 1.5 0 0 0 0-2.12z"
+                                stroke="#ffb300" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
                     </a>
                     <a href="{{ url_for('admin.delete_news', news_id=n.id) }}" class="delete-btn" title="Видалити"
                         onclick="return confirm('Видалити цю новину?')">
-                        <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6h16zm-5 4v6m-4-6v6" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
+                            <path
+                                d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6h16zm-5 4v6m-4-6v6"
+                                stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
                     </a>
                 </td>
             </tr>
@@ -46,134 +56,164 @@
         </table>
     </div>
 </section>
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    <ul class="flashes">
-      {% for category, message in messages %}
-        <li class="flash-{{ category }}">{{ message }}</li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
 <style>
-.admin-news-title {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #ff9800;
-    margin-bottom: 1.5rem;
-    letter-spacing: 0.5px;
-}
-.admin-news-form-modern {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem 2.5rem;
-    align-items: flex-start;
-    background: #f8fafc;
-    border-radius: 16px;
-    padding: 2rem 2.5rem 1.5rem 2.5rem;
-    margin-bottom: 2.5rem;
-    box-shadow: 0 4px 24px rgba(255,179,0,0.08);
-    border: 1.5px solid #ffe082;
-}
-.news-form-group {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 220px;
-    min-width: 180px;
-    margin-bottom: 0.5rem;
-}
-.news-form-group-full {
-    flex-basis: 100%;
-}
-.admin-news-form-modern label {
-    font-size: 1.01rem;
-    font-weight: 600;
-    color: #ff9800;
-    margin-bottom: 0.4em;
-    letter-spacing: 0.03em;
-}
-.admin-news-form-modern input[type="text"],
-.admin-news-form-modern textarea {
-    padding: 0.8rem 1.1rem;
-    border-radius: 8px;
-    border: 1.5px solid #ffe082;
-    font-size: 1.04rem;
-    background: #fff;
-    transition: border 0.2s, box-shadow 0.2s;
-    font-family: inherit;
-    resize: none;
-}
-.admin-news-form-modern input[type="text"]:focus,
-.admin-news-form-modern textarea:focus {
-    border: 1.5px solid #ffb300;
-    outline: none;
-    box-shadow: 0 2px 8px rgba(255,179,0,0.08);
-}
-.news-form-btn {
-    background: linear-gradient(90deg, #ffb300 60%, #ff9800 100%);
-    color: #fff;
-    font-weight: 700;
-    border: none;
-    border-radius: 8px;
-    padding: 0.9rem 2.5rem;
-    font-size: 1.13rem;
-    cursor: pointer;
-    margin-top: 1.2rem;
-    box-shadow: 0 2px 12px rgba(255,179,0,0.08);
-    transition: background 0.18s, box-shadow 0.18s;
-    letter-spacing: 0.04em;
-}
-.news-form-btn:hover {
-    background: linear-gradient(90deg, #ef4444 60%, #ff9800 100%);
-    box-shadow: 0 4px 18px rgba(239,68,68,0.10);
-}
-@media (max-width: 900px) {
-    .admin-news-form-modern {
-        flex-direction: column;
-        gap: 1.1rem;
-        padding: 1.2rem 0.7rem 1.2rem 0.7rem;
+    .admin-news-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #ff9800;
+        margin-bottom: 1.5rem;
+        letter-spacing: 0.5px;
     }
-    .news-form-btn { width: 100%; }
-}
-.admin-news-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(255,179,0,0.08);
-    overflow: hidden;
-}
-.admin-news-table th, .admin-news-table td {
-    padding: 0.8rem 1rem;
-    border-bottom: 1px solid #ffe082;
-    text-align: left;
-    vertical-align: top;
-}
-.admin-news-table th {
-    background: #fffbe6;
-    font-weight: 700;
-    color: #ff9800;
-    font-size: 1.05rem;
-}
-.admin-news-table tr:last-child td {
-    border-bottom: none;
-}
-.edit-btn, .delete-btn {
-    display: inline-block;
-    margin-right: 0.5rem;
-    vertical-align: middle;
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-}
-.edit-btn svg { vertical-align: middle; }
-.delete-btn svg { vertical-align: middle; }
-.delete-btn:hover svg path { stroke: #b91c1c; }
-.edit-btn:hover svg path { stroke: #f59e42; }
-@media (max-width: 700px) {
-    .admin-news-form { flex-direction: column; gap: 0.7rem; }
-    .admin-news-table th, .admin-news-table td { padding: 0.6rem 0.5rem; }
-}
+
+    .admin-news-form-modern {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem 2.5rem;
+        align-items: flex-start;
+        background: #f8fafc;
+        border-radius: 16px;
+        padding: 2rem 2.5rem 1.5rem 2.5rem;
+        margin-bottom: 2.5rem;
+        box-shadow: 0 4px 24px rgba(255, 179, 0, 0.08);
+        border: 1.5px solid #ffe082;
+    }
+
+    .news-form-group {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 220px;
+        min-width: 180px;
+        margin-bottom: 0.5rem;
+    }
+
+    .news-form-group-full {
+        flex-basis: 100%;
+    }
+
+    .admin-news-form-modern label {
+        font-size: 1.01rem;
+        font-weight: 600;
+        color: #ff9800;
+        margin-bottom: 0.4em;
+        letter-spacing: 0.03em;
+    }
+
+    .admin-news-form-modern input[type="text"],
+    .admin-news-form-modern textarea {
+        padding: 0.8rem 1.1rem;
+        border-radius: 8px;
+        border: 1.5px solid #ffe082;
+        font-size: 1.04rem;
+        background: #fff;
+        transition: border 0.2s, box-shadow 0.2s;
+        font-family: inherit;
+        resize: none;
+    }
+
+    .admin-news-form-modern input[type="text"]:focus,
+    .admin-news-form-modern textarea:focus {
+        border: 1.5px solid #ffb300;
+        outline: none;
+        box-shadow: 0 2px 8px rgba(255, 179, 0, 0.08);
+    }
+
+    .news-form-btn {
+        background: linear-gradient(90deg, #ffb300 60%, #ff9800 100%);
+        color: #fff;
+        font-weight: 700;
+        border: none;
+        border-radius: 8px;
+        padding: 0.9rem 2.5rem;
+        font-size: 1.13rem;
+        cursor: pointer;
+        margin-top: 1.2rem;
+        box-shadow: 0 2px 12px rgba(255, 179, 0, 0.08);
+        transition: background 0.18s, box-shadow 0.18s;
+        letter-spacing: 0.04em;
+    }
+
+    .news-form-btn:hover {
+        background: linear-gradient(90deg, #ef4444 60%, #ff9800 100%);
+        box-shadow: 0 4px 18px rgba(239, 68, 68, 0.10);
+    }
+
+    @media (max-width: 900px) {
+        .admin-news-form-modern {
+            flex-direction: column;
+            gap: 1.1rem;
+            padding: 1.2rem 0.7rem 1.2rem 0.7rem;
+        }
+
+        .news-form-btn {
+            width: 100%;
+        }
+    }
+
+    .admin-news-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(255, 179, 0, 0.08);
+        overflow: hidden;
+    }
+
+    .admin-news-table th,
+    .admin-news-table td {
+        padding: 0.8rem 1rem;
+        border-bottom: 1px solid #ffe082;
+        text-align: left;
+        vertical-align: top;
+    }
+
+    .admin-news-table th {
+        background: #fffbe6;
+        font-weight: 700;
+        color: #ff9800;
+        font-size: 1.05rem;
+    }
+
+    .admin-news-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .edit-btn,
+    .delete-btn {
+        display: inline-block;
+        margin-right: 0.5rem;
+        vertical-align: middle;
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+    }
+
+    .edit-btn svg {
+        vertical-align: middle;
+    }
+
+    .delete-btn svg {
+        vertical-align: middle;
+    }
+
+    .delete-btn:hover svg path {
+        stroke: #b91c1c;
+    }
+
+    .edit-btn:hover svg path {
+        stroke: #f59e42;
+    }
+
+    @media (max-width: 700px) {
+        .admin-news-form {
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+
+        .admin-news-table th,
+        .admin-news-table td {
+            padding: 0.6rem 0.5rem;
+        }
+    }
 </style>
 {% endblock %}

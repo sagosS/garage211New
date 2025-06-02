@@ -130,6 +130,8 @@
                 <th>Назва</th>
                 <th>Опис</th>
                 <th>Ціна (від-до)</th>
+                <th>ЧПУ (slug)</th>
+                <th>Акція</th>
                 <th>Дії</th>
             </tr>
             {% for s in services %}
@@ -142,6 +144,14 @@
                 <td>{{ s.title }}</td>
                 <td>{{ s.description }}</td>
                 <td>{{ s.price_from|round(2) }}&nbsp;–&nbsp;{{ s.price_to|round(2) }} грн</td>
+                <td>{{ s.slug or '—' }}</td>
+                <td>
+                    {% if s.promotion %}
+                    {{ s.promotion.title }}
+                    {% else %}
+                    —
+                    {% endif %}
+                </td>
                 <td>
                     <a href="{{ url_for('admin.edit_service', service_id=s.id) }}" class="edit-btn" title="Редагувати">
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
@@ -158,13 +168,6 @@
                                 stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                     </a>
-                </td>
-                <td>
-                    {% if s.promotion %}
-                    {{ s.promotion.title }}
-                    {% else %}
-                    —
-                    {% endif %}
                 </td>
             </tr>
             {% endfor %}

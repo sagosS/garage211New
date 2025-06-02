@@ -52,6 +52,27 @@
                         <span>Meta-теги послуг</span>
                     </a>
                 </li>
+                <li>
+                    <a href="{{ url_for('admin.edit_sitemap') }}"
+                        class="admin-nav-link{% if request.endpoint == 'admin.edit_sitemap' %} active{% endif %}">
+                        <span class="admin-nav-icon">
+                            <!-- Послуги: гайковий ключ -->
+                            <svg viewBox="0 0 24 24">
+                                <path d="M22 7l-5 5 1.5 1.5a5 5 0 1 1-7.1-7.1L12 7l5-5" />
+                            </svg>
+                        </span>
+                        <span>Sitemap.xml</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin.edit_robots') }}"
+                        class="admin-nav-link{% if request.endpoint == 'admin.edit_robots' %} active{% endif %}">
+                        <span class="admin-nav-icon">
+                            <i class="fa-solid fa-robot"></i>
+                        </span>
+                        <span>robots.txt</span>
+                    </a>
+                </li>
             </ul>
         </li>
         <li class="admin-nav-dropdown">

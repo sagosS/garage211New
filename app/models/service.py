@@ -9,3 +9,4 @@ class Service(db.Model):
     price_to = db.Column(db.Float, nullable=False)
     promotion_id = db.Column(db.Integer, db.ForeignKey('promotions.id', name='fk_service_promotion_id'), nullable=True)
     promotion = db.relationship('Promotion', backref='services')
+    slug = db.Column(db.String(128), unique=True, nullable=False)

@@ -1,12 +1,34 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="service-form">
-    <h2>Редагувати послугу</h2>
-    <form method="POST" enctype="multipart/form-data">
-        <input type="text" name="title" value="{{ service.title }}" required>
-        <textarea name="description" required>{{ service.description }}</textarea>
-        <input type="number" name="price_from" step="0.01" value="{{ service.price_from }}" required>
-        <input type="number" name="price_to" step="0.01" value="{{ service.price_to }}" required>
+<div class="service-form glassy">
+    <h2 class="service-form-title">
+        <i class="fa-solid fa-screwdriver-wrench" style="color:#ff9800;font-size:1.2em;margin-right:8px;"></i>
+        Редагувати послугу
+    </h2>
+    <form method="POST" enctype="multipart/form-data" class="service-edit-form">
+        <label>
+            <span>Назва</span>
+            <input type="text" name="title" value="{{ service.title }}" required>
+        </label>
+        <label>
+            <span>Опис</span>
+            <textarea name="description" required>{{ service.description }}</textarea>
+        </label>
+        <div class="form-row">
+            <label>
+                <span>Ціна від</span>
+                <input type="number" name="price_from" step="0.01" value="{{ service.price_from }}" required>
+            </label>
+            <label>
+                <span>Ціна до</span>
+                <input type="number" name="price_to" step="0.01" value="{{ service.price_to }}" required>
+            </label>
+        </div>
+        <div class="form-group">
+            <label for="slug">URL (slug):</label>
+            <input type="text" name="slug" id="slug" value="{{ service.slug if service else '' }}" required>
+            <small>Наприклад: diagnostyka, remont-dvyhuna, zamina-masla</small>
+        </div>
         <label for="promotion_id">Акція (необов'язково):</label>
         <select name="promotion_id" id="promotion_id">
             <option value="">Без акції</option>
@@ -16,13 +38,143 @@
             </option>
             {% endfor %}
         </select>
-        <input type="file" name="image" accept="image/*">
+        <label>
+            <span>Зображення</span>
+            <input type="file" name="image" accept="image/*">
+        </label>
         {% if service.image %}
-        <img src="{{ url_for('static', filename='uploads/' ~ service.image) }}" alt=""
-            style="width:80px;height:54px;border-radius:7px;margin-bottom:10px;">
+        <div class="service-image-preview">
+            <img src="{{ url_for('static', filename='uploads/' ~ service.image) }}" alt=""
+                style="width:90px;height:60px;border-radius:7px;margin-bottom:10px;object-fit:cover;">
+        </div>
         {% endif %}
-        <button type="submit">Зберегти</button>
-        <a href="{{ url_for('admin.admin_services') }}" class="edit-btn" style="margin-left:10px;">Скасувати</a>
+        <div class="service-form-actions">
+            <button type="submit" class="service-btn">Зберегти</button>
+            <a href="{{ url_for('admin.admin_services') }}" class="service-cancel-btn">Скасувати</a>
+        </div>
     </form>
 </div>
+<style>
+.service-form.glassy {
+    background: rgba(255, 251, 230, 0.97);
+    border-radius: 18px;
+    box-shadow: 0 8px 32px 0 rgba(255, 168, 0, 0.12);
+    padding: 2.5em 2em 2em 2em;
+    margin: 2em auto;
+    max-width: 500px;
+    width: 100%;
+}
+.service-form-title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #ff9800;
+    letter-spacing: 0.03em;
+    margin-bottom: 1.5em;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+.service-edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2em;
+}
+.service-edit-form label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 500;
+    color: #b26a00;
+    gap: 0.3em;
+}
+.service-edit-form input[type="text"],
+.service-edit-form input[type="number"],
+.service-edit-form input[type="file"],
+.service-edit-form textarea,
+.service-edit-form select {
+    border: 1.5px solid #ffe082;
+    border-radius: 8px;
+    padding: 0.6em 1em;
+    font-size: 1.08em;
+    background: #fffbe6;
+    color: #b26a00;
+    transition: border 0.18s;
+    outline: none;
+}
+.service-edit-form input:focus,
+.service-edit-form textarea:focus,
+.service-edit-form select:focus {
+    border-color: #ff9800;
+    background: #fffde7;
+}
+.service-edit-form textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+.form-row {
+    display: flex;
+    gap: 1em;
+}
+.form-row label {
+    flex: 1;
+}
+.service-form .form-group {
+    margin-bottom: 0.5em;
+}
+.service-form .form-group small {
+    color: #b26a00;
+    font-size: 0.93em;
+    margin-top: 0.2em;
+}
+.service-image-preview {
+    margin-bottom: 0.5em;
+}
+.service-form-actions {
+    display: flex;
+    gap: 1em;
+    margin-top: 1.2em;
+}
+.service-btn {
+    background: #ff9800;
+    color: #fff;
+    border-radius: 7px;
+    padding: 0.7em 2em;
+    font-size: 1.08em;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: background 0.18s;
+    box-shadow: 0 2px 8px #ffe08280;
+}
+.service-btn:hover {
+    background: #ef4444;
+    color: #fff;
+}
+.service-cancel-btn {
+    background: #fffbe6;
+    color: #b26a00;
+    border-radius: 7px;
+    padding: 0.7em 2em;
+    font-size: 1.08em;
+    font-weight: 700;
+    border: 1.5px solid #ffe082;
+    text-decoration: none;
+    transition: background 0.18s, color 0.18s;
+}
+.service-cancel-btn:hover {
+    background: #ffe082;
+    color: #ff9800;
+}
+@media (max-width: 650px) {
+    .service-form.glassy {
+        padding: 1em 0.3em;
+    }
+    .service-form-title {
+        font-size: 1.1rem;
+    }
+    .form-row {
+        flex-direction: column;
+        gap: 0.5em;
+    }
+}
+</style>
 {% endblock %}

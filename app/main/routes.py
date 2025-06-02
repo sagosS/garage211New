@@ -1,8 +1,8 @@
 import os
 import json
-from flask import render_template, redirect, url_for, flash, request, abort, current_app
+from flask import render_template, redirect, url_for, flash, request, abort, current_app, Response
 from flask_login import login_user, login_required, logout_user, current_user
-from app.models import MetaTag, User, Client, Order, Service, Promotion, News, ContactMessage
+from app.models import MetaTag, SitemapPage, RobotsTxt, User, Client, Order, Service, Promotion, News, ContactMessage
 from app import db
 from werkzeug.security import check_password_hash, generate_password_hash
 from app.main import main
@@ -143,43 +143,25 @@ def book():
     services = Service.query.order_by(Service.title).all()
     return render_template('book.html', settings=settings, services=services)
 
-@main.route('/news/<int:news_id>')
-def news_detail(news_id):
-    # Тут має бути пошук новини за id (наприклад, з БД)
-    # Для прикладу:
-    news = [
-        {
-            "id": 1,
-            "title": "Відкриття нового сервісу",
-            "date": "2025-05-20",
-            "content": "Повний текст новини 1...",
-            "image_url": url_for('static', filename='images/news1.jpg')
-        },
-        {
-            "id": 2,
-            "title": "Весняна акція",
-            "date": "2025-04-15",
-            "content": "Повний текст новини 2...",
-            "image_url": url_for('static', filename='images/news2.jpg')
-        },
-        # ...ще новини...
-    ]
-    item = next((n for n in news if n["id"] == news_id), None)
-    if not item:
-        abort(404)
-    return render_template('news_detail.html', item=item)
+@main.route('/news/<slug>')
+def news_detail(slug):
+    news = News.query.filter_by(slug=slug).first_or_404()
+    return render_template('news_detail.html', news=news)
+
+@main.route('/promotions/<slug>')
+def promotion_detail(slug):
+    promo = Promotion.query.filter_by(slug=slug).first_or_404()
+    return render_template('promotion_detail.html', promo=promo)
+
+@main.route('/services/<slug>')
+def service_detail(slug):
+    service = Service.query.filter_by(slug=slug).first_or_404()
+    return render_template('service_detail.html', service=service)
 
 @main.route('/promotions')
 def promotions():
     promos = Promotion.query.order_by(Promotion.id.desc()).all()
     return render_template('promotions.html', promos=promos)
-
-@main.route('/promotions/<int:promo_id>')
-def promotion_detail(promo_id):
-    promo = Promotion.query.get(promo_id)
-    if not promo:
-        abort(404)
-    return render_template('promotion_detail.html', promo=promo)
 
 @main.route('/services')
 def all_services():
@@ -227,3 +209,22 @@ def contacts():
             flash('contact_success', 'success')
             return redirect(url_for('main.contacts'))
     return render_template('contacts.html', title="Контакти")
+
+@main.route('/sitemap.xml')
+def sitemap():
+    pages = SitemapPage.query.all()
+    return render_template('sitemap.xml', pages=pages)
+
+@main.route('/robots.txt')
+def robots_txt():
+    robots = RobotsTxt.query.first()
+    if robots and robots.content:
+        content = robots.content
+    else:
+        # Значення за замовчуванням
+        content = (
+            "User-agent: *\n"
+            "Disallow:\n"
+            f"Sitemap: {url_for('main.sitemap', _external=True)}\n"
+        )
+    return Response(content, mimetype='text/plain')
