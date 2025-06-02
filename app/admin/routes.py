@@ -3,13 +3,17 @@ from datetime import datetime
 from flask import render_template, request, redirect, url_for, flash, abort, current_app
 from flask_login import login_required, current_user, logout_user
 from werkzeug.security import generate_password_hash
-from app.models import MetaTag, SitemapPage, RobotsTxt, User, Client, Order, Employee, Service, Promotion, News, ContactMessage, MaterialAsset
+from app.models import MetaTag, SitemapPage, RobotsTxt, User, Client, Order, Employee, Service, Promotion, News, ContactMessage, MaterialAsset, ImageAlt
 from app.extensions import db
 from . import admin
 from werkzeug.utils import secure_filename
 import json
 import pandas as pd
 import requests
+
+@admin.app_context_processor
+def inject_meta():
+    return dict(meta=None)
 
 @admin.route('/')
 @login_required
@@ -779,6 +783,25 @@ def admin_import_assets():
             db.session.rollback()
             flash(f'Помилка імпорту: {e}', 'danger')
     return render_template('admin/import_assets.html')
+
+@admin.route('/alts', methods=['GET', 'POST'])
+@login_required
+def edit_alts():
+    upload_folder = os.path.join(current_app.static_folder, 'uploads')
+    alts_json = os.path.join(upload_folder, 'alts.json')
+    alts = {}
+    if os.path.exists(alts_json):
+        with open(alts_json, 'r') as f:
+            alts = json.load(f)
+    images = [f for f in os.listdir(upload_folder) if f.lower().endswith(('.jpg', '.jpeg', '.png', '.webp'))]
+    if request.method == 'POST':
+        for img in images:
+            alts[img] = request.form.get(f'alt_{img}', '')
+        with open(alts_json, 'w') as f:
+            json.dump(alts, f, ensure_ascii=False, indent=2)
+        flash('Alt-тексти оновлено!', 'success')
+        return redirect(url_for('admin.edit_alts'))
+    return render_template('admin/edit_alts.html', images=images, alts=alts)
 
 @admin.route('/logout')
 @login_required

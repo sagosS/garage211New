@@ -73,6 +73,13 @@
                         <span>robots.txt</span>
                     </a>
                 </li>
+                <li>
+                    <a href="{{ url_for('admin.edit_alts') }}"
+                        class="admin-nav-link{% if request.endpoint == 'admin.edit_alts' %} active{% endif %}">
+                        <i class="fa fa-image"></i>
+                        Alt для зображень
+                    </a>
+                </li>
             </ul>
         </li>
         <li class="admin-nav-dropdown">

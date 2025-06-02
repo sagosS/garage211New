@@ -10,3 +10,4 @@ from .promotions import Promotion
 from .news import News
 from .contacts import ContactMessage
 from .material_asset import MaterialAsset
+from .image_alt import ImageAlt

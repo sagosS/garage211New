@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block title %}Редагування Alt-тексти для зображень{% endblock %}
+{% block content %}
+
+<div class="alts-panel glassy">
+    <h2 class="alts-title">
+        <i class="fa fa-image" style="color:#ff9800;margin-right:8px;"></i>
+        Alt-тексти для зображень
+    </h2>
+    <form method="post" class="alts-form">
+        <table class="alts-table">
+            <thead>
+                <tr>
+                    <th>Зображення</th>
+                    <th>Alt-текст</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for img in images %}
+                <tr>
+                    <td>
+                        <img src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="" style="max-width:80px; border-radius:8px; box-shadow:0 2px 8px #ffe08280;">
+                        <div class="alts-img-name">{{ img }}</div>
+                    </td>
+                    <td>
+                        <input type="text" name="alt_{{ img }}" value="{{ alts[img] if img in alts else '' }}" class="alts-input" placeholder="Опис зображення...">
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit" class="alts-btn">Зберегти</button>
+    </form>
+</div>
+
+<style>
+.alts-panel {
+    background: rgba(255, 251, 230, 0.97);
+    border-radius: 18px;
+    box-shadow: 0 8px 32px 0 rgba(255,168,0,0.10);
+    padding: 2em 1em 1.5em 1em;
+    max-width: 700px;
+    margin: 2em auto;
+}
+.alts-title {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: #b26a00;
+    margin-bottom: 1.2em;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+.alts-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 0.5em;
+    margin-bottom: 1.5em;
+}
+.alts-table th {
+    background: #fffbe6;
+    color: #ff9800;
+    font-weight: 700;
+    padding: 0.7em 0.5em;
+    border-radius: 8px 8px 0 0;
+    font-size: 1.05em;
+}
+.alts-table td {
+    background: #fff;
+    padding: 0.7em 0.5em;
+    border-radius: 8px;
+    vertical-align: middle;
+}
+.alts-img-name {
+    font-size: 0.85em;
+    color: #b26a00;
+    margin-top: 0.3em;
+    word-break: break-all;
+}
+.alts-input {
+    width: 100%;
+    padding: 0.5em 0.7em;
+    border: 1.5px solid #ffe082;
+    border-radius: 7px;
+    font-size: 1em;
+    background: #fffbe6;
+    color: #222;
+    transition: border 0.18s;
+}
+.alts-input:focus {
+    border: 1.5px solid #ff9800;
+    outline: none;
+    background: #fffde7;
+}
+.alts-btn {
+    background: #ff9800;
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    padding: 0.7em 2.2em;
+    font-size: 1.08em;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 2px 8px #ffe08280;
+    transition: background 0.18s;
+    margin-top: 1em;
+}
+.alts-btn:hover {
+    background: #ef4444;
+    color: #fff;
+}
+@media (max-width: 700px) {
+    .alts-panel { padding: 1em 0.2em; }
+    .alts-table th, .alts-table td { font-size: 0.98em; }
+}
+</style>
+{% endblock %}
