@@ -2,7 +2,7 @@ import os
 import json
 from flask import render_template, redirect, url_for, flash, request, abort, current_app
 from flask_login import login_user, login_required, logout_user, current_user
-from app.models import User, Client, Order, Service, Promotion, News, ContactMessage
+from app.models import MetaTag, User, Client, Order, Service, Promotion, News, ContactMessage
 from app import db
 from werkzeug.security import check_password_hash, generate_password_hash
 from app.main import main
@@ -34,12 +34,13 @@ def index():
         except Exception:
             alts = {}
 
+    meta = MetaTag.query.filter_by(page='main').first()
     services = Service.query.order_by(Service.id.desc()).all()
     services_with_promos = [s for s in services if s.promotion][:6]
     promotions = Promotion.query.order_by(Promotion.id.desc()).all()
     news_list = News.query.order_by(News.date.desc()).limit(3).all()  # 3 останні новини
 
-    return render_template('index.html', images=images, alts=alts, services=services, services_with_promos=services_with_promos, promotions=promotions, news_list=news_list, title="Головна сторінка")
+    return render_template('index.html', meta=meta, images=images, alts=alts, services=services, services_with_promos=services_with_promos, promotions=promotions, news_list=news_list, title="Головна сторінка")
 
 @main.route('/login', methods=['GET', 'POST'])
 def login():
@@ -104,10 +105,7 @@ def book():
         # Додаємо клієнта, якщо не існує
         client = Client.query.filter_by(phone_number=phone).first()
         if not client:
-            client = Client(
-                phone_number=phone,
-                password=generate_password_hash(phone)  # пароль = номер телефону
-            )
+            client = Client(phone_number=phone, name=name, password=generate_password_hash(phone))
             db.session.add(client)
             db.session.commit()
 

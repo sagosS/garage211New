@@ -3,7 +3,7 @@ from datetime import datetime
 from flask import render_template, request, redirect, url_for, flash, abort, current_app
 from flask_login import login_required, current_user, logout_user
 from werkzeug.security import generate_password_hash
-from app.models import User, Client, Order, Employee, Service, Promotion, News, ContactMessage, MaterialAsset
+from app.models import MetaTag, User, Client, Order, Employee, Service, Promotion, News, ContactMessage, MaterialAsset
 from app.extensions import db
 from . import admin
 from werkzeug.utils import secure_filename
@@ -45,6 +45,22 @@ def admin_index():
         last_orders=last_orders,
         status_counts=status_counts
     )
+
+@admin.route('/meta/<page>', methods=['GET', 'POST'])
+@login_required
+def edit_meta(page):
+    meta = MetaTag.query.filter_by(page=page).first()
+    if not meta:
+        meta = MetaTag(page=page)
+        db.session.add(meta)
+    if request.method == 'POST':
+        meta.title = request.form.get('title')
+        meta.description = request.form.get('description')
+        meta.keywords = request.form.get('keywords')
+        db.session.commit()
+        flash('Meta-теги оновлено!', 'success')
+        return redirect(url_for('admin.edit_meta', page=page))
+    return render_template('admin/edit_meta.html', meta=meta, page=page)
 
 @admin.route('/users')
 @login_required

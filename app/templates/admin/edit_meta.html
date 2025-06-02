@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}Редагування meta-тегів{% endblock %}
+{% block content %}
+
+<div class="meta-panel glassy">
+    <h2 class="meta-title">
+        <svg width="28" height="28" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:8px;">
+            <circle cx="12" cy="12" r="10" fill="#ffe082" stroke="#ff9800" stroke-width="2"/>
+            <path d="M8 16c0-2.21 3.58-2.21 3.58 0M12 12a3 3 0 100-6 3 3 0 000 6z" stroke="#ff9800" stroke-width="2" fill="none"/>
+        </svg>
+        Meta-теги для сторінки <span style="color:#ff9800;">"{{ page }}"</span>
+    </h2>
+    <form method="post" class="meta-form">
+        <div class="meta-form-group">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" value="{{ meta.title or '' }}" maxlength="256" required>
+        </div>
+        <div class="meta-form-group">
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" rows="3" maxlength="512" required>{{ meta.description or '' }}</textarea>
+        </div>
+        <div class="meta-form-group">
+            <label for="keywords">Keywords:</label>
+            <input type="text" id="keywords" name="keywords" value="{{ meta.keywords or '' }}" maxlength="512">
+        </div>
+        <button type="submit" class="admin-link-btn meta-btn">Зберегти</button>
+    </form>
+</div>
+
+<style>
+.meta-panel {
+    background: rgba(255, 251, 230, 0.97);
+    border-radius: 18px;
+    box-shadow: 0 8px 32px 0 rgba(255, 168, 0, 0.12);
+    padding: 2.5em 2em 2em 2em;
+    margin: 2em auto;
+    max-width: 600px;
+    width: 100%;
+}
+.meta-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ff9800;
+    letter-spacing: 0.03em;
+    margin-bottom: 1.5em;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+.meta-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.3em;
+}
+.meta-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4em;
+}
+.meta-form label {
+    font-weight: 700;
+    color: #b26a00;
+    margin-bottom: 0.1em;
+}
+.meta-form input[type="text"],
+.meta-form textarea {
+    border: 1.5px solid #ffe082;
+    border-radius: 8px;
+    padding: 0.6em 1em;
+    font-size: 1.08em;
+    background: #fffbe6;
+    color: #b26a00;
+    transition: border 0.18s;
+    outline: none;
+}
+.meta-form input[type="text"]:focus,
+.meta-form textarea:focus {
+    border-color: #ff9800;
+    background: #fffde7;
+}
+.meta-btn {
+    margin-top: 1em;
+    background: #ff9800;
+    color: #fff;
+    border-radius: 7px;
+    padding: 0.7em 2em;
+    font-size: 1.08em;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: background 0.18s;
+    box-shadow: 0 2px 8px #ffe08280;
+}
+.meta-btn:hover {
+    background: #ef4444;
+    color: #fff;
+}
+@media (max-width: 650px) {
+    .meta-panel {
+        padding: 1em 0.3em;
+    }
+    .meta-title {
+        font-size: 1.1rem;
+    }
+}
+</style>
+{% endblock %}

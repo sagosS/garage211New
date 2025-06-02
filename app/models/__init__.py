@@ -1,3 +1,4 @@
+from .meta_teg import MetaTag
 from .user import User
 from .client import Client
 from .order import Order
