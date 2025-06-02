@@ -15,7 +15,7 @@
         {% for img in images %}
         <li class="gallery-item">
             <a href="{{ url_for('static', filename='uploads/' ~ img) }}" data-lightbox="gallery" data-title="{{ alts.get(img, '') }}">
-                <img src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="{{ alts.get(img, '') }}">
+                <img src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="{{ alts[img] if img in alts else '' }}">
             </a>
             <div class="gallery-caption">{{ alts.get(img, '') }}</div>
         </li>

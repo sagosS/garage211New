@@ -9,7 +9,7 @@
         {% for s in services %}
         <div class="service-card">
             {% if s.image %}
-            <img src="{{ url_for('static', filename='uploads/' ~ s.image) }}" alt="">
+            <img src="{{ url_for('static', filename='uploads/' ~ s.image) }}" alt="{{ alts[s.image] if s.image in alts else '' }}">
             {% endif %}
             <h3>{{ s.title }}</h3>
             <div>{{ s.description }}</div>

@@ -89,7 +89,7 @@
             {% endif %}
             <div class="project-public-images">
                 {% for img in project.images %}
-                    <img src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="">
+                    <img src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="{{ alts[img] if img in alts else '' }}">
                 {% endfor %}
             </div>
         </div>

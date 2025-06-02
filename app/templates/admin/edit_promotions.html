@@ -34,7 +34,7 @@
         </label>
         {% if promo.image %}
         <div class="promo-image-preview">
-            <img src="{{ url_for('static', filename='uploads/' ~ promo.image) }}" alt=""
+            <img src="{{ url_for('static', filename='uploads/' ~ promo.image) }}" alt="{{ alts[promo.image] if promo.image in alts else '' }}"
                 style="width:90px;height:60px;border-radius:7px;margin-bottom:10px;object-fit:cover;">
         </div>
         {% endif %}

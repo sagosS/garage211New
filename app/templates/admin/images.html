@@ -15,7 +15,7 @@
             {% if img.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp', '.svg')) %}
             <div class="admin-image-block">
                 <a href="{{ url_for('static', filename='uploads/' ~ img) }}" target="_blank">
-                    <img src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="Зображення" class="admin-image-thumb">
+                    <img src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="{{ alts[img] if img in alts else '' }}" class="admin-image-thumb">
                 </a>
                 <form method="POST" action="{{ url_for('admin.delete_image', filename=img) }}" class="admin-image-delete-form" onsubmit="return confirm('Видалити це зображення?');">
                     <button type="submit" class="admin-image-delete-btn" title="Видалити">

@@ -788,19 +788,23 @@ def admin_import_assets():
 @login_required
 def edit_alts():
     upload_folder = os.path.join(current_app.static_folder, 'uploads')
-    alts_json = os.path.join(upload_folder, 'alts.json')
-    alts = {}
-    if os.path.exists(alts_json):
-        with open(alts_json, 'r') as f:
-            alts = json.load(f)
     images = [f for f in os.listdir(upload_folder) if f.lower().endswith(('.jpg', '.jpeg', '.png', '.webp'))]
+
+    # Отримати alt-и з бази
+    alts = {alt.filename: alt.alt for alt in ImageAlt.query.all()}
+
     if request.method == 'POST':
         for img in images:
-            alts[img] = request.form.get(f'alt_{img}', '')
-        with open(alts_json, 'w') as f:
-            json.dump(alts, f, ensure_ascii=False, indent=2)
+            alt_text = request.form.get(f'alt_{img}', '')
+            image_alt = ImageAlt.query.filter_by(filename=img).first()
+            if image_alt:
+                image_alt.alt = alt_text
+            else:
+                db.session.add(ImageAlt(filename=img, alt=alt_text))
+        db.session.commit()
         flash('Alt-тексти оновлено!', 'success')
         return redirect(url_for('admin.edit_alts'))
+
     return render_template('admin/edit_alts.html', images=images, alts=alts)
 
 @admin.route('/logout')

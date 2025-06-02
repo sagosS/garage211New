@@ -12,7 +12,7 @@
             {% if img.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp', '.svg')) %}
                 <label class="gallery-image-item{% if img in selected %} selected{% endif %}">
                     <input type="checkbox" name="gallery_images" value="{{ img }}" {% if img in selected %}checked{% endif %}>
-                    <img src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="img">
+                    <img src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="{{ alts[img] if img in alts else '' }}">
                 </label>
             {% endif %}
             {% else %}
@@ -26,7 +26,7 @@
             <h4>Вибрані для галереї:</h4>
             <div class="gallery-selected-list">
                 {% for img in selected %}
-                    <img src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="img">
+                    <img src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="{{ alts[img] if img in alts else '' }}">
                 {% endfor %}
             </div>
         </div>

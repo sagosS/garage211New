@@ -74,7 +74,7 @@
     <tr>
         <td>
             {% if p.image %}
-                <img src="{{ url_for('static', filename='uploads/' ~ p.image) }}" alt="">
+                <img src="{{ url_for('static', filename='uploads/' ~ p.image) }}" alt="{{ alts[img] if img in alts else '' }}">
             {% endif %}
         </td>
         <td>{{ p.title }}</td>

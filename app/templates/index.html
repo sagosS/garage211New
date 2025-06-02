@@ -30,21 +30,21 @@
     </div>
     <div class="promotions-list">
         {% for p in promotions %}
-        <div class="promotion-item">
-            {% if p.image %}
-            <img src="{{ url_for('static', filename='uploads/' ~ p.image) }}" alt="">
-            {% endif %}
-            <h3>{{ p.title }}</h3>
-            <p>{{ p.description }}</p>
-            {% if p.price %}
-            <div class="promotion-price">{{ p.price|round(2) }} грн</div>
-            {% endif %}
-            {% if p.end_date %}
-            <div class="promotion-date">До {{ p.end_date }}</div>
-            {% endif %}
-        </div>
+            <div class="promotion-item">
+                {% if p.image %}
+                    <img src="{{ url_for('static', filename='uploads/' ~ p.image) }}" alt="{{ alts[p.image] if p.image in alts else '' }}">
+                {% endif %}
+                <h3>{{ p.title }}</h3>
+                <p>{{ p.description }}</p>
+                {% if p.price %}
+                    <div class="promotion-price">{{ p.price|round(2) }} грн</div>
+                {% endif %}
+                {% if p.end_date %}
+                    <div class="promotion-date">До {{ p.end_date }}</div>
+                {% endif %}
+            </div>
         {% else %}
-        <p style="grid-column:1/-1;text-align:center;color:#888;">Не має акцій.</p>
+            <p style="grid-column:1/-1;text-align:center;color:#888;">Не має акцій.</p>
         {% endfor %}
     </div>
 </section>
@@ -57,32 +57,31 @@
     </div>
     <div class="services-list">
         {% for s in services[:3] %}
-        <div class="service-card">
-            {% if s.image %}
-            <img src="{{ url_for('static', filename='uploads/' ~ s.image) }}" alt="{{ s.title }}"
-                class="service-card-img">
-            {% endif %}
-            <h3 class="service-card-title">{{ s.title }}</h3>
-            <div class="service-card-desc">{{ s.description }}</div>
-            <div class="service-card-price">
-                від {{ s.price_from|round(2) }} до {{ s.price_to|round(2) }} грн
-            </div>
-            {% if s.promotion %}
-            <div class="service-card-promos">
-                <div class="service-card-promo">
-                    <span class="service-card-promo-title">{{ s.promotion.title }}</span>
-                    {% if s.promotion.price %}
-                    <span class="service-card-promo-price">{{ s.promotion.price|round(2) }} грн</span>
-                    {% endif %}
-                    {% if s.promotion.end_date %}
-                    <span class="service-card-promo-date">до {{ s.promotion.end_date }}</span>
-                    {% endif %}
+            <div class="service-card">
+                {% if s.image %}
+                    <img src="{{ url_for('static', filename='uploads/' ~ s.image) }}" alt="{{ alts[s.image] if s.image in alts else '' }}" class="service-card-img">
+                {% endif %}
+                <h3 class="service-card-title">{{ s.title }}</h3>
+                <div class="service-card-desc">{{ s.description }}</div>
+                <div class="service-card-price">
+                    від {{ s.price_from|round(2) }} до {{ s.price_to|round(2) }} грн
                 </div>
+                {% if s.promotion %}
+                <div class="service-card-promos">
+                    <div class="service-card-promo">
+                        <span class="service-card-promo-title">{{ s.promotion.title }}</span>
+                        {% if s.promotion.price %}
+                            <span class="service-card-promo-price">{{ s.promotion.price|round(2) }} грн</span>
+                        {% endif %}
+                        {% if s.promotion.end_date %}
+                            <span class="service-card-promo-date">до {{ s.promotion.end_date }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
             </div>
-            {% endif %}
-        </div>
         {% else %}
-        <p style="grid-column:1/-1;text-align:center;color:#888;">Не має послуг.</p>
+            <p style="grid-column:1/-1;text-align:center;color:#888;">Не має послуг.</p>
         {% endfor %}
     </div>
 </section>
@@ -96,20 +95,20 @@
     </div>
     <div class="promotions-list">
         {% for n in news_list[:5] %}
-        <div class="promotion-item">
-            <h3>
-                {% if n.slug %}
+    <div class="promotion-item">
+        <h3>
+            {% if n.slug %}
                 <a href="{{ url_for('main.news_detail', slug=n.slug) }}">{{ n.title }}</a>
-                {% else %}
+            {% else %}
                 {{ n.title }}
-                {% endif %}
-            </h3>
-            <p>{{ n.description }}</p>
-            <div class="promotion-date">{{ n.date.strftime('%d.%m.%Y') }}</div>
-        </div>
-        {% else %}
-        <p style="grid-column:1/-1;text-align:center;color:#888;">Новин ще немає.</p>
-        {% endfor %}
+            {% endif %}
+        </h3>
+        <p>{{ n.description }}</p>
+        <div class="promotion-date">{{ n.date.strftime('%d.%m.%Y') }}</div>
+    </div>
+{% else %}
+    <p style="grid-column:1/-1;text-align:center;color:#888;">Новин ще немає.</p>
+{% endfor %}
     </div>
 </section>
 
@@ -123,8 +122,7 @@
         {% for img in images[:8] %}
         <li class="index-gallery-item">
             <a href="{{ url_for('static', filename='uploads/' ~ img) }}" class="lightbox-link" target="_blank">
-                <img src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="Фото з галереї"
-                    class="index-gallery-img">
+                <img src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="{{ alts[img] if img in alts else '' }}" class="index-gallery-img">
                 <div class="index-gallery-caption">
                     Фото №{{ loop.index }}
                 </div>

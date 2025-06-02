@@ -19,7 +19,7 @@
                 {% for img in images %}
                 <tr>
                     <td>
-                        <img src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="" style="max-width:80px; border-radius:8px; box-shadow:0 2px 8px #ffe08280;">
+                        <img src="{{ url_for('static', filename='uploads/' ~ img) }}" alt="{{ alts[img] if img in alts else '' }}" style="max-width:80px; border-radius:8px; box-shadow:0 2px 8px #ffe08280;">
                         <div class="alts-img-name">{{ img }}</div>
                     </td>
                     <td>
