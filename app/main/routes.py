@@ -218,13 +218,16 @@ def sitemap():
 @main.route('/robots.txt')
 def robots_txt():
     robots = RobotsTxt.query.first()
+    sitemap_url = url_for('main.sitemap', _external=True)
     if robots and robots.content:
-        content = robots.content
+        content = robots.content.strip()
+        # Додаємо Sitemap, якщо його немає у content
+        if 'Sitemap:' not in content:
+            content += f"\n\nSitemap: {sitemap_url}"
     else:
-        # Значення за замовчуванням
-        content = (
-            "User-agent: *\n"
-            "Disallow:\n"
-            f"Sitemap: {url_for('main.sitemap', _external=True)}\n"
-        )
+        content = f"User-agent: *\nDisallow:\n\nSitemap: {sitemap_url}"
     return Response(content, mimetype='text/plain')
+
+@main.app_errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404

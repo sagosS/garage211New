@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="error-404 glassy">
+    <div class="error-404-icon">
+        <i class="fa-solid fa-circle-exclamation"></i>
+    </div>
+    <h1>404</h1>
+    <p>Ой! Сторінку не знайдено :(</p>
+    <a href="{{ url_for('main.index') }}" class="btn btn-primary">На головну</a>
+</div>
+<style>
+.error-404 {
+    text-align: center;
+    padding: 4em 1em 3em 1em;
+    margin: 3em auto;
+    max-width: 420px;
+    background: rgba(255,251,230,0.97);
+    border-radius: 22px;
+    box-shadow: 0 8px 32px 0 rgba(255,168,0,0.13);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.7em;
+}
+.error-404-icon {
+    font-size: 3.5em;
+    color: #ff9800;
+    margin-bottom: 0.2em;
+    animation: bounce 1.2s infinite alternate;
+}
+@keyframes bounce {
+    0% { transform: translateY(0);}
+    100% { transform: translateY(-10px);}
+}
+.error-404 h1 {
+    font-size: 4.5em;
+    color: #ff9800;
+    margin-bottom: 0.1em;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+.error-404 p {
+    font-size: 1.25em;
+    color: #b26a00;
+    margin-bottom: 1.5em;
+    font-weight: 500;
+}
+.error-404 .btn-primary {
+    background: #ff9800;
+    color: #fff;
+    border-radius: 7px;
+    padding: 0.7em 2em;
+    font-size: 1.08em;
+    font-weight: 700;
+    border: none;
+    text-decoration: none;
+    transition: background 0.18s;
+    box-shadow: 0 2px 8px #ffe08280;
+}
+.error-404 .btn-primary:hover {
+    background: #ef4444;
+    color: #fff;
+}
+@media (max-width: 600px) {
+    .error-404 {
+        padding: 2em 0.3em 2em 0.3em;
+        max-width: 98vw;
+    }
+    .error-404 h1 {
+        font-size: 2.5em;
+    }
+    .error-404-icon {
+        font-size: 2.2em;
+    }
+}
+</style>
+{% endblock %}
