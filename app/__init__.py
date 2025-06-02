@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_caching import Cache
 from app.extensions import db, migrate, login_manager
 from app.static_data import (
     GARAGE_NAME, GARAGE_ADDRESS, GARAGE_PHONE, GARAGE_EMAIL,
@@ -6,6 +7,8 @@ from app.static_data import (
 )
 from werkzeug.security import generate_password_hash
 from app.models import User
+
+cache = Cache(config={'CACHE_TYPE': 'simple'})  # Для продакшну краще redis/memcached
 
 def create_admin():
     from app.extensions import db
@@ -57,5 +60,8 @@ def create_app():
 
     from app.admin import admin as admin_blueprint
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
+
+
+    cache.init_app(app)
 
     return app

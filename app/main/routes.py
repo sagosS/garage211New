@@ -3,12 +3,29 @@ import json
 from flask import render_template, redirect, url_for, flash, request, abort, current_app, Response
 from flask_login import login_user, login_required, logout_user, current_user
 from app.models import MetaTag, SitemapPage, RobotsTxt, User, Client, Order, Service, Promotion, News, ContactMessage
-from app import db
+from app import db, cache
 from werkzeug.security import check_password_hash, generate_password_hash
 from app.main import main
 from datetime import datetime
 
+def get_meta(page_type, slug=None):
+    """
+    Повертає MetaTag для сторінки.
+    page_type: назва сторінки (наприклад, 'news_detail', 'service_detail', 'main' тощо)
+    slug: якщо є, шукає meta для конкретного об'єкта
+    """
+    if slug:
+        meta = MetaTag.query.filter_by(page=page_type, slug=slug).first()
+        if meta:
+            return meta
+    meta = MetaTag.query.filter_by(page=page_type).first()
+    if meta:
+        return meta
+    # Фолбек на дефолтний meta
+    return MetaTag.query.filter_by(page='default').first()
+
 @main.route('/')
+@cache.cached(timeout=300)  # Кешує сторінку на 5 хвилин
 def index():
     upload_folder = os.path.join(current_app.static_folder, 'uploads')
     gallery_json = os.path.join(upload_folder, 'gallery.json')
@@ -34,7 +51,7 @@ def index():
         except Exception:
             alts = {}
 
-    meta = MetaTag.query.filter_by(page='main').first()
+    meta = get_meta('main')
     services = Service.query.order_by(Service.id.desc()).all()
     services_with_promos = [s for s in services if s.promotion][:6]
     promotions = Promotion.query.order_by(Promotion.id.desc()).all()
@@ -43,6 +60,7 @@ def index():
     return render_template('index.html', meta=meta, images=images, alts=alts, services=services, services_with_promos=services_with_promos, promotions=promotions, news_list=news_list, title="Головна сторінка")
 
 @main.route('/login', methods=['GET', 'POST'])
+@cache.cached(timeout=300)
 def login():
     if request.method == 'POST':
         user = User.query.filter_by(phone_number=request.form['phone_number']).first()
@@ -53,9 +71,11 @@ def login():
             else:
                 return redirect(url_for('main.worker_cabinet'))
         flash('login_error', 'danger')
-    return render_template('login.html')
+    meta = get_meta('login')
+    return render_template('login.html', meta=meta)
 
 @main.route('/logout')
+@cache.cached(timeout=300)
 @login_required
 def logout():
     logout_user()
@@ -63,12 +83,15 @@ def logout():
     return redirect(url_for('main.index'))
 
 @main.route('/cabinet')
+@cache.cached(timeout=300)
 @login_required
 def worker_cabinet():
     orders = Order.query.filter_by(employee_id=current_user.id).order_by(Order.created_at.desc()).all()
-    return render_template('worker_cabinet.html', orders=orders)
+    meta = get_meta('worker_cabinet')
+    return render_template('worker_cabinet.html', orders=orders, meta=meta)
 
 @main.route('/worker_update_status/<int:order_id>', methods=['POST'])
+@cache.cached(timeout=300)
 @login_required
 def worker_update_status(order_id):
     order = Order.query.get_or_404(order_id)
@@ -83,12 +106,15 @@ def worker_update_status(order_id):
     return redirect(url_for('main.worker_cabinet'))
 
 @main.route('/news')
+@cache.cached(timeout=300)
 def news():
     news_list = News.query.order_by(News.date.desc()).all()
-    news = News.query.order_by(News.date.desc()).limit(3).all()  # або інша ваша логіка
-    return render_template('news_list.html', news=news, news_list=news_list)
+    news = News.query.order_by(News.date.desc()).limit(3).all()
+    meta = get_meta('news')
+    return render_template('news_list.html', news=news, news_list=news_list, meta=meta)
 
 @main.route('/book', methods=['GET', 'POST'])
+@cache.cached(timeout=300)
 def book():
     services = Service.query.order_by(Service.title).all()
     if request.method == 'POST':
@@ -113,7 +139,7 @@ def book():
         order = Order(
             created_at=datetime.utcnow(),
             desired_date=desired_date,
-            delivery_date=None,  # можна додати поле у форму
+            delivery_date=None,
             brand=brand,
             model=model,
             year=year,
@@ -132,7 +158,6 @@ def book():
         return redirect(url_for('main.index'))
     settings_path = os.path.join(current_app.static_folder, 'book_form_settings.json')
     settings = {
-        # "services": ["Діагностика", "ТО", "Ремонт ходової", "Заміна масла", "Ремонт гальмівної системи", "Інше"],
         "year_min": 1980,
         "year_max": 2030,
         "year_placeholder": "Наприклад: 2015"
@@ -141,34 +166,46 @@ def book():
         with open(settings_path, 'r') as f:
             settings = json.load(f)
     services = Service.query.order_by(Service.title).all()
-    return render_template('book.html', settings=settings, services=services)
+    meta = get_meta('book')
+    return render_template('book.html', settings=settings, services=services, meta=meta)
 
 @main.route('/news/<slug>')
+@cache.cached(timeout=300)
 def news_detail(slug):
     news = News.query.filter_by(slug=slug).first_or_404()
-    return render_template('news_detail.html', news=news)
+    meta = get_meta('news_detail', slug)
+    return render_template('news_detail.html', news=news, meta=meta)
 
 @main.route('/promotions/<slug>')
+@cache.cached(timeout=300)
 def promotion_detail(slug):
     promo = Promotion.query.filter_by(slug=slug).first_or_404()
-    return render_template('promotion_detail.html', promo=promo)
+    meta = get_meta('promotion_detail', slug)
+    return render_template('promotion_detail.html', promo=promo, meta=meta)
 
 @main.route('/services/<slug>')
+@cache.cached(timeout=300)
 def service_detail(slug):
     service = Service.query.filter_by(slug=slug).first_or_404()
-    return render_template('service_detail.html', service=service)
+    meta = get_meta('service_detail', slug)
+    return render_template('service_detail.html', service=service, meta=meta)
 
 @main.route('/promotions')
+@cache.cached(timeout=300)
 def promotions():
     promos = Promotion.query.order_by(Promotion.id.desc()).all()
-    return render_template('promotions.html', promos=promos)
+    meta = get_meta('promotions')
+    return render_template('promotions.html', promos=promos, meta=meta)
 
 @main.route('/services')
+@cache.cached(timeout=300)
 def all_services():
     services = Service.query.order_by(Service.title).all()
-    return render_template('services_list.html', services=services)
+    meta = get_meta('services')
+    return render_template('services_list.html', services=services, meta=meta)
 
 @main.route('/gallery')
+@cache.cached(timeout=300)
 def gallery():
     upload_folder = os.path.join(current_app.static_folder, 'uploads')
     gallery_json = os.path.join(upload_folder, 'gallery.json')
@@ -176,7 +213,6 @@ def gallery():
     if os.path.exists(gallery_json):
         with open(gallery_json, 'r') as f:
             images = json.load(f)
-    # Фільтруємо тільки ті, що реально існують
     images = [img for img in images if os.path.exists(os.path.join(upload_folder, img))]
 
     alts_json = os.path.join(upload_folder, 'alts.json')
@@ -184,9 +220,11 @@ def gallery():
     if os.path.exists(alts_json):
         with open(alts_json, 'r') as f:
             alts = json.load(f)
-    return render_template('gallery.html', images=images, alts=alts)
+    meta = get_meta('gallery')
+    return render_template('gallery.html', images=images, alts=alts, meta=meta)
 
 @main.route('/projects')
+@cache.cached(timeout=300)
 def projects():
     upload_folder = os.path.join(current_app.static_folder, 'uploads')
     projects_json = os.path.join(upload_folder, 'projects.json')
@@ -194,9 +232,11 @@ def projects():
     if os.path.exists(projects_json):
         with open(projects_json, 'r') as f:
             projects = json.load(f)
-    return render_template('projects.html', projects=projects)
+    meta = get_meta('projects')
+    return render_template('projects.html', projects=projects, meta=meta)
 
 @main.route('/contacts', methods=['GET', 'POST'])
+@cache.cached(timeout=300)
 def contacts():
     if request.method == 'POST':
         name = request.form.get('name')
@@ -208,20 +248,23 @@ def contacts():
             db.session.commit()
             flash('contact_success', 'success')
             return redirect(url_for('main.contacts'))
-    return render_template('contacts.html', title="Контакти")
+    meta = get_meta('contacts')
+    return render_template('contacts.html', title="Контакти", meta=meta)
 
 @main.route('/sitemap.xml')
+@cache.cached(timeout=600)
 def sitemap():
     pages = SitemapPage.query.all()
-    return render_template('sitemap.xml', pages=pages)
+    meta = get_meta('sitemap')
+    return render_template('sitemap.xml', pages=pages, meta=meta)
 
 @main.route('/robots.txt')
+@cache.cached(timeout=600)
 def robots_txt():
     robots = RobotsTxt.query.first()
     sitemap_url = url_for('main.sitemap', _external=True)
     if robots and robots.content:
         content = robots.content.strip()
-        # Додаємо Sitemap, якщо його немає у content
         if 'Sitemap:' not in content:
             content += f"\n\nSitemap: {sitemap_url}"
     else:
@@ -230,4 +273,4 @@ def robots_txt():
 
 @main.app_errorhandler(404)
 def page_not_found(e):
-    return render_template('404.html'), 404
+    return render_template('404.html', meta=get_meta('404')), 404
