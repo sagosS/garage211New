@@ -23,6 +23,10 @@
             <label for="keywords">Keywords:</label>
             <input type="text" id="keywords" name="keywords" value="{{ meta.keywords or '' }}" maxlength="512">
         </div>
+        <div class="meta-form-group">
+            <label for="schema_org">Schema.org (JSON-LD):</label>
+            <textarea id="schema_org" name="schema_org" rows="8" maxlength="4096" placeholder='{"@context": "https://schema.org", ...}'>{{ meta.schema_org or '' }}</textarea>
+        </div>
         <button type="submit" class="admin-link-btn meta-btn">Зберегти</button>
     </form>
 </div>

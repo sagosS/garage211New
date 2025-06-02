@@ -57,8 +57,9 @@ def edit_meta(page):
         meta.title = request.form.get('title')
         meta.description = request.form.get('description')
         meta.keywords = request.form.get('keywords')
+        meta.schema_org = request.form.get('schema_org')
         db.session.commit()
-        flash('Meta-теги оновлено!', 'success')
+        flash('Meta-теги та schema.org оновлено!', 'success')
         return redirect(url_for('admin.edit_meta', page=page))
     return render_template('admin/edit_meta.html', meta=meta, page=page)
 

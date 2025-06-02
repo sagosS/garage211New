@@ -4,15 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ title if title else "Назва СТО" }}</title>
     <title>{{ meta.title if meta and meta.title else 'Garage 211' }}</title>
     <meta name="description" content="{{ meta.description if meta and meta.description else 'Автосервіс Garage 211' }}">
     <meta name="keywords" content="{{ meta.keywords if meta and meta.keywords else 'автосервіс, ремонт авто' }}">
+    {% if meta and meta.schema_org %}
+    <script type="application/ld+json">
+    {{ meta.schema_org|safe }}
+    </script>
+    {% endif %}
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ request.url }}" />
     <!-- Open Graph для соцмереж -->
-    <meta property="og:title" content="{{ title if title else 'Назва СТО' }}">
-    <meta property="og:description" content="{{ description if description else 'Опис СТО' }}">
+    <meta property="og:title" content="{{ meta.title if meta and meta.title else 'Garage 211' }}">
+    <meta property="og:description" content="{{ meta.description if meta and meta.description else 'Автосервіс Garage 211' }}">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ request.url }}">
     <meta property="og:image" content="{{ url_for('static', filename='images/og-image.png', _external=True) }}">
@@ -20,9 +24,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" sizes="any">
     <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/icons/apple-touch-icon.png') }}">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     {% if current_user.is_authenticated %}
@@ -32,28 +34,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_navbar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     {% block extra_css %}{% endblock %}
-
     <script src="{{ url_for('static', filename='js/navbar.js') }}"></script>
     <script src="{{ url_for('static', filename='js/flash_mess.js') }}"></script>
-
-    <!-- ...existing code... -->
-    <script type="application/ld+json">
-        {
-        "@context": "https://schema.org",
-        "@type": "AutoRepair",
-        "name": "{{ GARAGE_NAME }}",
-        "address": {
-            "@type": "PostalAddress",
-            "streetAddress": "Вулиця Ньютона, будинок 2а",
-            "addressLocality": "Кривий Ріг",
-            "addressRegion": "Дніпропетровська область",
-            "postalCode": "50025",
-            "addressCountry": "UA"
-        },
-        "telephone": "{{ GARAGE_PHONE }}"
-        }
-        </script>
-
 </head>
 
 <body>
@@ -64,10 +46,7 @@
         {% if request.path != '/' %}
         <div class="top-padding"></div>
         {% endif %}
-        {% block content %}
-        <h1>Головна сторінка</h1>
-        <p>Вітаємо на нашому сайті!</p>
-        {% endblock %}
+        {% block content %}{% endblock %}
     </main>
     {% include 'includes/footer.html' %}
 
@@ -88,4 +67,5 @@
         };
     </script>
 </body>
+
 </html>
