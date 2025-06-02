@@ -1,93 +1,77 @@
-<footer class="footer">
-    <div class="footer-columns">
-        <div class="footer-col footer-map">
-            <h3>Ми на карті</h3>
-            <div id="footer-map" style="width:100%;height:180px;border-radius:8px;overflow:hidden;"></div>
-            <a href="#" id="footer-route-btn" class="footer-route-btn" target="_blank" rel="noopener">
-                Прокласти маршрут
-            </a>
+<footer class="footer-modern">
+    <div class="footer-container">
+        <div class="footer-cols">
+            <div class="footer-col footer-map">
+                <h3>Ми на карті</h3>
+                <div id="footer-map" style="width:100%;height:180px;border-radius:10px;overflow:hidden;"></div>
+                <a href="#" id="footer-route-btn" class="footer-route-btn" target="_blank" rel="noopener">
+                    Прокласти маршрут
+                </a>
+            </div>
+            <div class="footer-col">
+                <h3>Контакти</h3>
+                <ul class="footer-contacts">
+                    <li>
+                        <span class="footer-contact-icon">
+                            <i class="fa-solid fa-location-dot" style="color:#ff9800"></i>
+                        </span>
+                        {{ GARAGE_ADDRESS }}
+                    </li>
+                    <li>
+                        <span class="footer-contact-icon">
+                            <i class="fa-solid fa-phone" style="color:#22c55e"></i>
+                        </span>
+                        <a href="tel:{{ GARAGE_PHONE }}">{{ GARAGE_PHONE }}</a>
+                    </li>
+                    <li>
+                        <span class="footer-contact-icon">
+                            <i class="fa-solid fa-envelope" style="color:#3b82f6"></i>
+                        </span>
+                        <a href="mailto:{{ GARAGE_EMAIL }}">{{ GARAGE_EMAIL }}</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Ми в соцмережах</h3>
+                <div class="footer-socials">
+                    <a href="{{ SOCIAL_INSTAGRAM }}" target="_blank" class="footer-social-link" aria-label="Instagram">
+                        <i class="fa-brands fa-instagram" style="color:#ff9800"></i>
+                        <span class="footer-social-text">Instagram</span>
+                    </a>
+                    <a href="{{ SOCIAL_FACEBOOK }}" target="_blank" class="footer-social-link" aria-label="Facebook">
+                        <i class="fa-brands fa-facebook" style="color:#1877f3"></i>
+                        <span class="footer-social-text">Facebook</span>
+                    </a>
+                    <a href="{{ SOCIAL_TELEGRAM }}" target="_blank" class="footer-social-link" aria-label="Telegram">
+                        <i class="fa-brands fa-telegram" style="color:#229ed9"></i>
+                        <span class="footer-social-text">Telegram</span>
+                    </a>
+                    <a href="{{ SOCIAL_VIBER }}" target="_blank" class="footer-social-link" aria-label="Viber">
+                        <i class="fa-brands fa-viber" style="color:#7f5af0"></i>
+                        <span class="footer-social-text">Viber</span>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h3>Навігація</h3>
+                <ul class="footer-links">
+                    <li><a href="{{ url_for('main.index') }}">Головна</a></li>
+                    <li><a href="{{ url_for('main.all_services') }}">Послуги</a></li>
+                    <li><a href="{{ url_for('main.news') }}">Новини</a></li>
+                    <li><a href="{{ url_for('main.book') }}">Запис онлайн</a></li>
+                    <li><a href="{{ url_for('main.contacts') }}">Контакти</a></li>
+                </ul>
+            </div>
         </div>
-        <div class="footer-col">
-            <h3>Контакти</h3>
-            <ul class="footer-contacts">
-                <li>
-                    <span class="footer-contact-icon">
-                        <svg width="30" height="30" fill="none" viewBox="0 0 24 24">
-                            <path
-                                d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"
-                                fill="#ff9800" />
-                        </svg>
-                    </span>
-                    {{ GARAGE_ADDRESS }}
-                </li>
-                <li>
-                    <span class="footer-contact-icon">
-                        <svg width="30" height="30" fill="none" viewBox="0 0 24 24">
-                            <path
-                                d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C7.61 21 3 16.39 3 11a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.46.57 3.58a1 1 0 0 1-.24 1.01l-2.2 2.2z"
-                                fill="#22c55e" />
-                        </svg>
-                    </span>
-                    Телефон: <a href="tel:{{ GARAGE_PHONE }}">{{ GARAGE_PHONE }}</a>
-                </li>
-                <li>
-                    <span class="footer-contact-icon">
-                        <svg width="30" height="30" fill="none" viewBox="0 0 24 24">
-                            <path d="M4 4h16v16H4V4zm8 8l8-5H4l8 5zm0 2l-8-5v10h16V9l-8 5z" fill="#3b82f6" />
-                        </svg>
-                    </span>
-                    Email: <a href="mailto:{{ GARAGE_EMAIL }}">{{ GARAGE_EMAIL }}</a>
-                </li>
-            </ul>
-        </div>
-        <div class="footer-col">
-            <h3>Ми в соцмережах</h3>
-            <div class="footer-socials">
-                <a href="{{ SOCIAL_INSTAGRAM }}" target="_blank" class="footer-social-link">
-                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24">
-                        <rect width="20" height="20" x="2" y="2" rx="5" stroke="#ff9800" stroke-width="2" />
-                        <circle cx="12" cy="12" r="5" stroke="#ff9800" stroke-width="2" />
-                        <circle cx="17" cy="7" r="1.5" fill="#ff9800" />
-                    </svg>
-                    <span>Instagram</span>
-                </a>
-                <a href="{{ SOCIAL_FACEBOOK }}" target="_blank" class="footer-social-link">
-                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24">
-                        <rect width="20" height="20" x="2" y="2" rx="5" stroke="#1877f3" stroke-width="2" />
-                        <path d="M15 8h-2a1 1 0 0 0-1 1v2h3l-.5 3h-2.5v7h-3v-7H7v-3h2V9a3 3 0 0 1 3-3h3v3z"
-                            fill="#1877f3" />
-                    </svg>
-                    <span>Facebook</span>
-                </a>
-                <a href="{{ SOCIAL_TELEGRAM }}" target="_blank" class="footer-social-link">
-                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="10" stroke="#229ed9" stroke-width="2" />
-                        <path d="M8 12l3 3 5-7" stroke="#229ed9" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" />
-                    </svg>
-                    <span>Telegram</span>
-                </a>
-                <a href="{{ SOCIAL_VIBER }}" target="_blank" class="footer-social-link">
-                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="10" stroke="#7f5af0" stroke-width="2" />
-                        <path d="M16 8c-1.5 0-3 1.5-3 3s1.5 3 3 3 3-1.5 3-3-1.5-3-3-3z" fill="#7f5af0" />
-                        <path d="M8 16l2-2m4-4l2-2m-6 6l2-2m4-4l2-2" stroke="#7f5af0" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-                    <span>Viber</span>
-                </a>
+        <div class="footer-bottom">
+            <div class="copyright">
+                &copy; {{ current_year }} СТО "Гараж 211"
+                |
+                <a href="{{ url_for('main.login') }}">@персонал</a>
             </div>
         </div>
     </div>
-    <div class="footer-bottom">
-        <div class="copyright">
-            &copy; {{ current_year }} СТО "Гараж 211"
-            |
-            <a href="{{ url_for('main.login') }}">@персонал</a>
-        </div>
-    </div>
 </footer>
-<!-- Додайте перед </body> або у футері -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="{{ url_for('static', filename='js/map.js') }}"></script>
