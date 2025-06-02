@@ -7,11 +7,6 @@
     <title>{{ meta.title if meta and meta.title else 'Garage 211' }}</title>
     <meta name="description" content="{{ meta.description if meta and meta.description else 'Автосервіс Garage 211' }}">
     <meta name="keywords" content="{{ meta.keywords if meta and meta.keywords else 'автосервіс, ремонт авто' }}">
-    {% if meta and meta.schema_org %}
-    <script type="application/ld+json">
-    {{ meta.schema_org|safe }}
-    </script>
-    {% endif %}
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ request.url }}" />
     <!-- Open Graph для соцмереж -->
