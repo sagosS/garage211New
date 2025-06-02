@@ -24,6 +24,30 @@
             <input type="text" id="keywords" name="keywords" value="{{ meta.keywords or '' }}" maxlength="512">
         </div>
         <div class="meta-form-group">
+            <label for="og_title">OG Title:</label>
+            <input type="text" id="og_title" name="og_title" value="{{ meta.og_title or '' }}" maxlength="256">
+        </div>
+        <div class="meta-form-group">
+            <label for="og_description">OG Description:</label>
+            <textarea id="og_description" name="og_description" rows="2" maxlength="512">{{ meta.og_description or '' }}</textarea>
+        </div>
+        <div class="meta-form-group">
+            <label for="og_image">OG Image (URL або шлях):</label>
+            <input type="text" id="og_image" name="og_image" value="{{ meta.og_image or '' }}" maxlength="256">
+        </div>
+        <div class="meta-form-group">
+            <label for="twitter_title">Twitter Title:</label>
+            <input type="text" id="twitter_title" name="twitter_title" value="{{ meta.twitter_title or '' }}" maxlength="256">
+        </div>
+        <div class="meta-form-group">
+            <label for="twitter_description">Twitter Description:</label>
+            <textarea id="twitter_description" name="twitter_description" rows="2" maxlength="512">{{ meta.twitter_description or '' }}</textarea>
+        </div>
+        <div class="meta-form-group">
+            <label for="twitter_image">Twitter Image (URL або шлях):</label>
+            <input type="text" id="twitter_image" name="twitter_image" value="{{ meta.twitter_image or '' }}" maxlength="256">
+        </div>
+        <div class="meta-form-group">
             <label for="schema_org">Schema.org (JSON-LD):</label>
             <textarea id="schema_org" name="schema_org" rows="8" maxlength="4096" placeholder='{"@context": "https://schema.org", ...}'>{{ meta.schema_org or '' }}</textarea>
         </div>

@@ -58,6 +58,12 @@ def edit_meta(page):
         meta.description = request.form.get('description')
         meta.keywords = request.form.get('keywords')
         meta.schema_org = request.form.get('schema_org')
+        meta.og_title = request.form['og_title']
+        meta.og_description = request.form['og_description']
+        meta.og_image = request.form['og_image']
+        meta.twitter_title = request.form['twitter_title']
+        meta.twitter_description = request.form['twitter_description']
+        meta.twitter_image = request.form['twitter_image']
         db.session.commit()
         flash('Meta-теги та schema.org оновлено!', 'success')
         return redirect(url_for('admin.edit_meta', page=page))

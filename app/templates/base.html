@@ -11,16 +11,24 @@
     <link rel="canonical" href="{{ request.url }}" />
     <!-- Open Graph для соцмереж -->
     <!-- Open Graph – это протокол, созданный Facebook, который позволяет контролировать отображение веб-страницы в социальных сетях и мессенджерах. С помощью Open Graph можно задать, как будет выглядеть ссылка на ваш сайт при публикации в соцсетях, например, выбрать изображение и описание. -->
-    <meta property="og:title" content="{{ meta.title if meta and meta.title else 'Garage 211' }}">
-    <meta property="og:description" content="{{ meta.description if meta and meta.description else 'Автосервіс Garage 211' }}">
+    <meta property="og:title" content="{{ meta.og_title or meta.title or 'Garage 211' }}">
+    <meta property="og:description" content="{{ meta.og_description or meta.description or 'Автосервіс Garage 211' }}">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ request.url }}">
-    <meta property="og:image" content="{{ url_for('static', filename='images/og-image.png', _external=True) }}">
+    <meta property="og:image"
+        content="{{ meta.og_image or url_for('static', filename='images/og-image.png', _external=True) }}">
     <!-- Twitter Cards -->
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ meta.twitter_title or meta.title or 'Garage 211' }}">
+    <meta name="twitter:description"
+        content="{{ meta.twitter_description or meta.description or 'Автосервіс Garage 211' }}">
+    <meta name="twitter:image"
+        content="{{ meta.twitter_image or url_for('static', filename='images/og-image.png', _external=True) }}">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" sizes="any">
     <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/icons/apple-touch-icon.png') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     {% if current_user.is_authenticated %}
